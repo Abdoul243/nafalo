@@ -1,0 +1,85 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Boutique extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'nom',
+        'description',
+        'logo',
+        'logo_mime',
+        'logo_taille',
+        'email',
+        'telephone',
+        'reseaux_sociaux',
+        'domaine_personnalise',
+        'est_active'
+    ];
+
+    protected $casts = [
+        'reseaux_sociaux' => 'array',
+        'est_active' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime'
+    ];
+
+    public function categories()
+    {
+        return $this->hasMany(Categorie::class);
+    }
+
+    public function produits()
+    {
+        return $this->hasMany(Produit::class);
+    }
+
+    public function clients()
+    {
+        return $this->hasMany(Client::class);
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
+
+    public function codesPromo()
+    {
+        return $this->hasMany(CodePromo::class);
+    }
+
+    public function pixels()
+    {
+        return $this->hasMany(PixelMarketing::class);
+    }
+
+    public function paniersAbandonnes()
+    {
+        return $this->hasMany(PanierAbandonne::class);
+    }
+
+    public function configuration()
+    {
+        return $this->hasOne(ConfigurationBoutique::class);
+    }
+
+    public function utilisateurs()
+    {
+        return $this->hasMany(Utilisateur::class);
+    }
+
+    public function getLogoUrlAttribute(): ?string
+    {
+        if (!$this->logo) {
+            return null;
+        }
+
+        return route('media.boutiques.logo', $this);
+    }
+}
