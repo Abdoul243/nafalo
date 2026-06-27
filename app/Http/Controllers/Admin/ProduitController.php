@@ -76,7 +76,13 @@ class ProduitController extends Controller
             $data['prix'] = 0;
         }
 
-        Produit::create($data);
+        $produit = Produit::create($data);
+
+        // Si c'est une formation → aller directement construire le programme.
+        if ($produit->estFormation()) {
+            return redirect()->route('admin.produits.formation.programme', $produit)
+                ->with('success', 'Produit créé. Construisez maintenant le programme.');
+        }
 
         return redirect()->route('admin.produits.index')
             ->with('success', 'Produit créé avec succès.');

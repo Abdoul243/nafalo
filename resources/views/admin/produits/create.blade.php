@@ -697,10 +697,27 @@
 
         {{-- SECTION : Fichiers --}}
         <div class="section-block" id="section-fichiers">
-            <div class="section-title">Fichiers</div>
-            <div class="section-subtitle">Le fichier numérique que vos clients recevront</div>
+            <div class="section-title">Livraison du produit</div>
+            <div class="section-subtitle">Un fichier à télécharger, ou une formation avec espace membre</div>
 
-            <div class="mb-4">
+            {{-- Format de livraison --}}
+            <div class="mb-3" style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+                <label style="flex:1;min-width:200px;border:1.5px solid #4f46e5;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-fichier">
+                    <input type="radio" name="format" value="fichier" checked onchange="toggleFormat()">
+                    <span><strong>Fichier téléchargeable</strong><br><span class="text-muted small">PDF, ZIP, vidéo…</span></span>
+                </label>
+                <label style="flex:1;min-width:200px;border:1.5px solid #e5e7eb;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-formation">
+                    <input type="radio" name="format" value="formation" onchange="toggleFormat()">
+                    <span><strong>Formation (espace membre)</strong><br><span class="text-muted small">Modules, leçons, vidéos</span></span>
+                </label>
+            </div>
+
+            {{-- Note formation --}}
+            <div id="bloc-formation" style="display:none;background:#eef2ff;border:1px solid #c7d2fe;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#4338ca;font-size:0.88rem;">
+                <i class="fas fa-graduation-cap"></i> Après avoir enregistré le produit, vous pourrez <strong>construire le programme</strong> (modules + leçons, vidéos par lien ou upload). Aucun fichier requis ici.
+            </div>
+
+            <div class="mb-4" id="bloc-fichier">
                 <label class="form-label">Fichier numérique (PDF, ZIP, MP4...)</label>
                 <div class="image-upload-area" onclick="document.getElementById('fichier-input').click()">
                     <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
@@ -717,6 +734,18 @@
                     <div class="text-danger small mt-1">{{ $message }}</div>
                 @enderror
             </div>
+            <script>
+                function toggleFormat(){
+                    var fmt = (document.querySelector('input[name=format]:checked')||{}).value;
+                    var estFormation = fmt === 'formation';
+                    var bf = document.getElementById('bloc-fichier');
+                    var bForm = document.getElementById('bloc-formation');
+                    if(bf) bf.style.display = estFormation ? 'none' : '';
+                    if(bForm) bForm.style.display = estFormation ? '' : 'none';
+                    document.getElementById('opt-fichier').style.borderColor = estFormation ? '#e5e7eb' : '#4f46e5';
+                    document.getElementById('opt-formation').style.borderColor = estFormation ? '#4f46e5' : '#e5e7eb';
+                }
+            </script>
 
             {{-- Wizard Nav --}}
             <div class="wizard-nav">

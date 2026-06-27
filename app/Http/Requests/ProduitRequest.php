@@ -28,7 +28,8 @@ class ProduitRequest extends FormRequest
             'image'              => 'nullable|image|max:2048',
             'fichier'            => (($isCreate && !$isFormation) ? 'required' : 'nullable') . '|file|mimes:pdf,zip,mp3,mp4,docx,xlsx|max:102400',
             'est_publie'         => 'boolean',
-            // Type d'accès
+            // Format de livraison + type d'accès
+            'format'                => 'nullable|in:fichier,formation',
             'acces_type'            => 'nullable|in:unique,abonnement',
             'abonnement_intervalle' => 'nullable|in:mensuel,annuel',
             // Lead Magnet
