@@ -163,6 +163,68 @@ class EmailService
         });
     }
 
+    /**
+     * Rappel d'échéance d'abonnement (renouvellement manuel).
+     */
+    public function envoyerRappelAbonnement(\App\Models\Abonnement $abonnement): void
+    {
+        $client   = $abonnement->client;
+        $produit  = $abonnement->produit;
+        $boutique = $abonnement->boutique;
+
+        if (!$client || !$produit || !$boutique) return;
+
+        $toEmail   = $this->normalizeEmail($client->email);
+        $fromEmail = $this->resolveFromEmail($boutique);
+        if (!$toEmail) return;
+
+        $lienRenouveler = route('boutique.checkout.produit', ['id' => $produit->id]);
+        $dateFin   = optional($abonnement->date_fin)->format('d/m/Y');
+        $jours     = max(0, $abonnement->joursRestants());
+        $expire    = !$abonnement->estActif();
+        $prix      = number_format($abonnement->prix, 0, ',', ' ');
+        $nom       = $client->nom ?? 'Client';
+        $annee     = date('Y');
+
+        $titre = $expire
+            ? "⏰ Votre abonnement a expiré"
+            : "🔔 Votre abonnement expire dans {$jours} jour(s)";
+
+        $message = $expire
+            ? "Votre accès à <strong>{$produit->nom}</strong> a pris fin le {$dateFin}. Renouvelez pour continuer."
+            : "Votre accès à <strong>{$produit->nom}</strong> se termine le <strong>{$dateFin}</strong>. Renouvelez pour ne pas perdre l'accès.";
+
+        $contenu = "
+            <!DOCTYPE html><html><head><meta charset='UTF-8'></head>
+            <body style='font-family:Arial,sans-serif;background:#f8fafc;margin:0;padding:0;'>
+                <div style='max-width:560px;margin:40px auto;background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08);'>
+                    <div style='background:#4f46e5;padding:32px;text-align:center;'>
+                        <h1 style='color:white;margin:0;font-size:1.35rem;font-weight:800;'>{$titre}</h1>
+                    </div>
+                    <div style='padding:32px;'>
+                        <p style='color:#0f172a;'>Bonjour <strong>{$nom}</strong>,</p>
+                        <p style='color:#64748b;line-height:1.7;'>{$message}</p>
+                        <div style='text-align:center;margin:28px 0;'>
+                            <a href='{$lienRenouveler}' style='display:inline-block;background:#4f46e5;color:white;padding:14px 32px;border-radius:12px;text-decoration:none;font-weight:700;'>
+                                🔄 Renouveler ({$prix} FCFA)
+                            </a>
+                        </div>
+                    </div>
+                    <div style='background:#f8fafc;padding:16px;text-align:center;border-top:1px solid #e2e8f0;'>
+                        <p style='color:#94a3b8;font-size:0.75rem;margin:0;'>{$boutique->nom} &copy; {$annee}</p>
+                    </div>
+                </div>
+            </body></html>
+        ";
+
+        Mail::send([], [], function ($m) use ($nom, $boutique, $contenu, $toEmail, $fromEmail, $titre) {
+            $m->to($toEmail, $nom)
+              ->from($fromEmail, $boutique->nom)
+              ->subject($titre . ' - ' . $boutique->nom)
+              ->html($contenu);
+        });
+    }
+
     public function envoyerFichiersAchat(Transaction $transaction): void
     {
         $transaction->loadMissing(['boutique.configuration', 'client', 'achats.produit']);

@@ -308,20 +308,37 @@
 
                 <div class="achat-footer">
                     <div class="achat-prix">{{ number_format($achat->produit->prix, 0, ',', ' ') }} FCFA</div>
+                    @php $abo = ($abonnements ?? collect())->get($achat->produit_id); @endphp
                     <div class="achat-actions">
                         <a href="{{ route('client.mes-achats.show', $achat) }}" class="btn-detail">
                             <i class="fas fa-eye"></i>
                         </a>
-                        @if($achat->produit->estFormation())
-                        <a href="{{ route('client.formation.show', $achat->produit) }}" class="btn-dl" style="background:#4f46e5;">
-                            <i class="fas fa-graduation-cap"></i> Accéder à la formation
-                        </a>
+                        @if($achat->produit->estAbonnement())
+                            @if($abo && $abo->estActif())
+                                <a href="{{ route('client.formation.show', $achat->produit) }}" class="btn-dl" style="background:#4f46e5;">
+                                    <i class="fas fa-graduation-cap"></i> Accéder
+                                </a>
+                            @else
+                                <a href="{{ route('boutique.checkout.produit', ['id' => $achat->produit_id]) }}" class="btn-dl" style="background:#dc2626;">
+                                    <i class="fas fa-redo"></i> Renouveler
+                                </a>
+                            @endif
+                        @elseif($achat->produit->estFormation())
+                            <a href="{{ route('client.formation.show', $achat->produit) }}" class="btn-dl" style="background:#4f46e5;">
+                                <i class="fas fa-graduation-cap"></i> Accéder à la formation
+                            </a>
                         @else
-                        <a href="{{ route('client.telechargement', $achat) }}" class="btn-dl">
-                            <i class="fas fa-download"></i> Télécharger
-                        </a>
+                            <a href="{{ route('client.telechargement', $achat) }}" class="btn-dl">
+                                <i class="fas fa-download"></i> Télécharger
+                            </a>
                         @endif
                     </div>
+                    @if($achat->produit->estAbonnement() && $abo)
+                        <div style="font-size:0.72rem;margin-top:6px;{{ $abo->estActif() ? 'color:#16a34a;' : 'color:#dc2626;' }}">
+                            <i class="fas fa-{{ $abo->estActif() ? 'check-circle' : 'times-circle' }}"></i>
+                            {{ $abo->estActif() ? 'Actif jusqu’au ' . optional($abo->date_fin)->format('d/m/Y') : 'Abonnement expiré' }}
+                        </div>
+                    @endif
                 </div>
 
                 @if($dlCount > 0)

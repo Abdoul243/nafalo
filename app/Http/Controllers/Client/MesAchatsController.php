@@ -36,11 +36,17 @@ class MesAchatsController extends Controller
             })
             ->latest()
             ->paginate(20);
-            
+
+        // Abonnements du client, indexés par produit (pour afficher statut/renouvellement)
+        $abonnements = \App\Models\Abonnement::where('client_id', $client->id)
+            ->get()
+            ->keyBy('produit_id');
+
         return view('boutique.client.mes-achats.index', [
-            'boutique' => $boutique,
-            'client' => $client,
-            'achats' => $achats
+            'boutique'    => $boutique,
+            'client'      => $client,
+            'achats'      => $achats,
+            'abonnements' => $abonnements,
         ]);
     }
     

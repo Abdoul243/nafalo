@@ -704,6 +704,35 @@
                 </a>
             </div>
 
+            {{-- Type d'accès : paiement unique ou abonnement --}}
+            <div style="border:1px solid #e9eaeb;border-radius:14px;padding:1.1rem 1.25rem;margin-bottom:1.25rem;">
+                <label class="form-label" style="font-weight:700;">💳 Type d'accès</label>
+                <div style="display:flex;gap:0.75rem;flex-wrap:wrap;margin-top:0.4rem;">
+                    <label style="flex:1;min-width:200px;border:1.5px solid {{ ($produit->acces_type ?? 'unique')==='unique' ? '#4f46e5':'#e5e7eb' }};border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;">
+                        <input type="radio" name="acces_type" value="unique" onchange="toggleAbo()" {{ ($produit->acces_type ?? 'unique')==='unique' ? 'checked':'' }}>
+                        <span><strong>Paiement unique</strong><br><span class="text-muted small">Le client paie une fois, accès à vie</span></span>
+                    </label>
+                    <label style="flex:1;min-width:200px;border:1.5px solid {{ ($produit->acces_type ?? '')==='abonnement' ? '#4f46e5':'#e5e7eb' }};border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;">
+                        <input type="radio" name="acces_type" value="abonnement" onchange="toggleAbo()" {{ ($produit->acces_type ?? '')==='abonnement' ? 'checked':'' }}>
+                        <span><strong>Abonnement</strong><br><span class="text-muted small">Accès récurrent, à renouveler</span></span>
+                    </label>
+                </div>
+                <div id="abo-intervalle" style="margin-top:0.8rem;{{ ($produit->acces_type ?? '')==='abonnement' ? '':'display:none;' }}">
+                    <label class="form-label">Périodicité de l'abonnement</label>
+                    <select name="abonnement_intervalle" class="form-select" style="max-width:240px;">
+                        <option value="mensuel" {{ ($produit->abonnement_intervalle ?? 'mensuel')==='mensuel' ? 'selected':'' }}>Mensuel (30 jours)</option>
+                        <option value="annuel"  {{ ($produit->abonnement_intervalle ?? '')==='annuel' ? 'selected':'' }}>Annuel (12 mois)</option>
+                    </select>
+                    <div class="text-muted small mt-1">Le prix ci-dessus est facturé à chaque période. Le client reçoit un rappel avant l'échéance.</div>
+                </div>
+            </div>
+            <script>
+                function toggleAbo(){
+                    var abo = document.querySelector('input[name=acces_type]:checked')?.value === 'abonnement';
+                    document.getElementById('abo-intervalle').style.display = abo ? '' : 'none';
+                }
+            </script>
+
             <div class="mb-4" @if($produit->estFormation()) style="opacity:0.6;" @endif>
                 <label class="form-label">Fichier numérique (PDF, ZIP, MP4...) <span class="text-muted small">— optionnel si formation</span></label>
 

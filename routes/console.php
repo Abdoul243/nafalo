@@ -18,3 +18,8 @@ Schedule::command('boutique:nettoyer-paniers')
 Schedule::command('codes:nettoyer')
     ->hourly()
     ->withoutOverlapping();
+
+// Abonnements : rappels d'échéance + expiration (une fois par jour à 8h)
+Schedule::command('abonnements:verifier')
+    ->dailyAt('08:00')
+    ->withoutOverlapping();

@@ -28,6 +28,12 @@ class FormationClientController extends Controller
             abort(404);
         }
 
+        // Abonnement expiré → renvoyer vers "Mes achats" pour renouveler (pas un 403 brut).
+        if ($produit->estAbonnement() && !$this->aAccquis($client, $produit)) {
+            return redirect()->route('client.mes-achats.index')
+                ->with('error', 'Votre abonnement à « ' . $produit->nom . ' » a expiré. Renouvelez pour y accéder.');
+        }
+
         abort_unless($this->aAccquis($client, $produit), 403, "Vous n'avez pas accès à cette formation.");
 
         $produit->load(['modules.lecons']);
@@ -102,9 +108,19 @@ class FormationClientController extends Controller
         abort_unless($this->aAccquis($client, $produit), 403);
     }
 
-    /** Le client a-t-il acheté ce produit (transaction réussie) ? */
+    /** Le client a-t-il accès à ce produit ? (achat unique OU abonnement actif) */
     private function aAccquis(Client $client, Produit $produit): bool
     {
+        // Produit en abonnement → l'accès dépend d'un abonnement encore actif.
+        if ($produit->estAbonnement()) {
+            return \App\Models\Abonnement::where('client_id', $client->id)
+                ->where('produit_id', $produit->id)
+                ->where('statut', 'actif')
+                ->where('date_fin', '>=', now())
+                ->exists();
+        }
+
+        // Paiement unique → un achat sur une transaction réussie suffit.
         return Achat::where('client_id', $client->id)
             ->where('produit_id', $produit->id)
             ->whereHas('transaction', fn($q) => $q->where('statut', 'reussi'))

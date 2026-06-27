@@ -480,11 +480,48 @@ class CheckoutController extends BoutiqueBaseController
                     'quantite'             => 1,
                     'token_telechargement' => Str::random(40),
                 ]);
+
+                // Abonnement : créer ou prolonger l'accès
+                if ($produit->estAbonnement() && $transaction->client_id) {
+                    $this->prolongerAbonnement($produit, $transaction);
+                }
             }
 
             Log::info('Produits livrés pour transaction #' . $transaction->id);
         } catch (\Exception $e) {
             Log::error('Erreur livraison produits', ['error' => $e->getMessage()]);
         }
+    }
+
+    /**
+     * Crée ou prolonge l'abonnement du client pour un produit récurrent.
+     * La nouvelle échéance part de la fin en cours si encore active (cumul),
+     * sinon de maintenant.
+     */
+    protected function prolongerAbonnement(Produit $produit, Transaction $transaction): void
+    {
+        $intervalle = $produit->abonnement_intervalle ?: 'mensuel';
+        $mois       = \App\Models\Abonnement::moisPourIntervalle($intervalle);
+
+        $abonnement = \App\Models\Abonnement::firstOrNew([
+            'client_id'  => $transaction->client_id,
+            'produit_id' => $produit->id,
+        ]);
+
+        // Base : fin actuelle si encore active, sinon maintenant
+        $base = ($abonnement->exists && $abonnement->date_fin && $abonnement->date_fin->isFuture())
+            ? $abonnement->date_fin
+            : now();
+
+        $abonnement->fill([
+            'boutique_id'             => $transaction->boutique_id,
+            'statut'                  => 'actif',
+            'intervalle'              => $intervalle,
+            'prix'                    => $produit->prix,
+            'date_debut'              => $abonnement->date_debut ?? now(),
+            'date_fin'                => $base->copy()->addMonths($mois),
+            'rappel_envoye'           => false,
+            'derniere_transaction_id' => $transaction->id,
+        ])->save();
     }
 }

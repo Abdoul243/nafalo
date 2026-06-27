@@ -32,6 +32,8 @@ class Produit extends Model
         'image_taille',
         'fichier',
         'format',
+        'acces_type',
+        'abonnement_intervalle',
         'est_publie',
         'nb_ventes',
         // Lead magnet
@@ -124,6 +126,19 @@ class Produit extends Model
     public function nbLecons(): int
     {
         return Lecon::whereIn('module_id', $this->modules()->pluck('id'))->count();
+    }
+
+    /* ── Abonnement ────────────────────────────────────────────────── */
+
+    /** Ce produit est-il vendu en abonnement (accès récurrent) ? */
+    public function estAbonnement(): bool
+    {
+        return $this->acces_type === 'abonnement';
+    }
+
+    public function abonnements()
+    {
+        return $this->hasMany(Abonnement::class, 'produit_id');
     }
 
     /* ── Helpers Lead Magnet ───────────────────────────────────────── */
