@@ -66,9 +66,11 @@ class ProduitController extends Controller
         }
         
         if ($request->hasFile('fichier')) {
-            $data['fichier'] = $request->file('fichier')->store('produits/fichiers', 'public');
+            // Disque PRIVÉ : le fichier produit n'est jamais accessible en direct,
+            // uniquement via la route de téléchargement protégée par token.
+            $data['fichier'] = $request->file('fichier')->store('produits/fichiers', 'local');
         }
-        
+
         // Lead magnet : forcer prix à 0 si gratuit
         if (($data['type'] ?? 'payant') === 'gratuit') {
             $data['prix'] = 0;
@@ -117,11 +119,12 @@ class ProduitController extends Controller
         
         if ($request->hasFile('fichier')) {
             if ($produit->fichier) {
-                Storage::disk('public')->delete($produit->fichier);
+                Storage::disk('local')->delete($produit->fichier);
             }
-            $data['fichier'] = $request->file('fichier')->store('produits/fichiers', 'public');
+            // Disque PRIVÉ (cf. store())
+            $data['fichier'] = $request->file('fichier')->store('produits/fichiers', 'local');
         }
-        
+
         // Lead magnet : forcer prix à 0 si gratuit
         if (($data['type'] ?? $produit->type) === 'gratuit') {
             $data['prix'] = 0;
@@ -142,12 +145,24 @@ class ProduitController extends Controller
         }
 
         if ($produit->fichier) {
-            Storage::disk('public')->delete($produit->fichier);
+            Storage::disk('local')->delete($produit->fichier);
         }
         
         $produit->delete();
-        
+
         return redirect()->route('admin.produits.index')
             ->with('success', 'Produit supprimé avec succès.');
+    }
+
+    /**
+     * Téléchargement du fichier produit par le marchand propriétaire.
+     * Le fichier est sur le disque privé : seul ce point d'accès contrôlé y mène.
+     */
+    public function telechargerFichier(Produit $produit)
+    {
+        abort_if($produit->boutique_id !== session('boutique_id'), 403);
+        abort_if(!$produit->fichier || !Storage::disk('local')->exists($produit->fichier), 404);
+
+        return Storage::disk('local')->download($produit->fichier, basename($produit->fichier));
     }
 }

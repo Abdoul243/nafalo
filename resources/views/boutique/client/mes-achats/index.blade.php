@@ -67,7 +67,7 @@
     border: 1px solid rgba(239,68,68,0.2);
     border-radius: 10px;
     font-size: 0.82rem; font-weight: 600;
-    color: #fca5a5;
+    color: #dc2626;
     cursor: pointer; font-family: inherit;
     transition: all 0.2s; text-decoration: none;
     position: relative;
@@ -75,7 +75,7 @@
 .btn-logout:hover {
     background: rgba(239,68,68,0.15);
     border-color: rgba(239,68,68,0.35);
-    color: #fca5a5;
+    color: #dc2626;
 }
 
 /* ── Toolbar ── */
@@ -129,7 +129,7 @@
     position: relative;
     height: 170px;
     overflow: hidden;
-    background: rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.03);
     display: flex; align-items: center; justify-content: center;
 }
 .achat-img img {
@@ -180,14 +180,14 @@
 .btn-detail {
     display: inline-flex; align-items: center; gap: 6px;
     padding: 0.5rem 0.75rem;
-    background: rgba(255,255,255,0.06);
+    background: rgba(0,0,0,0.04);
     border: 1px solid var(--border);
     border-radius: 9px;
     font-size: 0.78rem; font-weight: 600;
     color: var(--text-2); text-decoration: none;
     transition: all 0.2s;
 }
-.btn-detail:hover { background: rgba(255,255,255,0.1); color: var(--text-1); border-color: rgba(255,255,255,0.2); }
+.btn-detail:hover { background: rgba(0,0,0,0.06); color: var(--text-1); border-color: rgba(0,0,0,0.15); }
 
 .dl-count {
     font-size: 0.72rem; color: var(--text-3);

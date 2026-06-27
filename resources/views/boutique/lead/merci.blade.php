@@ -118,7 +118,7 @@
 .upsell-thumb {
     width: 56px; height: 56px; border-radius: 12px;
     overflow: hidden; flex-shrink: 0;
-    background: rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.03);
     display: flex; align-items: center; justify-content: center;
 }
 .upsell-thumb img { width: 100%; height: 100%; object-fit: cover; }
@@ -149,12 +149,12 @@
 .btn-primary-action:hover { background: var(--accent-hover); color: white; transform: translateY(-1px); }
 .btn-secondary-action {
     display: flex; align-items: center; justify-content: center; gap: 9px;
-    padding: 1rem; background: rgba(255,255,255,0.04); color: var(--text-2);
+    padding: 1rem; background: rgba(0,0,0,0.03); color: var(--text-2);
     border: 1px solid var(--border); border-radius: 14px;
     font-weight: 600; font-size: 0.9rem;
     text-decoration: none; transition: all 0.2s;
 }
-.btn-secondary-action:hover { color: var(--text-1); border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.07); }
+.btn-secondary-action:hover { color: var(--text-1); border-color: rgba(0,0,0,0.15); background: rgba(0,0,0,0.05); }
 </style>
 @endpush
 

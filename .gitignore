@@ -18,6 +18,8 @@
 /public/storage
 /storage/*.key
 /storage/pail
+# Contenu privé (fichiers produits téléchargeables) — ne jamais committer
+/storage/app/private
 /vendor
 Homestead.json
 Homestead.yaml

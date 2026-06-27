@@ -23,7 +23,7 @@
             <i class="fas fa-shopping-cart"></i> Retourner au panier
         </a>
         <a href="{{ route('boutique.accueil') }}"
-           style="display:flex;align-items:center;justify-content:center;gap:9px;background:rgba(255,255,255,0.04);color:var(--text-2);border:1px solid var(--border);border-radius:14px;padding:1rem;font-weight:600;font-size:0.9rem;text-decoration:none;transition:all 0.2s;">
+           style="display:flex;align-items:center;justify-content:center;gap:9px;background:rgba(0,0,0,0.03);color:var(--text-2);border:1px solid var(--border);border-radius:14px;padding:1rem;font-weight:600;font-size:0.9rem;text-decoration:none;transition:all 0.2s;">
             <i class="fas fa-arrow-left"></i> Retour à la boutique
         </a>
     </div>

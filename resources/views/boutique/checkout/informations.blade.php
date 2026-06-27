@@ -119,7 +119,7 @@
 }
 .ck-input {
     width: 100%;
-    background: rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.03);
     border: 1.5px solid var(--border);
     border-radius: 12px;
     padding: 0.75rem 1rem;
@@ -166,7 +166,7 @@
     justify-content: center;
     gap: 7px;
     padding: 0.85rem 0.5rem 0.75rem;
-    background: rgba(255,255,255,0.03);
+    background: rgba(0,0,0,0.02);
     border: 1.5px solid var(--border);
     border-radius: 14px;
     cursor: pointer;
@@ -224,7 +224,7 @@
     align-items: flex-start;
     gap: 7px;
     padding: 0.75rem;
-    background: rgba(255,255,255,0.03);
+    background: rgba(0,0,0,0.02);
     border-radius: 10px;
     border: 1px solid var(--border);
     margin-top: 0.75rem;
@@ -301,7 +301,7 @@
     width: 48px; height: 48px;
     border-radius: 10px;
     object-fit: cover;
-    background: rgba(255,255,255,0.06);
+    background: rgba(0,0,0,0.04);
     flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
     overflow: hidden;
@@ -379,7 +379,7 @@
     <p class="ck-subtitle">Renseignez vos informations pour recevoir vos produits instantanément.</p>
 
     @if($errors->any())
-    <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:0.875rem 1.1rem;margin-bottom:1.5rem;color:#fca5a5;font-size:0.875rem;">
+    <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:12px;padding:0.875rem 1.1rem;margin-bottom:1.5rem;color:#dc2626;font-size:0.875rem;">
         <i class="fas fa-exclamation-circle" style="margin-right:6px;"></i> {{ $errors->first() }}
     </div>
     @endif

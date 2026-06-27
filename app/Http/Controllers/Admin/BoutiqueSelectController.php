@@ -9,20 +9,26 @@ use Illuminate\Http\Request;
 class BoutiqueSelectController extends Controller
 {
     /**
-     * Page de sélection de boutique
+     * Page de sélection de boutique — uniquement CELLES de l'utilisateur.
      */
     public function choisir()
     {
-        $boutiques = Boutique::orderBy('nom')->get();
+        $boutiques = auth()->user()->boutiques()->orderBy('nom')->get();
         return view('admin.boutiques.select', compact('boutiques'));
     }
 
     /**
-     * Sélectionner une boutique et aller au dashboard
+     * Sélectionner une boutique et aller au dashboard.
+     *
+     * SÉCURITÉ : on vérifie que la boutique appartient bien à l'utilisateur
+     * connecté avant de l'activer en session. Sans ce contrôle, n'importe quel
+     * marchand pourrait accéder aux données d'une autre boutique (IDOR), car
+     * tous les contrôleurs admin se basent sur session('boutique_id').
      */
     public function select($id)
     {
-        $boutique = Boutique::findOrFail($id);
+        $boutique = auth()->user()->boutiques()->findOrFail($id);
+
         session(['boutique_id' => $boutique->id]);
         session(['boutique_domaine' => $boutique->domaine_personnalise ?? 'digital-store.test']);
 

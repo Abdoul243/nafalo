@@ -689,7 +689,7 @@
                     <div class="existing-file-pill">
                         <i class="fas fa-file-check"></i>
                         <span>Fichier actuel :</span>
-                        <a href="{{ Storage::url($produit->fichier) }}" target="_blank"
+                        <a href="{{ route('admin.produits.fichier', $produit) }}" target="_blank"
                            class="text-primary fw-semibold" style="font-size:0.82rem;">
                             {{ basename($produit->fichier) }}
                         </a>

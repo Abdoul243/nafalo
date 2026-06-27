@@ -76,40 +76,56 @@ class BoutiqueController extends Controller
             ->with('success', '🎉 Ta boutique "' . $boutique->nom . '" est créée et accessible !');
     }
     
+    /**
+     * Garde-fou : la boutique doit appartenir à l'utilisateur connecté.
+     */
+    private function verifierProprietaire(Boutique $boutique): void
+    {
+        abort_if($boutique->utilisateur_id !== auth()->id(), 403);
+    }
+
     public function edit(Boutique $boutique)
     {
+        $this->verifierProprietaire($boutique);
+
         return view('admin.boutiques.edit', compact('boutique'));
     }
-    
+
     public function update(BoutiqueRequest $request, Boutique $boutique)
     {
+        $this->verifierProprietaire($boutique);
+
         $data = $request->validated();
-        
+
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
             $data['logo'] = file_get_contents($logo->getRealPath());
             $data['logo_mime'] = $logo->getMimeType();
             $data['logo_taille'] = $logo->getSize();
         }
-        
+
         $boutique->update($data);
-        
+
         return redirect()->route('admin.boutiques.index')
             ->with('success', 'Boutique mise à jour avec succès.');
     }
-    
+
     public function destroy(Boutique $boutique)
     {
+        $this->verifierProprietaire($boutique);
+
         $boutique->delete();
-        
+
         return redirect()->route('admin.boutiques.index')
             ->with('success', 'Boutique supprimée avec succès.');
     }
-    
+
     public function toggleActivation(Boutique $boutique)
     {
+        $this->verifierProprietaire($boutique);
+
         $boutique->update(['est_active' => !$boutique->est_active]);
-        
+
         return response()->json([
             'success' => true,
             'est_active' => $boutique->est_active

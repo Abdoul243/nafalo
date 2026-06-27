@@ -12,7 +12,8 @@ use App\Models\Boutique as BoutiqueModel;
 // Routes d'authentification admin
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
-    Route::post('/login', [LoginController::class, 'login']);
+    // Anti brute-force : 5 tentatives / minute / IP
+    Route::post('/login', [LoginController::class, 'login'])->middleware('throttle:5,1');
     Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
     // Profil utilisateur
@@ -30,6 +31,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/password/reset', [ForgotPasswordController::class, 'showLinkRequestForm'])
         ->name('password.request');
     Route::post('/password/email', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+        ->middleware('throttle:5,1')
         ->name('password.email');
     Route::get('/password/reset/{token}', [ResetPasswordController::class, 'showResetForm'])
         ->name('password.reset');
@@ -158,7 +160,9 @@ Route::prefix('superadmin')->name('superadmin.')->group(function () {
 
     // Connexion (publique)
     Route::get('/login', [App\Http\Controllers\SuperAdmin\AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [App\Http\Controllers\SuperAdmin\AuthController::class, 'login'])->name('login.post');
+    Route::post('/login', [App\Http\Controllers\SuperAdmin\AuthController::class, 'login'])
+        ->middleware('throttle:5,1')
+        ->name('login.post');
     Route::post('/logout', [App\Http\Controllers\SuperAdmin\AuthController::class, 'logout'])->name('logout');
 
     // Routes protégées

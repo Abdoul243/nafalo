@@ -15,11 +15,12 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
     // Dashboard
     Route::get('/', [Admin\DashboardController::class, 'index'])->name('dashboard');
 
-    // Chatbot IA admin
-    Route::post('/chatbot', [Admin\ChatbotController::class, 'chat'])->name('chatbot');
+    // Chatbot IA admin — rate-limit (appels API Anthropic payants)
+    Route::post('/chatbot', [Admin\ChatbotController::class, 'chat'])
+        ->middleware('throttle:20,1')->name('chatbot');
 
-    // IA Produits
-    Route::prefix('ia')->name('ia.')->group(function () {
+    // IA Produits — rate-limit
+    Route::prefix('ia')->name('ia.')->middleware('throttle:20,1')->group(function () {
         Route::post('/generer-page-vente', [Admin\ProduitIaController::class, 'genererPageVente'])->name('generer-page-vente');
         Route::post('/traduire',           [Admin\ProduitIaController::class, 'traduire'])->name('traduire');
         Route::post('/scorer-compatibilite', [Admin\ProduitIaController::class, 'scorerCompatibilite'])->name('scorer-compatibilite');
@@ -39,6 +40,9 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
         ->name('boutiques.toggle-activation');
 
     // Gestion des produits
+    // Téléchargement du fichier produit par le marchand (protégé)
+    Route::get('produits/{produit}/fichier', [Admin\ProduitController::class, 'telechargerFichier'])
+        ->name('produits.fichier');
     Route::resource('produits', Admin\ProduitController::class);
 
     // ── Co-publication ────────────────────────────────────────────────
@@ -51,7 +55,7 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
         Route::delete('/{copublication}',           [Admin\CopublicationController::class, 'destroy'])->name('destroy');
         // ── Recherche IA de partenaires ─────────────────────────
         Route::get('/rechercher',                   [Admin\CopublicationController::class, 'rechercher'])->name('rechercher');
-        Route::post('/ia-search',                   [Admin\CopublicationController::class, 'iaSearch'])->name('ia-search');
+        Route::post('/ia-search',                   [Admin\CopublicationController::class, 'iaSearch'])->middleware('throttle:20,1')->name('ia-search');
     });
 
     // ── Upsells (imbriqués sous les produits) ─────────────────────────

@@ -20,7 +20,7 @@
 .btn-back {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 0.55rem 1.1rem;
-    background: rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.03);
     border: 1px solid var(--border); border-radius: 10px;
     color: var(--text-2); font-size: 0.82rem; font-weight: 600;
     text-decoration: none; margin-bottom: 1.5rem;
@@ -42,7 +42,7 @@
 
 .product-hero-img {
     height: 260px; overflow: hidden;
-    background: rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.03);
     display: flex; align-items: center; justify-content: center;
 }
 .product-hero-img img { width: 100%; height: 100%; object-fit: cover; }
@@ -69,7 +69,7 @@
 }
 .meta-pill {
     display: inline-flex; align-items: center; gap: 6px;
-    background: rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.03);
     border: 1px solid var(--border);
     border-radius: 20px; padding: 0.3rem 0.75rem;
     font-size: 0.77rem; color: var(--text-2); font-weight: 500;
@@ -186,13 +186,13 @@
 .btn-sidebar-secondary {
     display: flex; align-items: center; justify-content: center; gap: 8px;
     width: 100%; padding: 0.75rem;
-    background: rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.03);
     color: var(--text-2);
     border: 1px solid var(--border); border-radius: 11px;
     font-weight: 600; font-size: 0.83rem; text-decoration: none;
     transition: all 0.2s; margin-bottom: 0.5rem;
 }
-.btn-sidebar-secondary:hover { background: rgba(255,255,255,0.08); color: var(--text-1); border-color: rgba(255,255,255,0.2); }
+.btn-sidebar-secondary:hover { background: rgba(0,0,0,0.06); color: var(--text-1); border-color: rgba(0,0,0,0.15); }
 
 .btn-review {
     display: flex; align-items: center; justify-content: center; gap: 8px;

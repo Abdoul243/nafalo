@@ -79,13 +79,26 @@ class PixelController extends Controller
             ->with('success', $created . ' pixel(s) enregistré(s) avec succès.');
     }
 
+    /**
+     * Garde-fou : le pixel doit appartenir à la boutique active du marchand.
+     * (Les pixels injectent du JS dans les pages → cloisonnement critique.)
+     */
+    private function verifierProprietaire(PixelMarketing $pixel): void
+    {
+        abort_if($pixel->boutique_id !== session('boutique_id'), 403);
+    }
+
     public function edit(PixelMarketing $pixel)
     {
+        $this->verifierProprietaire($pixel);
+
         return view('admin.pixels.edit', compact('pixel'));
     }
 
     public function update(Request $request, PixelMarketing $pixel)
     {
+        $this->verifierProprietaire($pixel);
+
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'code_pixel' => 'required|string',
@@ -101,6 +114,8 @@ class PixelController extends Controller
 
     public function destroy(PixelMarketing $pixel)
     {
+        $this->verifierProprietaire($pixel);
+
         $pixel->delete();
 
         return redirect()->route('admin.pixels.index')
@@ -109,6 +124,8 @@ class PixelController extends Controller
 
     public function toggleActivation(PixelMarketing $pixel)
     {
+        $this->verifierProprietaire($pixel);
+
         $pixel->update(['est_actif' => !$pixel->est_actif]);
 
         return response()->json([

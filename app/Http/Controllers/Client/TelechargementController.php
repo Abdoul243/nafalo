@@ -37,7 +37,7 @@ class TelechargementController extends Controller
 
         $produit = $achat->produit;
 
-        if (!$produit || !$produit->fichier || !Storage::disk('public')->exists($produit->fichier)) {
+        if (!$produit || !$produit->fichier || !Storage::disk('local')->exists($produit->fichier)) {
             abort(404, 'Fichier non trouvé.');
         }
 
@@ -50,14 +50,14 @@ class TelechargementController extends Controller
 
         $extension  = strtolower(pathinfo($produit->fichier, PATHINFO_EXTENSION));
         $nomFichier = Str::slug($produit->nom) . '.' . $extension;
-        $cheminAbs  = Storage::disk('public')->path($produit->fichier);
+        $cheminAbs  = Storage::disk('local')->path($produit->fichier);
 
         // ── Protection anti-piratage PDF (Feature 19) ─────────────────────────
         if ($extension === 'pdf') {
             return $this->telechargerPdfProtege($cheminAbs, $nomFichier, $client, $boutique);
         }
 
-        return Storage::disk('public')->download($produit->fichier, $nomFichier);
+        return Storage::disk('local')->download($produit->fichier, $nomFichier);
     }
 
     /**

@@ -33,7 +33,7 @@
 }
 .avis-input {
     width: 100%;
-    background: rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.03);
     border: 1.5px solid var(--border);
     border-radius: 12px;
     padding: 0.8rem 1rem;
@@ -44,7 +44,7 @@
 }
 .avis-input::placeholder { color: var(--text-3); }
 .avis-input:focus { border-color: var(--accent); background: rgba(124,58,237,0.06); }
-.avis-error { font-size: 0.78rem; color: #fca5a5; margin-top: 0.35rem; display: block; }
+.avis-error { font-size: 0.78rem; color: #dc2626; margin-top: 0.35rem; display: block; }
 
 /* Star rating */
 .stars-row {
@@ -56,7 +56,7 @@
     display: none;
 }
 .stars-row label {
-    font-size: 1.8rem; cursor: pointer; color: rgba(255,255,255,0.15);
+    font-size: 1.8rem; cursor: pointer; color: #d1d5db;
     transition: color 0.15s;
     line-height: 1;
 }
@@ -91,12 +91,12 @@
 .btn-cancel {
     display: flex; align-items: center; justify-content: center; gap: 7px;
     width: 100%; padding: 0.75rem;
-    background: rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.03);
     border: 1px solid var(--border); border-radius: 11px;
     font-size: 0.875rem; font-weight: 600; color: var(--text-2);
     text-decoration: none; transition: all 0.2s;
 }
-.btn-cancel:hover { color: var(--text-1); border-color: rgba(255,255,255,0.2); }
+.btn-cancel:hover { color: var(--text-1); border-color: rgba(0,0,0,0.15); }
 </style>
 @endpush
 

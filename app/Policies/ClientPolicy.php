@@ -9,6 +9,8 @@ class ClientPolicy
 {
     public function view(Utilisateur $utilisateur, Client $client): bool
     {
-        return $utilisateur->estAdmin();
+        // Le client doit appartenir à une boutique de l'utilisateur.
+        return $utilisateur->estAdmin()
+            && $utilisateur->boutiques()->whereKey($client->boutique_id)->exists();
     }
 }

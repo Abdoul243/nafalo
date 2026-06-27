@@ -149,7 +149,7 @@
 .product-thumb {
     width: 58px; height: 58px;
     border-radius: 12px;
-    background: rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.03);
     display: flex; align-items: center; justify-content: center;
     overflow: hidden; flex-shrink: 0;
 }
@@ -202,7 +202,7 @@
 .upsell-thumb {
     width: 64px; height: 64px;
     border-radius: 12px;
-    background: rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.03);
     display: flex; align-items: center; justify-content: center;
     overflow: hidden; flex-shrink: 0;
 }
@@ -285,12 +285,12 @@
 .btn-action-primary:hover { background: var(--accent-hover); color: white; transform: translateY(-1px); }
 .btn-action-secondary {
     display: flex; align-items: center; justify-content: center; gap: 9px;
-    padding: 1rem; background: rgba(255,255,255,0.04); color: var(--text-2);
+    padding: 1rem; background: rgba(0,0,0,0.03); color: var(--text-2);
     border: 1px solid var(--border); border-radius: 14px;
     font-weight: 600; font-size: 0.9rem;
     text-decoration: none; transition: all 0.2s;
 }
-.btn-action-secondary:hover { border-color: rgba(255,255,255,0.2); color: var(--text-1); background: rgba(255,255,255,0.07); }
+.btn-action-secondary:hover { border-color: rgba(0,0,0,0.15); color: var(--text-1); background: rgba(0,0,0,0.05); }
 </style>
 @endpush
 

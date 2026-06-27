@@ -31,15 +31,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Moneroo — Passerelle de paiement africaine (PawaPay)
+    | GeniusPay — Passerelle de paiement africaine
     |--------------------------------------------------------------------------
     */
-    'moneroo' => [
-        'public_key'     => env('MONEROO_PUBLIC_KEY'),
-        'secret_key'     => env('MONEROO_SECRET_KEY'),
-        'api_url'        => env('MONEROO_API_URL', 'https://api.moneroo.io/v1'),
-        'webhook_url'    => env('MONEROO_WEBHOOK_URL'),
-        'webhook_secret' => env('MONEROO_WEBHOOK_SECRET'),
+    'geniuspay' => [
+        'public_key'     => env('GENIUSPAY_PUBLIC_KEY'),
+        'secret_key'     => env('GENIUSPAY_SECRET_KEY'),
+        'api_url'        => env('GENIUSPAY_API_URL', 'http://pay.genius.ci/api/v1/merchant'),
+        'webhook_secret' => env('GENIUSPAY_WEBHOOK_SECRET'),
     ],
 
     /*

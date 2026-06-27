@@ -29,9 +29,9 @@
     padding: 0.3rem 0.8rem; border-radius: 6px;
     letter-spacing: 0.04em; text-transform: uppercase;
 }
-.prod-badge-cat    { background: rgba(124,58,237,0.15); color: #c4b5fd; border: 1px solid rgba(124,58,237,0.3); }
-.prod-badge-hot    { background: rgba(249,115,22,0.15); color: #fdba74; border: 1px solid rgba(249,115,22,0.3); }
-.prod-badge-new    { background: rgba(34,197,94,0.12);  color: #86efac; border: 1px solid rgba(34,197,94,0.25); }
+.prod-badge-cat    { background: rgba(124,58,237,0.15); color: var(--accent); border: 1px solid rgba(124,58,237,0.3); }
+.prod-badge-hot    { background: rgba(249,115,22,0.15); color: #c2410c; border: 1px solid rgba(249,115,22,0.3); }
+.prod-badge-new    { background: rgba(34,197,94,0.12);  color: #166534; border: 1px solid rgba(34,197,94,0.25); }
 
 /* Titre */
 .prod-title {
@@ -78,8 +78,8 @@
 .prod-image-empty {
     display: flex; align-items: center; justify-content: center;
     width: 100%; height: 100%; min-height: 320px;
-    color: rgba(255,255,255,0.1); font-size: 5rem;
-    background: linear-gradient(135deg, #1a1a28 0%, #2a1a3e 50%, #1a2838 100%);
+    color: rgba(0,0,0,0.18); font-size: 5rem;
+    background: linear-gradient(135deg, #f3f4f6 0%, #ede9fe 50%, #eef2ff 100%);
 }
 
 /* Overlay "Aperçu" */
@@ -130,7 +130,7 @@
 .rating-big { font-size: 3rem; font-weight: 900; color: var(--text-1); line-height: 1; }
 .rating-bar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 5px; }
 .rating-bar-label { font-size: 0.8rem; color: var(--text-3); width: 40px; flex-shrink: 0; }
-.rating-bar-track { flex: 1; height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
+.rating-bar-track { flex: 1; height: 5px; background: rgba(0,0,0,0.06); border-radius: 3px; overflow: hidden; }
 .rating-bar-fill { height: 100%; background: #f59e0b; border-radius: 3px; }
 .rating-bar-count { font-size: 0.75rem; color: var(--text-3); width: 16px; text-align: right; }
 
@@ -143,7 +143,7 @@
     overflow: hidden; text-decoration: none; display: block;
     transition: all 0.2s;
 }
-.sim-card:hover { border-color: rgba(255,255,255,0.15); transform: translateY(-2px); }
+.sim-card:hover { border-color: var(--border-hover); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
 .sim-card img { width: 100%; height: 130px; object-fit: cover; }
 .sim-img-ph { height: 130px; background: var(--bg-elevated); display: flex; align-items: center; justify-content: center; color: var(--text-3); font-size: 2rem; }
 .sim-body { padding: 12px 14px; }
@@ -174,7 +174,7 @@
     display: inline-flex; align-items: center; gap: 5px;
     background: rgba(34,197,94,0.12);
     border: 1px solid rgba(34,197,94,0.2);
-    color: #86efac; font-size: 0.72rem; font-weight: 700;
+    color: #166534; font-size: 0.72rem; font-weight: 700;
     padding: 0.25rem 0.65rem; border-radius: 6px;
     margin-left: 0.6rem;
 }
@@ -211,7 +211,7 @@
 .btn-cta-secondary {
     width: 100%; padding: 0.875rem;
     font-size: 0.9rem; font-weight: 600;
-    background: rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.03);
     border: 1px solid var(--border);
     color: var(--text-2); border-radius: 14px;
     cursor: pointer; text-align: center;
@@ -219,7 +219,7 @@
     transition: all 0.2s; font-family: inherit;
 }
 .btn-cta-secondary:hover {
-    background: rgba(255,255,255,0.09);
+    background: rgba(0,0,0,0.06);
     border-color: var(--border-hover);
     color: var(--text-1);
 }
@@ -245,7 +245,7 @@
 }
 .pm-item {
     display: flex; align-items: center; gap: 8px;
-    background: rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.03);
     border: 1px solid var(--border);
     border-radius: 10px; padding: 0.55rem 0.75rem;
 }
@@ -273,16 +273,16 @@
     padding: 0.75rem 1rem;
     margin-bottom: 1rem;
     display: flex; align-items: center; gap: 8px;
-    font-size: 0.82rem; color: #fdba74; font-weight: 600;
+    font-size: 0.82rem; color: #c2410c; font-weight: 600;
 }
 .urgency-bar i { color: #f97316; flex-shrink: 0; }
 .cd-seg {
-    background: rgba(255,255,255,0.1);
+    background: rgba(0,0,0,0.10);
     color: var(--text-1); border-radius: 5px;
     padding: 2px 6px; font-size: 0.82rem;
     font-variant-numeric: tabular-nums; font-weight: 700;
 }
-.cd-sep { color: rgba(255,255,255,0.3); margin: 0 2px; }
+.cd-sep { color: rgba(0,0,0,0.30); margin: 0 2px; }
 
 /* Social proof */
 .social-proof {
@@ -305,7 +305,7 @@
 .creator-mini {
     display: flex; align-items: center; gap: 12px;
     padding: 0.875rem;
-    background: rgba(255,255,255,0.03);
+    background: var(--bg-surface);
     border: 1px solid var(--border);
     border-radius: 14px;
     margin-bottom: 1rem;
@@ -352,7 +352,7 @@
 .country-selector-btn {
     display: flex; align-items: center; gap: 8px;
     padding: 0.6rem 1rem;
-    background: rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.03);
     border: 1px solid var(--border);
     border-radius: 10px;
     cursor: pointer; font-size: 0.85rem; color: var(--text-2);
@@ -371,7 +371,7 @@
     background: var(--bg-elevated);
     border: 1px solid var(--border-hover);
     border-radius: 14px;
-    box-shadow: 0 16px 50px rgba(0,0,0,0.7);
+    box-shadow: 0 16px 40px rgba(0,0,0,0.15);
     z-index: 999;
     max-height: 260px; overflow-y: auto;
     display: none; padding: 6px 0;
@@ -383,8 +383,8 @@
     font-size: 0.85rem; color: var(--text-2);
     cursor: pointer; transition: background 0.1s;
 }
-.country-option:hover { background: rgba(255,255,255,0.06); color: var(--text-1); }
-.country-option.active { background: var(--accent-light); color: #c4b5fd; font-weight: 600; }
+.country-option:hover { background: rgba(0,0,0,0.04); color: var(--text-1); }
+.country-option.active { background: var(--accent-light); color: var(--accent); font-weight: 600; }
 .country-option .currency { margin-left: auto; font-size: 0.75rem; color: var(--text-3); }
 
 /* ── RESPONSIVE ── */
@@ -573,18 +573,7 @@
         <div class="prod-sidebar">
             <div class="sidebar-card">
 
-                {{-- Country selector --}}
-                <div class="country-selector" id="countrySelector">
-                    <div class="country-selector-btn" id="countrySelectorBtn" onclick="toggleCountryDropdown()">
-                        <span id="selectedFlag">🌍</span>
-                        <span id="selectedCountryName">Détection...</span>
-                        <span id="selectedCurrencyLabel" style="color:var(--text-3);font-size:0.78rem;">(FCFA)</span>
-                        <i class="fas fa-chevron-down chevron" id="selectorChevron"></i>
-                    </div>
-                    <div class="country-dropdown" id="countryDropdown"></div>
-                </div>
-
-                {{-- Prix --}}
+                {{-- Prix (conversion gérée par le sélecteur global du header) --}}
                 <div style="margin-bottom:1.25rem;">
                     @if($produit->estGratuit())
                         <div class="sidebar-price-free">🎁 GRATUIT</div>
@@ -594,17 +583,16 @@
                             $discount = $hasPromo ? round((($produit->prix - $produit->prix_promo) / $produit->prix) * 100) : 0;
                         @endphp
                         @if($hasPromo)
-                            <div class="sidebar-price-old">
+                            <div class="sidebar-price-old" data-xof="{{ (int)$produit->prix }}">
                                 {{ number_format($produit->prix, 0, ',', ' ') }} FCFA
                             </div>
                         @endif
-                        <div style="display:flex;align-items:baseline;gap:0.25rem;flex-wrap:wrap;">
-                            <div class="sidebar-price">
-                                <span id="displayedPrice">{{ $hasPromo ? number_format($produit->prix_promo, 0, ',', ' ') : number_format($produit->prix, 0, ',', ' ') }}</span>
-                                <span class="sidebar-price-currency" id="displayedCurrency">F</span>
+                        <div style="display:flex;align-items:baseline;gap:0.5rem;flex-wrap:wrap;">
+                            <div class="sidebar-price" data-xof="{{ $hasPromo ? (int)$produit->prix_promo : (int)$produit->prix }}">
+                                {{ $hasPromo ? number_format($produit->prix_promo, 0, ',', ' ') : number_format($produit->prix, 0, ',', ' ') }} FCFA
                             </div>
                             @if($hasPromo)
-                                <span class="sidebar-promo-badge">-{{ $discount }}% J-5</span>
+                                <span class="sidebar-promo-badge">-{{ $discount }}%</span>
                             @endif
                         </div>
                         <div class="sidebar-price-sub">Paiement unique · Accès à vie</div>
@@ -652,7 +640,7 @@
                 </form>
                 @else
                     @if($produit->limiteAtteinte())
-                    <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#fca5a5;border-radius:12px;padding:14px;text-align:center;font-size:0.9rem;font-weight:600;">
+                    <div style="background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.2);color:#dc2626;border-radius:12px;padding:14px;text-align:center;font-size:0.9rem;font-weight:600;">
                         <i class="fas fa-lock me-2"></i> Ce produit n'est plus disponible
                     </div>
                     @else
@@ -723,7 +711,7 @@
 <div id="lead-form-modal"
      style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);z-index:9999;align-items:center;justify-content:center;padding:1rem;"
      onclick="if(event.target===this) this.style.display='none'">
-    <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:24px;width:100%;max-width:460px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.8);animation:slideUp .25s ease;">
+    <div style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:24px;width:100%;max-width:460px;overflow:hidden;box-shadow:0 24px 80px rgba(0,0,0,0.25);animation:slideUp .25s ease;">
         <div style="background:linear-gradient(135deg,var(--accent),#2563eb);padding:24px 24px 20px;position:relative;">
             <button onclick="document.getElementById('lead-form-modal').style.display='none'"
                     style="position:absolute;top:14px;right:14px;background:rgba(255,255,255,0.15);border:none;color:white;border-radius:50%;width:30px;height:30px;cursor:pointer;font-size:0.9rem;display:flex;align-items:center;justify-content:center;">✕</button>
@@ -737,7 +725,7 @@
             <div style="margin-bottom:14px;">
                 <label style="font-weight:600;font-size:0.85rem;color:var(--text-2);display:block;margin-bottom:5px;">{{ $label }} *</label>
                 <input type="{{ $type }}" name="{{ $field }}" required placeholder="{{ $ph }}"
-                       style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:10px;padding:10px 13px;font-size:0.9rem;outline:none;color:var(--text-1);font-family:inherit;transition:border-color 0.15s;"
+                       style="width:100%;background:rgba(0,0,0,0.03);border:1px solid var(--border);border-radius:10px;padding:10px 13px;font-size:0.9rem;outline:none;color:var(--text-1);font-family:inherit;transition:border-color 0.15s;"
                        onfocus="this.style.borderColor='var(--accent)'" onblur="this.style.borderColor='var(--border)'">
             </div>
             @endforeach
@@ -746,7 +734,7 @@
             <div style="margin-bottom:14px;">
                 <label style="font-weight:600;font-size:0.85rem;color:var(--text-2);display:block;margin-bottom:5px;">{{ $lbls[$champ] ?? $champ }}</label>
                 <input type="{{ $tps[$champ]??'text' }}" name="{{ $champ }}" placeholder="{{ $phs[$champ]??'' }}"
-                       style="width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:10px;padding:10px 13px;font-size:0.9rem;outline:none;color:var(--text-1);font-family:inherit;">
+                       style="width:100%;background:rgba(0,0,0,0.03);border:1px solid var(--border);border-radius:10px;padding:10px 13px;font-size:0.9rem;outline:none;color:var(--text-1);font-family:inherit;">
             </div>
             @endforeach
             <button type="submit" style="width:100%;background:var(--accent);color:white;border:none;border-radius:12px;padding:13px;font-weight:700;font-size:1rem;cursor:pointer;margin-top:6px;font-family:inherit;transition:background 0.15s;"
@@ -764,81 +752,6 @@
 
 @push('scripts')
 <script>
-const BASE_PRICE_XOF = {{ $produit->estPayant() ? (int)($produit->prix_promo ?? $produit->prix) : 0 }};
-
-const COUNTRIES = [
-    { code:'CI', name:"Côte d'Ivoire", flag:'🇨🇮', symbol:'F CFA', rate:1 },
-    { code:'SN', name:'Sénégal',        flag:'🇸🇳', symbol:'F CFA', rate:1 },
-    { code:'ML', name:'Mali',           flag:'🇲🇱', symbol:'F CFA', rate:1 },
-    { code:'BF', name:'Burkina Faso',   flag:'🇧🇫', symbol:'F CFA', rate:1 },
-    { code:'TG', name:'Togo',           flag:'🇹🇬', symbol:'F CFA', rate:1 },
-    { code:'BJ', name:'Bénin',          flag:'🇧🇯', symbol:'F CFA', rate:1 },
-    { code:'NE', name:'Niger',          flag:'🇳🇪', symbol:'F CFA', rate:1 },
-    { code:'CM', name:'Cameroun',       flag:'🇨🇲', symbol:'F CFA', rate:1 },
-    { code:'GN', name:'Guinée',         flag:'🇬🇳', symbol:'GNF',   rate:14 },
-    { code:'GH', name:'Ghana',          flag:'🇬🇭', symbol:'GH₵',   rate:0.018 },
-    { code:'NG', name:'Nigeria',        flag:'🇳🇬', symbol:'₦',     rate:2.5 },
-    { code:'FR', name:'France',         flag:'🇫🇷', symbol:'€',     rate:0.00152 },
-    { code:'US', name:'États-Unis',     flag:'🇺🇸', symbol:'$',     rate:0.00167 },
-    { code:'XX', name:'Autre pays',     flag:'🌍',  symbol:'F CFA', rate:1 },
-];
-
-let selectedCountry = COUNTRIES[0];
-
-function buildDropdown() {
-    const dd = document.getElementById('countryDropdown');
-    dd.innerHTML = '';
-    COUNTRIES.forEach(c => {
-        const div = document.createElement('div');
-        div.className = 'country-option' + (c.code === selectedCountry.code ? ' active' : '');
-        div.innerHTML = `<span>${c.flag}</span><span>${c.name}</span><span class="currency">${c.symbol}</span>`;
-        div.onclick = () => selectCountry(c);
-        dd.appendChild(div);
-    });
-}
-
-function selectCountry(c) {
-    selectedCountry = c;
-    document.getElementById('selectedFlag').textContent = c.flag;
-    document.getElementById('selectedCountryName').textContent = c.name;
-    document.getElementById('selectedCurrencyLabel').textContent = '(' + c.symbol + ')';
-    if (BASE_PRICE_XOF > 0) {
-        const val = BASE_PRICE_XOF * c.rate;
-        const formatted = c.rate <= 0.01 ? val.toFixed(2).replace('.', ',') : Math.round(val).toLocaleString('fr-FR');
-        const el = document.getElementById('displayedPrice');
-        const elC = document.getElementById('displayedCurrency');
-        if (el)  el.textContent  = formatted;
-        if (elC) elC.textContent = c.symbol;
-    }
-    buildDropdown();
-    closeDropdown();
-}
-
-function toggleCountryDropdown() {
-    const dd = document.getElementById('countryDropdown');
-    const btn = document.getElementById('countrySelectorBtn');
-    if (dd.classList.contains('open')) { closeDropdown(); }
-    else { dd.classList.add('open'); btn.classList.add('open'); buildDropdown(); }
-}
-function closeDropdown() {
-    document.getElementById('countryDropdown')?.classList.remove('open');
-    document.getElementById('countrySelectorBtn')?.classList.remove('open');
-}
-document.addEventListener('click', e => {
-    if (!e.target.closest('#countrySelector')) closeDropdown();
-});
-
-// Auto-détection pays
-(function detectCountry() {
-    fetch('https://ipapi.co/json/')
-        .then(r => r.json())
-        .then(data => {
-            const found = COUNTRIES.find(c => c.code === (data.country_code || 'XX')) || COUNTRIES.find(c => c.code === 'XX');
-            selectCountry(found);
-        })
-        .catch(() => selectCountry(COUNTRIES[0]));
-})();
-
 // Countdown
 (function() {
     const key = 'nafalo_cd_{{ $produit->id }}';

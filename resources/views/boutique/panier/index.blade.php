@@ -66,12 +66,12 @@
     transition: background 0.2s;
 }
 .panier-item:last-child { border-bottom: none; }
-.panier-item:hover { background: rgba(255,255,255,0.02); }
+.panier-item:hover { background: rgba(0,0,0,0.02); }
 
 .panier-img {
     width: 60px; height: 60px;
     border-radius: 12px;
-    background: rgba(255,255,255,0.06);
+    background: rgba(0,0,0,0.04);
     display: flex; align-items: center; justify-content: center;
     overflow: hidden; flex-shrink: 0;
 }
@@ -121,7 +121,7 @@
 .btn-continue {
     display: inline-flex; align-items: center; gap: 7px;
     padding: 0.65rem 1.1rem;
-    background: rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.03);
     border: 1px solid var(--border);
     border-radius: 10px;
     font-size: 0.82rem; font-weight: 600;
@@ -132,7 +132,7 @@
     font-family: inherit;
     cursor: pointer;
 }
-.btn-continue:hover { color: var(--text-1); border-color: rgba(255,255,255,0.2); background: rgba(255,255,255,0.08); }
+.btn-continue:hover { color: var(--text-1); border-color: rgba(0,0,0,0.15); background: rgba(0,0,0,0.06); }
 
 /* Summary sidebar */
 .summary-card {
@@ -174,7 +174,7 @@
 .promo-wrap { display: flex; gap: 0.6rem; margin: 1rem 0; }
 .promo-input {
     flex: 1;
-    background: rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.03);
     border: 1.5px solid var(--border);
     border-radius: 10px;
     padding: 0.65rem 0.875rem;
@@ -224,7 +224,7 @@
 .btn-checkout::after {
     content: '';
     position: absolute; inset: 0;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 60%);
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
     pointer-events: none;
 }
 .btn-checkout:hover {
@@ -333,7 +333,7 @@
                         <div class="panier-item-name" title="{{ $produit->nom }}">{{ $produit->nom }}</div>
                         <div class="panier-item-desc">{{ Str::limit(strip_tags($produit->description), 55) }}</div>
                     </div>
-                    <div class="panier-item-price">{{ number_format($produit->prix, 0, ',', ' ') }} FCFA</div>
+                    <div class="panier-item-price" data-xof="{{ (int)$produit->prix }}">{{ number_format($produit->prix, 0, ',', ' ') }} FCFA</div>
                     <form action="{{ route('boutique.panier.supprimer', $produit) }}" method="POST">
                         @csrf
                         @method('DELETE')
@@ -362,7 +362,7 @@
 
                     <div class="summary-row">
                         <span class="summary-row-label">Sous-total</span>
-                        <span class="summary-row-val">{{ number_format($total, 0, ',', ' ') }} FCFA</span>
+                        <span class="summary-row-val" data-xof="{{ (int)$total }}">{{ number_format($total, 0, ',', ' ') }} FCFA</span>
                     </div>
 
                     @if(session('code_promo_' . $boutique->id))
@@ -373,18 +373,18 @@
                         @endphp
                         <div class="summary-row">
                             <span class="summary-row-label">Réduction</span>
-                            <span class="summary-row-discount">− {{ number_format($reduction, 0, ',', ' ') }} FCFA</span>
+                            <span class="summary-row-discount">− <span data-xof="{{ (int)$reduction }}">{{ number_format($reduction, 0, ',', ' ') }} FCFA</span></span>
                         </div>
                         <div class="summary-divider"></div>
                         <div class="summary-total">
                             <span class="summary-total-label">Total</span>
-                            <span class="summary-total-val">{{ number_format($totalApresReduction, 0, ',', ' ') }} FCFA</span>
+                            <span class="summary-total-val" data-xof="{{ (int)$totalApresReduction }}">{{ number_format($totalApresReduction, 0, ',', ' ') }} FCFA</span>
                         </div>
                     @else
                         <div class="summary-divider"></div>
                         <div class="summary-total">
                             <span class="summary-total-label">Total</span>
-                            <span class="summary-total-val">{{ number_format($total, 0, ',', ' ') }} FCFA</span>
+                            <span class="summary-total-val" data-xof="{{ (int)$total }}">{{ number_format($total, 0, ',', ' ') }} FCFA</span>
                         </div>
                     @endif
 

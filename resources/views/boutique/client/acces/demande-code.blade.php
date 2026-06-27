@@ -49,7 +49,7 @@
 }
 .auth-input {
     width: 100%;
-    background: rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.03);
     border: 1.5px solid var(--border);
     border-radius: 12px;
     padding: 0.8rem 1rem;
@@ -67,7 +67,7 @@
     border-color: rgba(239,68,68,0.6);
 }
 .auth-error {
-    font-size: 0.78rem; color: #fca5a5;
+    font-size: 0.78rem; color: #dc2626;
     margin-top: 0.35rem; display: block;
 }
 
@@ -104,7 +104,7 @@
 
 /* How it works */
 .how-card {
-    background: rgba(255,255,255,0.02);
+    background: rgba(0,0,0,0.02);
     border: 1px solid var(--border);
     border-radius: 16px;
     padding: 1.25rem 1.5rem;

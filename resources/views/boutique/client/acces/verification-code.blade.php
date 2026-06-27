@@ -59,7 +59,7 @@
 }
 .otp-input {
     width: 100%;
-    background: rgba(255,255,255,0.04);
+    background: rgba(0,0,0,0.03);
     border: 1.5px solid var(--border);
     border-radius: 14px;
     padding: 1rem 1rem;
@@ -82,7 +82,7 @@
     border-color: rgba(239,68,68,0.6);
 }
 .auth-error {
-    font-size: 0.78rem; color: #fca5a5;
+    font-size: 0.78rem; color: #dc2626;
     margin-top: 0.45rem; display: block;
     text-align: center;
 }
@@ -132,7 +132,7 @@
     font-family: inherit; padding: 0; text-decoration: none;
     transition: color 0.2s;
 }
-.link-action:hover { color: #a78bfa; text-decoration: underline; }
+.link-action:hover { color: #7c3aed; text-decoration: underline; }
 
 /* Alert messages */
 .auth-alert-success {
@@ -140,7 +140,7 @@
     border: 1px solid rgba(34,197,94,0.25);
     border-radius: 10px;
     padding: 0.75rem 1rem;
-    font-size: 0.83rem; color: #86efac;
+    font-size: 0.83rem; color: #16a34a;
     margin-bottom: 1.25rem;
     display: flex; align-items: center; gap: 8px;
 }
@@ -149,7 +149,7 @@
     border: 1px solid rgba(239,68,68,0.25);
     border-radius: 10px;
     padding: 0.75rem 1rem;
-    font-size: 0.83rem; color: #fca5a5;
+    font-size: 0.83rem; color: #dc2626;
     margin-bottom: 1.25rem;
     display: flex; align-items: center; gap: 8px;
 }

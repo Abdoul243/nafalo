@@ -19,9 +19,14 @@ return Application::configure(basePath: dirname(__DIR__))
             'superadmin' => App\Http\Middleware\SuperAdminMiddleware::class,
         ]);
 
+        // En-têtes de sécurité sur toutes les réponses web
+        $middleware->web(append: [
+            App\Http\Middleware\SecurityHeaders::class,
+        ]);
+
         // Exclure les webhooks de paiement de la vérification CSRF
         $middleware->validateCsrfTokens(except: [
-            'boutique/checkout/webhook/geniuspay',
+            'boutique/checkout/webhook/moneroo',
             'paiement/webhook',
             'paiement/webhook/*',
             'api/*',

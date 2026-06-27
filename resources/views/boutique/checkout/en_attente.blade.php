@@ -62,14 +62,14 @@
     display: flex; align-items: center; gap: 1rem;
     padding: 0.875rem 1rem;
     border-radius: 12px;
-    background: rgba(255,255,255,0.03);
+    background: rgba(0,0,0,0.02);
     border: 1px solid var(--border);
 }
 .wave-step-num {
     width: 32px; height: 32px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     font-size: 0.8rem; font-weight: 800; flex-shrink: 0;
-    background: rgba(124,58,237,0.15); color: #a78bfa;
+    background: rgba(124,58,237,0.12); color: #7c3aed;
 }
 .wave-step.done .wave-step-num { background: rgba(34,197,94,0.15); color: #22c55e; }
 .wave-step-label { font-size: 0.875rem; font-weight: 600; color: var(--text-1); }
@@ -83,12 +83,12 @@
     font-size: 0.78rem; font-weight: 600;
     margin-bottom: 1.5rem;
 }
-.status-badge.pending { background: rgba(234,179,8,0.12); color: #fde68a; border: 1px solid rgba(234,179,8,0.2); }
-.status-badge.success { background: rgba(34,197,94,0.12); color: #86efac; border: 1px solid rgba(34,197,94,0.2); }
-.status-badge.failed  { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid rgba(239,68,68,0.2); }
+.status-badge.pending { background: rgba(234,179,8,0.12); color: #92400e; border: 1px solid rgba(234,179,8,0.25); }
+.status-badge.success { background: rgba(34,197,94,0.12); color: #166534; border: 1px solid rgba(34,197,94,0.25); }
+.status-badge.failed  { background: rgba(239,68,68,0.12); color: #991b1b; border: 1px solid rgba(239,68,68,0.25); }
 .pulse-dot {
     width: 7px; height: 7px; border-radius: 50%;
-    background: #fde68a;
+    background: #d97706;
     animation: pulse-dot 1.2s ease infinite;
 }
 @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.7); } }
@@ -106,12 +106,12 @@
 .btn-back {
     display: inline-flex; align-items: center; gap: 8px;
     padding: 0.75rem 1.5rem;
-    background: rgba(255,255,255,0.06);
+    background: rgba(0,0,0,0.04);
     color: var(--text-2); font-weight: 600; font-size: 0.9rem;
     border-radius: 12px; border: 1px solid var(--border);
     text-decoration: none; transition: all 0.2s; margin-left: 0.75rem;
 }
-.btn-back:hover { background: rgba(255,255,255,0.1); color: var(--text-1); }
+.btn-back:hover { background: rgba(0,0,0,0.05); color: var(--text-1); }
 </style>
 @endpush
 
@@ -200,7 +200,7 @@
 @push('scripts')
 <script>
 (function () {
-    var paymentId  = {{ json_encode($monerooPaymentId ?? '') }};
+    var paymentId  = {{ json_encode($paymentReference ?? '') }};
     var pollUrl    = '{{ route("boutique.checkout.verifier-statut") }}';
     var successUrl = '{{ route("boutique.checkout.succes") }}';
     var checks     = 1;
