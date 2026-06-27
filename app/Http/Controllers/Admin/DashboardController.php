@@ -106,6 +106,23 @@ class DashboardController extends Controller
         // Produits publiés vs total
         $produitPublies = Produit::where('boutique_id', $boutiqueId)->where('est_publie', true)->count();
 
+        // ── Abonnements (revenus récurrents) ──
+        $abosActifs = \App\Models\Abonnement::where('boutique_id', $boutiqueId)
+            ->where('statut', 'actif')
+            ->where('date_fin', '>=', now())
+            ->get();
+        $abonnesActifs = $abosActifs->count();
+        // MRR : tout ramené au mois (annuel ÷ 12)
+        $mrr = (float) $abosActifs->reduce(
+            fn($c, $a) => $c + ($a->intervalle === 'annuel' ? ($a->prix / 12) : $a->prix),
+            0
+        );
+        $abonnementsExpirant = $abosActifs->filter(
+            fn($a) => $a->date_fin && $a->date_fin->lte(now()->addDays(7))
+        )->count();
+        $aDesAbonnements = $abonnesActifs > 0
+            || Produit::where('boutique_id', $boutiqueId)->where('acces_type', 'abonnement')->exists();
+
         return view('admin.dashboard', compact(
             'totalVentes',
             'chiffreAffaires',
@@ -123,7 +140,11 @@ class DashboardController extends Controller
             'nouveauxClients',
             'produitPublies',
             'totalLeads',
-            'produitsLeadMagnet'
+            'produitsLeadMagnet',
+            'abonnesActifs',
+            'mrr',
+            'abonnementsExpirant',
+            'aDesAbonnements'
         ));
     }
     

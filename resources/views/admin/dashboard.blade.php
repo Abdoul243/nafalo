@@ -157,6 +157,33 @@
     </div>
 </div>
 
+{{-- ── Abonnements / revenus récurrents ── --}}
+@if($aDesAbonnements)
+<div style="display:grid;grid-template-columns:repeat(1,1fr);gap:12px;margin-bottom:20px;" class="db-abo-grid">
+    <div class="db-kpi-card" style="border-color:#c7d2fe;background:linear-gradient(135deg,#eef2ff,#fff);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <div style="width:38px;height:38px;border-radius:10px;background:#4f46e5;display:flex;align-items:center;justify-content:center;">
+                <i class="fas fa-sync-alt" style="color:#fff;"></i>
+            </div>
+            <div class="db-kpi-label" style="margin:0;">Revenus récurrents (MRR)</div>
+        </div>
+        <div class="db-kpi-value">{{ number_format($mrr, 0, ',', ' ') }}<span style="font-size:.9rem;color:#9ca3af;font-weight:600;margin-left:5px;">FCFA/mois</span></div>
+        <div class="db-kpi-sub">Estimation mensuelle des abonnements actifs</div>
+    </div>
+    <div class="db-kpi-card">
+        <div class="db-kpi-label">Abonnés actifs</div>
+        <div class="db-kpi-value" data-counter="{{ $abonnesActifs }}">{{ number_format($abonnesActifs) }}</div>
+        <div class="db-kpi-sub">Abonnements en cours</div>
+    </div>
+    <div class="db-kpi-card">
+        <div class="db-kpi-label">Échéances à venir</div>
+        <div class="db-kpi-value" style="{{ $abonnementsExpirant > 0 ? 'color:#d97706;' : '' }}" data-counter="{{ $abonnementsExpirant }}">{{ number_format($abonnementsExpirant) }}</div>
+        <div class="db-kpi-sub">Expirent sous 7 jours</div>
+    </div>
+</div>
+<style>@media(min-width:768px){ .db-abo-grid { grid-template-columns:1.4fr 1fr 1fr !important; } }</style>
+@endif
+
 {{-- Best sellers + résumé --}}
 <div class="db-grid2">
     <div class="db-card">
