@@ -691,8 +691,9 @@
     </a>
 
     @php
-        $boutiques = \App\Models\Boutique::orderBy('nom')->get();
-        $boutiqueCourante = \App\Models\Boutique::find(session('boutique_id'));
+        // Uniquement les boutiques de l'utilisateur connecté (cloisonnement).
+        $boutiques = auth()->user()->boutiques()->orderBy('nom')->get();
+        $boutiqueCourante = $boutiques->firstWhere('id', session('boutique_id'));
         function isActiveRoute($route) { return request()->routeIs($route) ? 'active' : ''; }
     @endphp
 

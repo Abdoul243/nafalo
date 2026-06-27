@@ -129,15 +129,15 @@ class TelechargementController extends Controller
             if ($b) return $b;
         }
 
-        // Local : domaine en session
-        if (session('boutique_domaine')) {
-            $b = Boutique::where('domaine_personnalise', session('boutique_domaine'))->where('est_active', true)->first();
+        // Local : boutique_id de l'admin (prioritaire — signal le plus fiable)
+        if (session('boutique_id')) {
+            $b = Boutique::where('id', session('boutique_id'))->where('est_active', true)->first();
             if ($b) return $b;
         }
 
-        // Local : boutique_id de l'admin
-        if (session('boutique_id')) {
-            $b = Boutique::where('id', session('boutique_id'))->where('est_active', true)->first();
+        // Local : domaine en session
+        if (session('boutique_domaine')) {
+            $b = Boutique::where('domaine_personnalise', session('boutique_domaine'))->where('est_active', true)->first();
             if ($b) return $b;
         }
 

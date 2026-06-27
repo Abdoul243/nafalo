@@ -22,6 +22,8 @@ class Transaction extends Model
         'commission',
         'montant_marchand',
         'statut',
+        'relance_envoyee',
+        'relance_envoyee_at',
         'mode_paiement',
         'moyen_paiement',
         'reference_paiement',
@@ -37,6 +39,8 @@ class Transaction extends Model
         'montant_marchand' => 'decimal:2',
         'details'          => 'array',
         'details_paiement' => 'array',
+        'relance_envoyee'  => 'boolean',
+        'relance_envoyee_at' => 'datetime',
         'created_at'       => 'datetime',
         'updated_at'       => 'datetime'
     ];

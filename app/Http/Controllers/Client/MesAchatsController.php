@@ -89,12 +89,12 @@ class MesAchatsController extends Controller
             if ($b) return $b;
         }
 
-        if (session('boutique_domaine')) {
-            $b = Boutique::where('domaine_personnalise', session('boutique_domaine'))->where('est_active', true)->first();
-            if ($b) return $b;
-        }
         if (session('boutique_id')) {
             $b = Boutique::where('id', session('boutique_id'))->where('est_active', true)->first();
+            if ($b) return $b;
+        }
+        if (session('boutique_domaine')) {
+            $b = Boutique::where('domaine_personnalise', session('boutique_domaine'))->where('est_active', true)->first();
             if ($b) return $b;
         }
 

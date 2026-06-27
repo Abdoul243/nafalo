@@ -32,16 +32,18 @@ abstract class BoutiqueBaseController extends Controller
         }
 
         // 3. Environnement local — plusieurs fallbacks
-        // a) domaine mémorisé en session
-        $domaineSess = session('boutique_domaine');
-        if ($domaineSess) {
-            $b = Boutique::where('domaine_personnalise', $domaineSess)->where('est_active', true)->first();
+        // a) boutique_id sélectionné par l'admin = signal le plus fiable.
+        //    Prioritaire sur le domaine mémorisé, pour que "Visiter la boutique"
+        //    affiche bien la boutique active (et pas celle d'un autre).
+        if (session('boutique_id')) {
+            $b = Boutique::where('id', session('boutique_id'))->where('est_active', true)->first();
             if ($b) return $b;
         }
 
-        // b) boutique_id de l'admin connecté
-        if (session('boutique_id')) {
-            $b = Boutique::where('id', session('boutique_id'))->where('est_active', true)->first();
+        // b) domaine mémorisé en session
+        $domaineSess = session('boutique_domaine');
+        if ($domaineSess) {
+            $b = Boutique::where('domaine_personnalise', $domaineSess)->where('est_active', true)->first();
             if ($b) return $b;
         }
 

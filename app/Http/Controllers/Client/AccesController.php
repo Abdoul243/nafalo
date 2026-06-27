@@ -127,13 +127,13 @@ class AccesController extends Controller
             if ($b) return $b;
         }
 
-        // 3. Local : session domaine → boutique_id → première active
-        if (session('boutique_domaine')) {
-            $b = Boutique::where('domaine_personnalise', session('boutique_domaine'))->where('est_active', true)->first();
-            if ($b) return $b;
-        }
+        // 3. Local : boutique_id (sélection admin, fiable) → domaine → première active
         if (session('boutique_id')) {
             $b = Boutique::where('id', session('boutique_id'))->where('est_active', true)->first();
+            if ($b) return $b;
+        }
+        if (session('boutique_domaine')) {
+            $b = Boutique::where('domaine_personnalise', session('boutique_domaine'))->where('est_active', true)->first();
             if ($b) return $b;
         }
 

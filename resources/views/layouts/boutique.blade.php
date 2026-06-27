@@ -984,7 +984,6 @@ document.addEventListener('keydown', function(e) {
         return a.name.localeCompare(b.name, 'fr');
     });
 
-    const STORAGE_KEY = 'nafalo_country';
     const findCountry = code => COUNTRIES.find(c => c.code === code);
     let current = findCountry('CI') || COUNTRIES[0];
 
@@ -1035,8 +1034,10 @@ document.addEventListener('keydown', function(e) {
     }
 
     function selectCountry(code) {
+        // Choix manuel = temporaire (vue en cours). On ne le mémorise PAS :
+        // à la prochaine actualisation, la détection automatique reprend la main
+        // (pays réel ou pays du VPN, en temps réel).
         const c = findCountry(code) || COUNTRIES[0];
-        localStorage.setItem(STORAGE_KEY, c.code);
         applyCurrency(c);
         closeCountryModal();
     }
@@ -1073,24 +1074,36 @@ document.addEventListener('keydown', function(e) {
             .catch(() => done());
     }
 
+    // Détection automatique du pays par géolocalisation IP (avec repli).
+    function detectCountry(cb) {
+        fetch('https://ipapi.co/json/')
+            .then(r => r.ok ? r.json() : Promise.reject())
+            .then(d => {
+                const c = findCountry(d && d.country_code);
+                if (c) return cb(c);
+                return Promise.reject();
+            })
+            .catch(() => {
+                // Repli sur un second service si le premier échoue/est saturé
+                fetch('https://ipwho.is/')
+                    .then(r => r.json())
+                    .then(d => cb(findCountry(d && d.country_code) || null))
+                    .catch(() => cb(null));
+            });
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
         const search = document.getElementById('countrySearchInput');
         if (search) search.addEventListener('input', e => renderList(e.target.value));
 
         loadRates(function () {
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved && findCountry(saved)) {
-                applyCurrency(findCountry(saved));
-            } else {
-                applyCurrency(current);
-                fetch('https://ipapi.co/json/')
-                    .then(r => r.json())
-                    .then(d => {
-                        const c = findCountry(d.country_code);
-                        if (c) applyCurrency(c);
-                    })
-                    .catch(() => {});
-            }
+            // Détection automatique du pays à CHAQUE chargement (temps réel).
+            // Affiche toujours le pays réel du visiteur — ou celui de son VPN.
+            // Aucun choix n'est mémorisé : une actualisation reprend le pays détecté.
+            applyCurrency(current); // affichage par défaut le temps de détecter
+            detectCountry(function (c) {
+                if (c) applyCurrency(c);
+            });
         });
     });
 })();

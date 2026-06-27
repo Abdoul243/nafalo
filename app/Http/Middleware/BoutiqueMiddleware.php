@@ -33,17 +33,19 @@ class BoutiqueMiddleware
 
         // 3. Hôte local : on cherche via la session
         if (!$boutique) {
-            // a) domaine mémorisé (via /{domaine}/boutique)
-            $domaineSess = session('boutique_domaine');
-            if ($domaineSess) {
-                $boutique = Boutique::where('domaine_personnalise', $domaineSess)
+            // a) boutique_id sélectionné par l'admin = signal le plus fiable.
+            //    Prioritaire sur le domaine mémorisé, pour éviter de tomber sur
+            //    une autre boutique lors de l'aperçu "Visiter la boutique".
+            if (session('boutique_id')) {
+                $boutique = Boutique::where('id', session('boutique_id'))
                     ->where('est_active', true)
                     ->first();
             }
 
-            // b) boutique_id de l'admin connecté
-            if (!$boutique && session('boutique_id')) {
-                $boutique = Boutique::where('id', session('boutique_id'))
+            // b) domaine mémorisé (via /{domaine}/boutique)
+            $domaineSess = session('boutique_domaine');
+            if (!$boutique && $domaineSess) {
+                $boutique = Boutique::where('domaine_personnalise', $domaineSess)
                     ->where('est_active', true)
                     ->first();
             }

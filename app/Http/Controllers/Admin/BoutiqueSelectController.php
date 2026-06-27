@@ -30,7 +30,9 @@ class BoutiqueSelectController extends Controller
         $boutique = auth()->user()->boutiques()->findOrFail($id);
 
         session(['boutique_id' => $boutique->id]);
-        session(['boutique_domaine' => $boutique->domaine_personnalise ?? 'digital-store.test']);
+        // Stocker le vrai domaine (ou null) — surtout PAS un domaine de repli :
+        // un repli ('digital-store.test') pointerait vers la boutique d'un autre.
+        session(['boutique_domaine' => $boutique->domaine_personnalise]);
 
         return redirect()->route('admin.dashboard')
             ->with('success', 'Boutique "' . $boutique->nom . '" sélectionnée.');
