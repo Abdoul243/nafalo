@@ -42,12 +42,23 @@ class ProduitController extends Controller
         return view('admin.produits.index', compact('produits', 'categories'));
     }
     
-    public function create()
+    /** Écran de choix du type de produit (style Chariow). */
+    public function choisirType()
+    {
+        return view('admin.produits.choisir-type');
+    }
+
+    public function create(Request $request)
     {
         $boutiqueId = session('boutique_id');
         $categories = Categorie::where('boutique_id', $boutiqueId)->get();
-        
-        return view('admin.produits.create', compact('categories'));
+
+        // Format pré-sélectionné depuis l'écran de choix (fichier | formation)
+        $formatInitial = in_array($request->query('format'), ['fichier', 'formation'])
+            ? $request->query('format')
+            : 'fichier';
+
+        return view('admin.produits.create', compact('categories', 'formatInitial'));
     }
     
     public function store(ProduitRequest $request)

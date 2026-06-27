@@ -40,6 +40,10 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
         ->name('boutiques.toggle-activation');
 
     // Gestion des produits
+    // Écran de choix du type de produit (style Chariow)
+    Route::get('produits/choisir', [Admin\ProduitController::class, 'choisirType'])
+        ->name('produits.choisir');
+
     // Téléchargement du fichier produit par le marchand (protégé)
     Route::get('produits/{produit}/fichier', [Admin\ProduitController::class, 'telechargerFichier'])
         ->name('produits.fichier');

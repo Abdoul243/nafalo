@@ -198,7 +198,7 @@
             <button type="submit" class="p-filter-btn" title="Filtrer">
                 <i class="fas fa-sliders-h"></i>
             </button>
-            <a href="{{ route('admin.produits.create') }}" class="btn-add">
+            <a href="{{ route('admin.produits.choisir') }}" class="btn-add">
                 <i class="fas fa-plus"></i> Ajouter un produit
             </a>
         </div>
@@ -255,7 +255,7 @@
         <div class="p-empty">
             <i class="fas fa-box-open"></i>
             <p>Aucun produit trouvé.</p>
-            <a href="{{ route('admin.produits.create') }}" class="btn-add" style="display:inline-flex;">
+            <a href="{{ route('admin.produits.choisir') }}" class="btn-add" style="display:inline-flex;">
                 <i class="fas fa-plus"></i> Ajouter un produit
             </a>
         </div>
@@ -329,7 +329,7 @@
                     <div class="p-empty">
                         <i class="fas fa-box-open"></i>
                         <p>Aucun produit trouvé.</p>
-                        <a href="{{ route('admin.produits.create') }}" class="btn-add" style="display:inline-flex;">
+                        <a href="{{ route('admin.produits.choisir') }}" class="btn-add" style="display:inline-flex;">
                             <i class="fas fa-plus"></i> Ajouter un produit
                         </a>
                     </div>

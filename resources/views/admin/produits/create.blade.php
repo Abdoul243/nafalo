@@ -707,12 +707,13 @@
 
             {{-- Format de livraison --}}
             <div class="mb-3" style="display:flex;gap:0.75rem;flex-wrap:wrap;">
-                <label style="flex:1;min-width:200px;border:1.5px solid #4f46e5;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-fichier">
-                    <input type="radio" name="format" value="fichier" checked onchange="toggleFormat()">
+                @php $fmtInit = $formatInitial ?? 'fichier'; @endphp
+                <label style="flex:1;min-width:200px;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-fichier">
+                    <input type="radio" name="format" value="fichier" onchange="toggleFormat()" {{ $fmtInit === 'fichier' ? 'checked' : '' }}>
                     <span><strong>Fichier téléchargeable</strong><br><span class="text-muted small">PDF, ZIP, vidéo…</span></span>
                 </label>
-                <label style="flex:1;min-width:200px;border:1.5px solid #e5e7eb;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-formation">
-                    <input type="radio" name="format" value="formation" onchange="toggleFormat()">
+                <label style="flex:1;min-width:200px;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-formation">
+                    <input type="radio" name="format" value="formation" onchange="toggleFormat()" {{ $fmtInit === 'formation' ? 'checked' : '' }}>
                     <span><strong>Formation (espace membre)</strong><br><span class="text-muted small">Modules, leçons, vidéos</span></span>
                 </label>
             </div>
@@ -750,6 +751,8 @@
                     document.getElementById('opt-fichier').style.borderColor = estFormation ? '#e5e7eb' : '#4f46e5';
                     document.getElementById('opt-formation').style.borderColor = estFormation ? '#4f46e5' : '#e5e7eb';
                 }
+                // Synchronise l'UI avec le type pré-sélectionné (depuis l'écran de choix)
+                document.addEventListener('DOMContentLoaded', toggleFormat);
             </script>
 
             {{-- Wizard Nav --}}

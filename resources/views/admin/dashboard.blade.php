@@ -89,7 +89,7 @@
             <a href="?periode=12mois"  class="period-tab {{ $periode === '12mois'  ? 'active' : '' }}">12M</a>
             <a href="?periode=tout"    class="period-tab {{ $periode === 'tout'    ? 'active' : '' }}">Tout</a>
         </div>
-        <a href="{{ route('admin.produits.create') }}" class="cw-btn-primary">
+        <a href="{{ route('admin.produits.choisir') }}" class="cw-btn-primary">
             <i class="fas fa-plus"></i> Nouveau produit
         </a>
     </div>
