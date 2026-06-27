@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Cr√©er un code promo')
+@section('title', 'CrÈer un code promo')
 
 @section('content')
 
@@ -29,7 +29,7 @@
     .card-section-title {
         display: flex; align-items: center; gap: 10px;
         font-size: 0.85rem; font-weight: 700; text-transform: uppercase;
-        letter-spacing: 0.06em; color: #2563eb;
+        letter-spacing: 0.06em; color: #0f172a;
         margin-bottom: 1.25rem; padding-bottom: 0.75rem;
         border-bottom: 1px solid #f1f5f9;
     }
@@ -64,7 +64,7 @@
         font-size: 0.9rem; font-family: inherit; outline: none;
         transition: all 0.2s; background: #fafafa; color: #0f172a;
     }
-    .promo-input:focus { border-color: #2563eb; background: white; box-shadow: 0 0 0 3px rgba(37,99,235,0.08); }
+    .promo-input:focus { border-color: #0f172a; background: white; box-shadow: 0 0 0 3px rgba(15,23,42,0.06); }
     .promo-input.is-invalid { border-color: #ef4444; background: #fff5f5; }
     .promo-input-no-icon { padding-left: 1rem; }
     .promo-input-with-suffix { padding-right: 70px; }
@@ -83,15 +83,15 @@
     }
     .type-label:hover { border-color: #93c5fd; background: #eff6ff; }
     .type-option:checked + .type-label {
-        border-color: #2563eb; background: #eff6ff;
-        box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+        border-color: #0f172a; background: #eff6ff;
+        box-shadow: 0 0 0 3px rgba(15,23,42,0.06);
     }
     .type-icon {
         width: 36px; height: 36px; border-radius: 10px;
         background: #dbeafe; display: flex; align-items: center;
         justify-content: center; font-size: 1rem; flex-shrink: 0;
     }
-    .type-option:checked + .type-label .type-icon { background: #2563eb; color: white; }
+    .type-option:checked + .type-label .type-icon { background: #0f172a; color: white; }
     .type-text strong { display: block; font-size: 0.88rem; font-weight: 700; color: #0f172a; }
     .type-text span   { font-size: 0.75rem; color: #64748b; }
 
@@ -105,13 +105,13 @@
         font-size: 0.82rem; font-weight: 500; color: #374151;
         transition: all 0.2s; background: #fafafa;
     }
-    .produit-label:hover { border-color: #93c5fd; background: #eff6ff; color: #1d4ed8; }
+    .produit-label:hover { border-color: #93c5fd; background: #eff6ff; color: #1e293b; }
     .produit-check:checked + .produit-label {
-        border-color: #2563eb; background: #eff6ff;
-        color: #1d4ed8; font-weight: 600;
+        border-color: #0f172a; background: #eff6ff;
+        color: #1e293b; font-weight: 600;
     }
     .produit-check:checked + .produit-label::before {
-        content: '‚úì'; color: #2563eb; font-weight: 800; margin-right: 2px;
+        content: '?'; color: #0f172a; font-weight: 800; margin-right: 2px;
     }
 
     /* Toggle */
@@ -134,17 +134,17 @@
         background: white; left: 3px; top: 3px; transition: 0.3s;
         box-shadow: 0 1px 4px rgba(0,0,0,0.2);
     }
-    .toggle-switch input:checked + .toggle-slider { background: #2563eb; }
+    .toggle-switch input:checked + .toggle-slider { background: #0f172a; }
     .toggle-switch input:checked + .toggle-slider::before { transform: translateX(20px); }
 
     /* Bouton submit */
     .btn-promo-submit {
         display: inline-flex; align-items: center; gap: 8px;
-        padding: 0.85rem 2rem; background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        padding: 0.85rem 2rem; background: linear-gradient(135deg, #0f172a, #1e293b);
         color: white; border: none; border-radius: 12px;
         font-weight: 700; font-size: 0.95rem; cursor: pointer;
         transition: all 0.2s; font-family: inherit;
-        box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+        box-shadow: 0 4px 14px rgba(15,23,42,0.15);
     }
     .btn-promo-submit:hover { transform: translateY(-1px); box-shadow: 0 8px 20px rgba(37,99,235,0.4); }
 
@@ -172,8 +172,8 @@
 {{-- Header --}}
 <div class="d-flex justify-content-between align-items-center promo-header">
     <div>
-        <h1>üè∑Ô∏è Cr√©er un code promo</h1>
-        <p>Configurez une r√©duction pour vos clients</p>
+        <h1>??? CrÈer un code promo</h1>
+        <p>Configurez une rÈduction pour vos clients</p>
     </div>
     <a href="{{ route('admin.codes-promo.index') }}" class="btn-back">
         <i class="fas fa-arrow-left"></i> Retour
@@ -189,10 +189,10 @@
 <form action="{{ route('admin.codes-promo.store') }}" method="POST">
 @csrf
 
-{{-- Aper√ßu du code --}}
+{{-- AperÁu du code --}}
 <div class="promo-preview">
     <div>
-        <div class="preview-label">Aper√ßu du code</div>
+        <div class="preview-label">AperÁu du code</div>
         <div class="preview-code" id="preview-code">MONCODE</div>
     </div>
     <div class="preview-badge" id="preview-badge">Actif</div>
@@ -220,15 +220,15 @@
             @error('code')<div class="invalid-msg">{{ $message }}</div>@enderror
         </div>
 
-        {{-- Type de r√©duction --}}
+        {{-- Type de rÈduction --}}
         <div class="field-group">
-            <label>Type de r√©duction <span class="required">*</span></label>
+            <label>Type de rÈduction <span class="required">*</span></label>
             <div class="type-selector">
                 <div>
                     <input type="radio" class="type-option" name="type_reduction" value="fixe"
                            id="type_fixe" {{ old('type_reduction','fixe') == 'fixe' ? 'checked' : '' }}>
                     <label class="type-label" for="type_fixe">
-                        <div class="type-icon">üí∞</div>
+                        <div class="type-icon">??</div>
                         <div class="type-text">
                             <strong>Montant fixe</strong>
                             <span>En FCFA</span>
@@ -239,7 +239,7 @@
                     <input type="radio" class="type-option" name="type_reduction" value="pourcentage"
                            id="type_pct" {{ old('type_reduction') == 'pourcentage' ? 'checked' : '' }}>
                     <label class="type-label" for="type_pct">
-                        <div class="type-icon">üìä</div>
+                        <div class="type-icon">??</div>
                         <div class="type-text">
                             <strong>Pourcentage</strong>
                             <span>En %</span>
@@ -251,7 +251,7 @@
 
         {{-- Valeur --}}
         <div class="field-group">
-            <label for="valeur_reduction">Valeur de la r√©duction <span class="required">*</span></label>
+            <label for="valeur_reduction">Valeur de la rÈduction <span class="required">*</span></label>
             <div class="input-wrap">
                 <i class="input-icon fas fa-percent"></i>
                 <input type="number" step="1" min="0"
@@ -270,7 +270,7 @@
             <div class="toggle-wrap">
                 <div class="toggle-info">
                     <strong>Code actif</strong>
-                    <span>Le code peut √™tre utilis√© par vos clients</span>
+                    <span>Le code peut Ítre utilisÈ par vos clients</span>
                 </div>
                 <label class="toggle-switch">
                     <input type="checkbox" id="est_actif" name="est_actif" value="1" checked
@@ -281,22 +281,22 @@
         </div>
     </div>
 
-    {{-- Colonne droite : validit√© --}}
+    {{-- Colonne droite : validitÈ --}}
     <div class="promo-card">
         <div class="card-section-title">
-            <i class="fas fa-calendar-alt"></i> Validit√© & Limites
+            <i class="fas fa-calendar-alt"></i> ValiditÈ & Limites
         </div>
 
-        {{-- Date d√©but --}}
+        {{-- Date dÈbut --}}
         <div class="field-group">
-            <label for="date_debut">Date de d√©but</label>
+            <label for="date_debut">Date de dÈbut</label>
             <div class="input-wrap">
                 <i class="input-icon fas fa-calendar"></i>
                 <input type="date" class="promo-input @error('date_debut') is-invalid @enderror"
                        id="date_debut" name="date_debut" value="{{ old('date_debut') }}">
             </div>
             @error('date_debut')<div class="invalid-msg">{{ $message }}</div>@enderror
-            <div class="help-text">Laissez vide pour une activation imm√©diate</div>
+            <div class="help-text">Laissez vide pour une activation immÈdiate</div>
         </div>
 
         {{-- Date fin --}}
@@ -308,7 +308,7 @@
                        id="date_fin" name="date_fin" value="{{ old('date_fin') }}">
             </div>
             @error('date_fin')<div class="invalid-msg">{{ $message }}</div>@enderror
-            <div class="help-text">Laissez vide pour une dur√©e illimit√©e</div>
+            <div class="help-text">Laissez vide pour une durÈe illimitÈe</div>
         </div>
 
         {{-- Utilisation max --}}
@@ -323,15 +323,15 @@
                        placeholder="Ex : 100">
             </div>
             @error('utilisation_max')<div class="invalid-msg">{{ $message }}</div>@enderror
-            <div class="help-text">Laissez vide pour un usage illimit√©</div>
+            <div class="help-text">Laissez vide pour un usage illimitÈ</div>
         </div>
     </div>
 
-    {{-- Produits concern√©s --}}
+    {{-- Produits concernÈs --}}
     @if($produits->count() > 0)
     <div class="promo-card promo-card-full">
         <div class="card-section-title">
-            <i class="fas fa-boxes"></i> Produits concern√©s
+            <i class="fas fa-boxes"></i> Produits concernÈs
         </div>
         <div class="produits-grid">
             @foreach($produits as $produit)
@@ -348,7 +348,7 @@
             @endforeach
         </div>
         <div class="help-text" style="margin-top:0.75rem;">
-            <i class="fas fa-info-circle"></i> Ne s√©lectionnez rien pour appliquer le code √† <strong>tous les produits</strong>
+            <i class="fas fa-info-circle"></i> Ne sÈlectionnez rien pour appliquer le code ‡ <strong>tous les produits</strong>
         </div>
     </div>
     @endif
@@ -358,7 +358,7 @@
 {{-- Actions --}}
 <div style="display:flex; align-items:center; gap:1rem; flex-wrap:wrap;">
     <button type="submit" class="btn-promo-submit">
-        <i class="fas fa-check"></i> Cr√©er le code promo
+        <i class="fas fa-check"></i> CrÈer le code promo
     </button>
     <a href="{{ route('admin.codes-promo.index') }}" class="btn-back">Annuler</a>
 </div>
@@ -366,7 +366,7 @@
 </form>
 
 <script>
-// Mise √† jour du suffixe selon le type
+// Mise ‡ jour du suffixe selon le type
 document.querySelectorAll('input[name="type_reduction"]').forEach(radio => {
     radio.addEventListener('change', function() {
         document.getElementById('suffix-label').textContent = this.value === 'pourcentage' ? '%' : 'FCFA';
@@ -375,3 +375,4 @@ document.querySelectorAll('input[name="type_reduction"]').forEach(radio => {
 </script>
 
 @endsection
+

@@ -7,8 +7,8 @@
         <i class="fas fa-arrow-left me-1"></i> Retour
     </a>
     <div>
-        <h1 class="h4 fw-bold mb-0">ü§ù Inviter un partenaire</h1>
-        <p class="text-muted small mb-0">Associez-vous √† un autre marchand pour co-publier un produit</p>
+        <h1 class="h4 fw-bold mb-0">?? Inviter un partenaire</h1>
+        <p class="text-muted small mb-0">Associez-vous ‡ un autre marchand pour co-publier un produit</p>
     </div>
 </div>
 
@@ -20,11 +20,11 @@
                 {{-- Explication --}}
                 <div class="alert alert-info border-0 rounded-3 mb-4" style="background:#eff6ff;">
                     <i class="fas fa-info-circle me-2 text-primary"></i>
-                    <strong>Comment √ßa fonctionne ?</strong><br>
+                    <strong>Comment Áa fonctionne ?</strong><br>
                     <small>
-                        Invitez un autre marchand Nafalo. D√®s qu'il accepte, chaque vente de ce produit
-                        sera automatiquement r√©partie selon les pourcentages d√©finis.
-                        Chacun re√ßoit un email de notification avec son gain net.
+                        Invitez un autre marchand Nafalo. DËs qu'il accepte, chaque vente de ce produit
+                        sera automatiquement rÈpartie selon les pourcentages dÈfinis.
+                        Chacun reÁoit un email de notification avec son gain net.
                     </small>
                 </div>
 
@@ -33,13 +33,13 @@
 
                     {{-- Produit --}}
                     <div class="mb-4">
-                        <label class="form-label fw-semibold">Produit concern√© *</label>
+                        <label class="form-label fw-semibold">Produit concernÈ *</label>
                         <select name="produit_id" class="form-select rounded-3 @error('produit_id') is-invalid @enderror" required>
-                            <option value="">‚Äî Choisir un produit ‚Äî</option>
+                            <option value="">ó Choisir un produit ó</option>
                             @foreach($produits as $p)
                                 <option value="{{ $p->id }}"
                                     {{ (old('produit_id', $produitSelectionne?->id) == $p->id) ? 'selected' : '' }}>
-                                    {{ $p->nom }} ‚Äî {{ number_format($p->prix, 0, ',', ' ') }} F CFA
+                                    {{ $p->nom }} ó {{ number_format($p->prix, 0, ',', ' ') }} F CFA
                                 </option>
                             @endforeach
                         </select>
@@ -54,20 +54,20 @@
                         <input type="email" name="email_copublicateur"
                                class="form-control rounded-3 @error('email_copublicateur') is-invalid @enderror"
                                placeholder="partenaire@example.com"
-                               value="{{ old('email_copublicateur') }}" required>
-                        <div class="form-text">Le partenaire doit d√©j√† avoir un compte Nafalo.</div>
+                               value="{{ old('email_copublicateur', $emailPartenaire ?? '') }}" required>
+                        <div class="form-text">Le partenaire doit dÈj‡ avoir un compte Nafalo.</div>
                         @error('email_copublicateur')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
 
-                    {{-- R√©partition des gains --}}
+                    {{-- RÈpartition des gains --}}
                     <div class="mb-4">
-                        <label class="form-label fw-semibold">R√©partition des gains *</label>
+                        <label class="form-label fw-semibold">RÈpartition des gains *</label>
                         <div class="alert alert-light border rounded-3 mb-3">
                             <small class="text-muted">
-                                Les pourcentages sont calcul√©s sur le montant net (apr√®s d√©duction de la commission Nafalo de 5 %).
-                                Le total doit √™tre exactement 100 %.
+                                Les pourcentages sont calculÈs sur le montant net (aprËs dÈduction de la commission Nafalo de 5 %).
+                                Le total doit Ítre exactement 100 %.
                             </small>
                         </div>
 
@@ -125,7 +125,7 @@
                         <a href="{{ route('admin.copublications.index') }}" class="btn btn-outline-secondary rounded-pill px-4">
                             Annuler
                         </a>
-                        <button type="submit" class="btn btn-primary rounded-pill px-5">
+                        <button type="submit" class="btn rounded-pill px-5">
                             <i class="fas fa-paper-plane me-1"></i> Envoyer l'invitation
                         </button>
                     </div>
@@ -158,3 +158,4 @@ function updateBarre(proprio, copub) {
 }
 </script>
 @endpush
+

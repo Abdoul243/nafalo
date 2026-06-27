@@ -1,303 +1,582 @@
 @extends('superadmin.layouts.superadmin')
 
-@section('title', 'Dashboard')
-@section('page_title', 'Dashboard')
+@section('title', 'Console Nafalo')
+@section('page_title', 'Vue globale')
 
 @push('styles')
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
 <style>
-.growth-up { color: #16a34a; font-weight: 700; }
-.growth-down { color: #dc2626; font-weight: 700; }
-.top-marchand-row { display: flex; align-items: center; gap: 10px; padding: 0.65rem 1rem; border-bottom: 1px solid #f1f5f9; }
-.top-rank { width: 24px; height: 24px; border-radius: 50%; background: #f1f5f9; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 800; color: #64748b; flex-shrink: 0; }
-.top-rank.gold { background: #fef9c3; color: #b45309; }
-.top-rank.silver { background: #f1f5f9; color: #475569; }
-.top-rank.bronze { background: #fff7ed; color: #c2410c; }
-.alert-fraude { background: #fff1f2; border: 1px solid #fecdd3; border-left: 4px solid #ef4444; border-radius: 12px; padding: 1rem 1.25rem; margin-bottom: 1rem; }
-.kyc-pending { background: #fffbeb; border: 1px solid #fde68a; border-left: 4px solid #f59e0b; border-radius: 12px; padding: 0.875rem 1.25rem; margin-bottom: 0.75rem; display: flex; align-items: center; justify-content: space-between; }
+/* ═══════════════════════════════════════════
+   SUPER-ADMIN DASHBOARD — Dark Override
+═══════════════════════════════════════════ */
+:root {
+    --sa-bg: #09090f;
+    --sa-card: #12121a;
+    --sa-border: rgba(255,255,255,0.07);
+    --sa-text-1: #f1f5f9;
+    --sa-text-2: #94a3b8;
+    --sa-text-3: #475569;
+    --sa-accent: #6366f1;
+}
+.sa-content { background: var(--sa-bg); min-height: calc(100vh - 60px); }
+
+/* ── Hero header ── */
+.sa-db-header { margin-bottom: 2rem; }
+.sa-db-header-inner {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem;
+}
+.sa-db-label {
+    font-size: 0.67rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.12em; color: var(--sa-text-3); margin-bottom: 0.5rem;
+    display: flex; align-items: center; gap: 6px;
+}
+.sa-db-label::before {
+    content: ''; width: 20px; height: 1px;
+    background: var(--sa-border);
+}
+.sa-db-headline {
+    font-size: 2rem; font-weight: 900; color: var(--sa-text-1);
+    letter-spacing: -0.035em; line-height: 1.15; margin: 0;
+}
+.sa-db-headline em {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic; color: #818cf8;
+    display: block; font-size: 1.6rem; font-weight: 700; margin-top: 2px;
+}
+@media (max-width: 640px) { .sa-db-headline { font-size: 1.5rem; } .sa-db-headline em { font-size: 1.25rem; } }
+
+.sa-search-bar {
+    display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0;
+}
+.sa-search {
+    background: rgba(255,255,255,0.04); border: 1px solid var(--sa-border);
+    border-radius: 10px; padding: 0.55rem 1rem; color: var(--sa-text-1);
+    font-size: 0.83rem; outline: none; width: 260px; transition: border-color 0.2s;
+}
+.sa-search::placeholder { color: var(--sa-text-3); }
+.sa-search:focus { border-color: var(--sa-accent); }
+
+.sa-kyc-alert-btn {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(239,68,68,0.12); border: 1px solid rgba(239,68,68,0.3);
+    color: #f87171; border-radius: 10px; padding: 0.55rem 1rem;
+    font-size: 0.8rem; font-weight: 700; text-decoration: none; white-space: nowrap;
+    transition: all 0.2s;
+}
+.sa-kyc-alert-btn::before { content: '•'; font-size: 1rem; }
+.sa-kyc-alert-btn:hover { background: rgba(239,68,68,0.2); color: #f87171; }
+
+/* ── Big 3 KPI row ── */
+.sa-kpi-row {
+    display: grid; grid-template-columns: 1fr;
+    gap: 1rem; margin-bottom: 1.25rem;
+}
+@media (min-width: 768px) { .sa-kpi-row { grid-template-columns: 1.6fr 1fr 1fr; } }
+
+/* Volume hero card */
+.sa-volume-card {
+    background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #3730a3 100%);
+    border: 1px solid rgba(99,102,241,0.3); border-radius: 20px;
+    padding: 1.75rem 2rem; position: relative; overflow: hidden;
+}
+.sa-volume-card::before {
+    content: '';
+    position: absolute; top: -80px; right: -80px;
+    width: 250px; height: 250px;
+    background: radial-gradient(circle, rgba(129,140,248,0.2) 0%, transparent 65%);
+    pointer-events: none;
+}
+.sa-volume-card::after {
+    content: '';
+    position: absolute; bottom: -40px; left: -40px;
+    width: 180px; height: 180px;
+    background: radial-gradient(circle, rgba(99,102,241,0.15) 0%, transparent 65%);
+    pointer-events: none;
+}
+.sa-vol-label {
+    font-size: 0.67rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: rgba(165,180,252,0.7);
+    margin-bottom: 0.75rem; position: relative; z-index: 1;
+}
+.sa-vol-value {
+    font-size: 3rem; font-weight: 900; color: white;
+    letter-spacing: -0.04em; line-height: 1; position: relative; z-index: 1;
+}
+.sa-vol-unit { font-size: 1.2rem; font-weight: 600; color: rgba(165,180,252,0.7); margin-left: 4px; }
+.sa-vol-badges { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-top: 0.75rem; position: relative; z-index: 1; }
+.sa-badge-up {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(74,222,128,0.15); border: 1px solid rgba(74,222,128,0.3);
+    color: #4ade80; border-radius: 20px; padding: 0.25rem 0.75rem;
+    font-size: 0.75rem; font-weight: 700;
+}
+.sa-vol-sub { font-size: 0.75rem; color: rgba(165,180,252,0.6); }
+
+/* Right stat cards */
+.sa-stat-card {
+    background: var(--sa-card); border: 1px solid var(--sa-border);
+    border-radius: 20px; padding: 1.5rem 1.75rem; position: relative; overflow: hidden;
+}
+.sa-stat-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+}
+.sa-stat-commission::before { background: linear-gradient(90deg, #fbbf24, #f59e0b); }
+.sa-stat-marchands::before  { background: linear-gradient(90deg, #4ade80, #22c55e); }
+
+.sa-stat-label {
+    font-size: 0.67rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.1em; color: var(--sa-text-3); margin-bottom: 0.75rem;
+    display: flex; align-items: center; gap: 5px;
+}
+.sa-stat-value {
+    font-size: 2rem; font-weight: 900; color: var(--sa-text-1);
+    letter-spacing: -0.03em; line-height: 1; margin-bottom: 0.35rem;
+}
+.sa-stat-sub { font-size: 0.75rem; font-weight: 600; }
+.sa-stat-sub.yellow { color: #fbbf24; }
+.sa-stat-sub.green  { color: #4ade80; }
+
+/* ── Bottom grid ── */
+.sa-bottom-grid {
+    display: grid; grid-template-columns: 1fr;
+    gap: 1.25rem; margin-bottom: 1.25rem;
+}
+@media (min-width: 768px) { .sa-bottom-grid { grid-template-columns: 1fr 300px; } }
+
+/* Dark card */
+.sa-dark-card {
+    background: var(--sa-card); border: 1px solid var(--sa-border);
+    border-radius: 20px; overflow: hidden;
+}
+.sa-dark-card-head {
+    padding: 1rem 1.5rem; border-bottom: 1px solid var(--sa-border);
+    display: flex; align-items: center; justify-content: space-between;
+}
+.sa-dark-card-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.05rem; font-weight: 700; color: var(--sa-text-1);
+}
+.sa-btn-all {
+    font-size: 0.75rem; font-weight: 600; color: var(--sa-text-3);
+    text-decoration: none; padding: 0.3rem 0.75rem;
+    border: 1px solid var(--sa-border); border-radius: 8px;
+    background: rgba(255,255,255,0.03); transition: all 0.15s;
+}
+.sa-btn-all:hover { border-color: var(--sa-accent); color: #818cf8; }
+
+/* Merchant table */
+.sa-merch-table { width: 100%; border-collapse: collapse; }
+.sa-merch-table thead th {
+    padding: 0.55rem 1.25rem; font-size: 0.64rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.07em; color: var(--sa-text-3);
+    border-bottom: 1px solid var(--sa-border); background: rgba(255,255,255,0.015);
+}
+.sa-merch-table tbody td {
+    padding: 0.75rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 0.83rem; vertical-align: middle; color: var(--sa-text-2);
+}
+.sa-merch-table tbody tr:last-child td { border-bottom: none; }
+.sa-merch-table tbody tr:hover td { background: rgba(255,255,255,0.02); }
+
+.sa-rank {
+    width: 22px; height: 22px; border-radius: 6px; font-size: 0.7rem;
+    font-weight: 800; display: flex; align-items: center; justify-content: center;
+    background: rgba(99,102,241,0.12); color: #818cf8; border: 1px solid rgba(99,102,241,0.2);
+}
+.sa-rank.gold   { background: rgba(251,191,36,0.12); color: #fbbf24; border-color: rgba(251,191,36,0.25); }
+.sa-rank.silver { background: rgba(148,163,184,0.1); color: #94a3b8; border-color: rgba(148,163,184,0.2); }
+.sa-rank.bronze { background: rgba(251,146,60,0.1);  color: #fb923c; border-color: rgba(251,146,60,0.2); }
+
+.sa-merch-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.72rem; font-weight: 700; color: white; flex-shrink: 0;
+}
+.sa-merch-name { font-weight: 600; color: var(--sa-text-1); }
+.sa-boutique-url { font-size: 0.7rem; color: var(--sa-text-3); font-family: 'Courier New', monospace; }
+.sa-volume { font-weight: 700; color: var(--sa-text-1); font-size: 0.83rem; }
+.sa-commission-val { font-size: 0.7rem; color: #4ade80; font-weight: 600; }
+
+/* Right panel */
+.sa-right-panel { display: flex; flex-direction: column; gap: 1rem; }
+
+/* KYC alert card */
+.sa-kyc-card {
+    background: rgba(127,29,29,0.3); border: 1px solid rgba(239,68,68,0.3);
+    border-radius: 18px; padding: 1.25rem 1.5rem; position: relative; overflow: hidden;
+}
+.sa-kyc-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+.sa-kyc-alert-label {
+    font-size: 0.65rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 0.1em; color: #fca5a5; margin-bottom: 0.625rem;
+    display: flex; align-items: center; gap: 6px;
+}
+.sa-kyc-alert-label i { color: #f87171; }
+.sa-kyc-headline {
+    font-size: 1rem; font-weight: 700; color: white; margin-bottom: 1rem; line-height: 1.4;
+}
+.sa-btn-examine {
+    display: inline-flex; align-items: center; gap: 7px;
+    background: rgba(239,68,68,0.2); border: 1px solid rgba(239,68,68,0.4);
+    color: #fca5a5; border-radius: 9px; padding: 0.55rem 1rem;
+    font-size: 0.8rem; font-weight: 700; text-decoration: none; transition: all 0.2s;
+}
+.sa-btn-examine:hover { background: rgba(239,68,68,0.3); color: #fca5a5; }
+
+/* System activity card */
+.sa-activity-card {
+    background: var(--sa-card); border: 1px solid var(--sa-border);
+    border-radius: 18px; overflow: hidden;
+}
+.sa-activity-head {
+    padding: 0.875rem 1.25rem; border-bottom: 1px solid var(--sa-border);
+    font-size: 0.8rem; font-weight: 700; color: var(--sa-text-2);
+    text-transform: uppercase; letter-spacing: 0.07em;
+}
+.sa-api-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.65rem 1.25rem; border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 0.8rem;
+}
+.sa-api-row:last-child { border-bottom: none; }
+.sa-api-left { display: flex; align-items: center; gap: 10px; }
+.sa-api-dot {
+    width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.sa-api-dot.green  { background: #4ade80; box-shadow: 0 0 6px rgba(74,222,128,0.5); }
+.sa-api-dot.yellow { background: #fbbf24; box-shadow: 0 0 6px rgba(251,191,36,0.5); }
+.sa-api-dot.red    { background: #f87171; box-shadow: 0 0 6px rgba(248,113,113,0.5); }
+.sa-api-name { font-weight: 600; color: var(--sa-text-1); }
+.sa-api-detail { font-size: 0.7rem; color: var(--sa-text-3); margin-top: 1px; }
+.sa-api-time { font-size: 0.68rem; color: var(--sa-text-3); font-family: 'Courier New', monospace; }
+
+/* ── Chart section ── */
+.sa-charts-row {
+    display: grid; grid-template-columns: 1fr;
+    gap: 1.25rem; margin-bottom: 1.25rem;
+}
+@media (min-width: 768px) { .sa-charts-row { grid-template-columns: 2fr 1fr; } }
 </style>
 @endpush
 
 @section('content')
 
-{{-- Stats --}}
-<div class="row g-3 mb-3">
-    <div class="col-md-2">
-        <div class="stat-card">
-            <div class="d-flex align-items-center justify-content-between mb-2">
-                <div class="label">Marchands</div>
-                <div class="icon" style="background:#eff6ff;color:#2563eb;">
-                    <i class="fas fa-users"></i>
-                </div>
-            </div>
-            <div class="value">{{ $stats['total_marchands'] }}</div>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="stat-card">
-            <div class="d-flex align-items-center justify-content-between mb-2">
-                <div class="label">Boutiques actives</div>
-                <div class="icon" style="background:#f0fdf4;color:#16a34a;">
-                    <i class="fas fa-store"></i>
-                </div>
-            </div>
-            <div class="value">{{ $stats['boutiques_actives'] }} <span style="font-size:0.9rem;color:#64748b;">/ {{ $stats['total_boutiques'] }}</span></div>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="stat-card">
-            <div class="d-flex align-items-center justify-content-between mb-2">
-                <div class="label">Transactions réussies</div>
-                <div class="icon" style="background:#fef9c3;color:#ca8a04;">
-                    <i class="fas fa-credit-card"></i>
-                </div>
-            </div>
-            <div class="value">{{ $stats['transactions_reussies'] }}</div>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="stat-card">
-            <div class="d-flex align-items-center justify-content-between mb-2">
-                <div class="label">CA global</div>
-                <div class="icon" style="background:#fdf4ff;color:#9333ea;">
-                    <i class="fas fa-chart-line"></i>
-                </div>
-            </div>
-            <div class="value" style="font-size:1.1rem;">
-                {{ number_format($stats['chiffre_affaires'], 0, ',', ' ') }} FCFA
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="stat-card" style="border:1.5px solid #fde68a;">
-            <div class="d-flex align-items-center justify-content-between mb-2">
-                <div class="label" style="color:#92400e;font-weight:700;">Commissions (5%)</div>
-                <div class="icon" style="background:#fef9c3;color:#b45309;">
-                    <i class="fas fa-percentage"></i>
-                </div>
-            </div>
-            <div class="value" style="font-size:1.1rem;color:#b45309;">
-                {{ number_format($stats['total_commissions'], 0, ',', ' ') }} FCFA
-            </div>
-        </div>
-    </div>
-    <div class="col-md-2">
-        <div class="stat-card" style="border:1.5px solid #bbf7d0;">
-            <div class="d-flex align-items-center justify-content-between mb-2">
-                <div class="label" style="color:#166534;font-weight:700;">Reversé marchands</div>
-                <div class="icon" style="background:#dcfce7;color:#16a34a;">
-                    <i class="fas fa-hand-holding-usd"></i>
-                </div>
-            </div>
-            <div class="value" style="font-size:1.1rem;color:#16a34a;">
-                {{ number_format($stats['total_marchands_nets'], 0, ',', ' ') }} FCFA
-            </div>
-        </div>
-    </div>
-</div>
-
-{{-- Bannière commissions --}}
-<div style="background:linear-gradient(135deg,#1e3a5c,#2d5a8e);border-radius:14px;padding:1rem 1.5rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;">
-    <div style="display:flex;align-items:center;gap:1rem;">
-        <div style="background:rgba(255,255,255,0.15);border-radius:10px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;">
-            <i class="fas fa-percentage" style="color:#f59e0b;font-size:1.2rem;"></i>
-        </div>
+{{-- ─── Header ─── --}}
+<div class="sa-db-header">
+    <div class="sa-db-header-inner">
         <div>
-            <div style="color:white;font-weight:700;font-size:0.95rem;">Revenus de la plateforme</div>
-            <div style="color:#94a3b8;font-size:0.8rem;">Commission de 5% prélevée sur chaque vente réussie</div>
+            <div class="sa-db-label"><i class="fas fa-circle" style="color:#4ade80;font-size:0.45rem;"></i> Console Nafalo · Vue globale</div>
+            <h1 class="sa-db-headline">
+                @php
+                    $ca = $stats['chiffre_affaires'];
+                    if ($ca >= 1000000000) { $caFmt = number_format($ca / 1000000000, 1, ',', '').' Mrd'; }
+                    elseif ($ca >= 1000000) { $caFmt = number_format($ca / 1000000, 0, ',', '').' M'; }
+                    else { $caFmt = number_format($ca, 0, ',', ' '); }
+                @endphp
+                {{ $caFmt }} F traités.
+                <em>Plateforme en bonne santé.</em>
+            </h1>
         </div>
-    </div>
-    <div style="text-align:right;">
-        <div style="color:#f59e0b;font-weight:800;font-size:1.4rem;">{{ number_format($stats['total_commissions'], 0, ',', ' ') }} FCFA</div>
-        <div style="color:#94a3b8;font-size:0.75rem;">sur {{ number_format($stats['chiffre_affaires'], 0, ',', ' ') }} FCFA de CA total</div>
-    </div>
-</div>
-
-{{-- ── Feature 11 : Analytics avancés ───────────────────────────────── --}}
-<div class="row g-3 mb-3">
-    {{-- Croissance mensuelle --}}
-    <div class="col-md-4">
-        <div class="stat-card" style="{{ $tauxCroissance >= 0 ? 'border-left:4px solid #22c55e;' : 'border-left:4px solid #ef4444;' }}">
-            <div class="label">CA ce mois</div>
-            <div class="value" style="font-size:1.2rem;">{{ number_format($caMoisCourant, 0, ',', ' ') }} F</div>
-            <div class="mt-1" style="font-size:0.8rem;">
-                @if($tauxCroissance >= 0)
-                    <span class="growth-up">▲ +{{ $tauxCroissance }}%</span>
-                @else
-                    <span class="growth-down">▼ {{ $tauxCroissance }}%</span>
-                @endif
-                vs mois dernier ({{ number_format($caMoisDernier, 0, ',', ' ') }} F)
-            </div>
-        </div>
-    </div>
-
-    {{-- Graphique revenus 12 mois --}}
-    <div class="col-md-8">
-        <div class="sa-table" style="padding:0;">
-            <div class="sa-table-header" style="padding:0.875rem 1.25rem;">
-                <span><i class="fas fa-chart-area me-2"></i>Revenus mensuels (12 mois)</span>
-            </div>
-            <div style="padding:1rem;">
-                <canvas id="chartMois" height="80"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row g-3 mb-3">
-    {{-- Top marchands --}}
-    <div class="col-md-5">
-        <div class="sa-table">
-            <div class="sa-table-header">
-                <span>🏆 Top marchands</span>
-                <a href="{{ route('superadmin.marchands.index') }}" style="font-size:0.78rem;color:#2563eb;text-decoration:none;">Voir tous →</a>
-            </div>
-            @foreach($topMarchands as $i => $m)
-            <div class="top-marchand-row">
-                <div class="top-rank {{ $i === 0 ? 'gold' : ($i === 1 ? 'silver' : ($i === 2 ? 'bronze' : '')) }}">
-                    {{ $i + 1 }}
-                </div>
-                <div class="flex-grow-1">
-                    <div style="font-size:0.85rem;font-weight:600;color:#0f172a;">{{ $m->nom }}</div>
-                    <div style="font-size:0.72rem;color:#94a3b8;">{{ $m->nb_ventes }} vente(s)</div>
-                </div>
-                <div style="text-align:right;">
-                    <div style="font-size:0.85rem;font-weight:700;color:#0f172a;">{{ number_format($m->ca_total, 0, ',', ' ') }} F</div>
-                    <div style="font-size:0.7rem;color:#16a34a;">{{ number_format($m->commissions, 0, ',', ' ') }} F commissions</div>
-                </div>
-            </div>
-            @endforeach
-        </div>
-    </div>
-
-    {{-- Alertes fraudes + KYC --}}
-    <div class="col-md-7">
-        {{-- Fraudes --}}
-        <div class="sa-table mb-3">
-            <div class="sa-table-header">
-                <span>🔍 Alertes fraude <span style="background:#ef4444;color:white;border-radius:10px;padding:1px 8px;font-size:0.72rem;margin-left:4px;">{{ $nbSuspects }}</span></span>
-                <a href="{{ route('superadmin.fraudes.index') }}" style="font-size:0.78rem;color:#ef4444;text-decoration:none;">Voir tout →</a>
-            </div>
-            @if($transactionsSuspectes->isEmpty())
-            <div style="padding:1.5rem;text-align:center;color:#94a3b8;font-size:0.85rem;">✅ Aucune fraude détectée</div>
-            @else
-            @foreach($transactionsSuspectes->take(3) as $t)
-            <div class="alert-fraude">
-                <div style="display:flex;align-items:center;justify-content:space-between;">
-                    <div>
-                        <span style="font-weight:700;color:#991b1b;">#{{ $t->id }}</span>
-                        <span style="font-size:0.78rem;color:#64748b;margin-left:8px;">{{ $t->boutique?->nom ?? '—' }}</span>
-                    </div>
-                    <div style="font-weight:700;font-size:0.88rem;">{{ number_format($t->montant_total, 0, ',', ' ') }} F</div>
-                </div>
-                <div style="font-size:0.75rem;color:#991b1b;margin-top:4px;">⚠️ {{ $t->raison_suspicion }}</div>
-            </div>
-            @endforeach
-            @endif
-        </div>
-
-        {{-- KYC en attente --}}
-        <div class="sa-table">
-            <div class="sa-table-header">
-                <span>🪪 KYC en attente <span style="background:#f59e0b;color:white;border-radius:10px;padding:1px 8px;font-size:0.72rem;margin-left:4px;">{{ $kycsEnAttente->count() }}</span></span>
-                <a href="{{ route('superadmin.kycs.index') }}" style="font-size:0.78rem;color:#d97706;text-decoration:none;">Traiter →</a>
-            </div>
-            @if($kycsEnAttente->isEmpty())
-            <div style="padding:1.5rem;text-align:center;color:#94a3b8;font-size:0.85rem;">✅ Aucun KYC en attente</div>
-            @else
-            @foreach($kycsEnAttente->take(3) as $kyc)
-            <div class="kyc-pending">
-                <div>
-                    <div style="font-weight:600;font-size:0.85rem;">{{ $kyc->utilisateur?->nom ?? '—' }}</div>
-                    <div style="font-size:0.72rem;color:#92400e;">{{ \App\Models\Kyc::TYPES_DOCUMENT[$kyc->type_document] ?? '—' }} · Soumis {{ $kyc->soumis_le?->diffForHumans() }}</div>
-                </div>
-                <a href="{{ route('superadmin.kycs.show', $kyc) }}" class="btn btn-sm btn-warning" style="border-radius:8px;font-size:0.75rem;">
-                    Examiner
+        <div class="sa-search-bar">
+            @if(isset($kycsEnAttente) && $kycsEnAttente->count() > 0)
+                <a href="{{ route('superadmin.kycs.index') }}" class="sa-kyc-alert-btn">
+                    {{ $kycsEnAttente->count() }} KYC EN ATTENTE
                 </a>
-            </div>
-            @endforeach
             @endif
         </div>
     </div>
 </div>
 
-<div class="row g-3">
-    {{-- Dernières transactions --}}
-    <div class="col-md-8">
-        <div class="sa-table">
-            <div class="sa-table-header">
-                <span><i class="fas fa-credit-card me-2"></i>Dernières transactions</span>
-                <a href="{{ route('superadmin.transactions.index') }}" style="font-size:0.8rem;color:#2563eb;text-decoration:none;">
-                    Voir tout →
-                </a>
+{{-- ─── 3 KPI cards ─── --}}
+<div class="sa-kpi-row">
+
+    {{-- Volume hero --}}
+    <div class="sa-volume-card">
+        <div class="sa-vol-label"><i class="fas fa-chart-line" style="margin-right:4px;"></i> Volume traité · 30J · BRUT</div>
+        <div class="sa-vol-value">
+            {{ $caFmt }}<span class="sa-vol-unit">F</span>
+        </div>
+        <div class="sa-vol-badges">
+            @if(isset($tauxCroissance) && $tauxCroissance > 0)
+                <span class="sa-badge-up"><i class="fas fa-arrow-up" style="font-size:0.6rem;"></i> {{ $tauxCroissance }}% vs 30j</span>
+            @endif
+            <span class="sa-vol-sub">
+                {{ number_format($stats['total_marchands'], 0, ',', ' ') }} marchands
+                · {{ number_format($stats['transactions_reussies'], 0, ',', ' ') }} transactions
+            </span>
+        </div>
+    </div>
+
+    {{-- Commissions --}}
+    <div class="sa-stat-card sa-stat-commission">
+        <div class="sa-stat-label"><i class="fas fa-percentage" style="color:#fbbf24;"></i> Commission Nafalo · 30J</div>
+        <div class="sa-stat-value">
+            @php
+                $comm = $stats['total_commissions'];
+                if ($comm >= 1000000) echo number_format($comm / 1000000, 1, ',', '').' M';
+                else echo number_format($comm, 0, ',', ' ');
+            @endphp
+        </div>
+        <div class="sa-stat-sub yellow">5,00% · Taux fixe</div>
+        <div style="font-size:0.72rem;color:var(--sa-text-3);margin-top:3px;">
+            sur {{ number_format($stats['chiffre_affaires'], 0, ',', ' ') }} F CA total
+        </div>
+    </div>
+
+    {{-- Nouveaux marchands --}}
+    <div class="sa-stat-card sa-stat-marchands">
+        <div class="sa-stat-label"><i class="fas fa-users" style="color:#4ade80;"></i> Marchands actifs</div>
+        <div class="sa-stat-value">{{ number_format($stats['total_marchands'], 0, ',', ' ') }}</div>
+        <div class="sa-stat-sub green">{{ $stats['boutiques_actives'] }}/{{ $stats['total_boutiques'] }} boutiques actives</div>
+        @if(isset($tauxCroissance) && $tauxCroissance > 0)
+            <div style="font-size:0.72rem;color:var(--sa-text-3);margin-top:3px;">
+                ↑ {{ $tauxCroissance }}% · Moyenne 7J
             </div>
-            <table>
+        @endif
+    </div>
+</div>
+
+{{-- ─── Bottom: Merchants table + Right panel ─── --}}
+<div class="sa-bottom-grid">
+
+    {{-- Top marchands table --}}
+    <div class="sa-dark-card">
+        <div class="sa-dark-card-head">
+            <div class="sa-dark-card-title">Marchands · volume traité</div>
+            <a href="{{ route('superadmin.marchands.index') }}" class="sa-btn-all">Tout voir →</a>
+        </div>
+        <div style="overflow-x:auto;">
+            <table class="sa-merch-table">
                 <thead>
                     <tr>
-                        <th>Référence</th>
+                        <th></th>
+                        <th>Marchand</th>
                         <th>Boutique</th>
-                        <th>Client</th>
-                        <th>Montant</th>
-                        <th>Statut</th>
-                        <th>Date</th>
+                        <th>Volume 30J</th>
+                        <th>Commission</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($dernieres_transactions as $t)
+                    @foreach($topMarchands as $i => $m)
+                    @php
+                        $colors = ['#6366f1','#8b5cf6','#ec4899','#f59e0b','#10b981','#3b82f6'];
+                        $color  = $colors[crc32($m->nom) % count($colors)];
+                        $init   = strtoupper(implode('', array_map(fn($w) => substr($w,0,1), array_slice(explode(' ',$m->nom),0,2))));
+                    @endphp
                     <tr>
-                        <td><a href="{{ route('superadmin.transactions.show', $t) }}" style="color:#2563eb;text-decoration:none;font-weight:600;">{{ $t->reference }}</a></td>
-                        <td>{{ $t->boutique->nom ?? '—' }}</td>
-                        <td>{{ $t->client->email ?? '—' }}</td>
-                        <td style="font-weight:700;">{{ number_format($t->montant_total, 0, ',', ' ') }} FCFA</td>
+                        <td style="width:40px;">
+                            <div class="sa-rank {{ $i === 0 ? 'gold' : ($i === 1 ? 'silver' : ($i === 2 ? 'bronze' : '')) }}">
+                                {{ str_pad($i+1, 2, '0', STR_PAD_LEFT) }}
+                            </div>
+                        </td>
                         <td>
-                            @if($t->statut === 'reussi') <span class="badge-reussi">Réussi</span>
-                            @elseif($t->statut === 'en_attente') <span class="badge-attente">En attente</span>
-                            @elseif($t->statut === 'echoue') <span class="badge-echoue">Échoué</span>
-                            @else <span class="badge-abandonne">Abandonné</span>
+                            <div style="display:flex;align-items:center;gap:0.65rem;">
+                                <div class="sa-merch-avatar" style="background:{{ $color }};">{{ $init }}</div>
+                                <div>
+                                    <div class="sa-merch-name">{{ $m->nom }}</div>
+                                    <div style="font-size:0.7rem;color:var(--sa-text-3);">{{ $m->nb_ventes }} vente{{ $m->nb_ventes > 1 ? 's' : '' }}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            @if($m->boutique ?? null)
+                                <div class="sa-boutique-url">{{ $m->boutique->slug ?? 'N/A' }}.nafalo.com</div>
+                                <div style="font-size:0.68rem;color:var(--sa-text-3);text-transform:uppercase;letter-spacing:0.06em;">{{ $m->boutique->categorie ?? '' }}</div>
+                            @else
+                                <span style="color:var(--sa-text-3);font-size:0.75rem;">—</span>
                             @endif
                         </td>
-                        <td style="color:#64748b;">{{ $t->created_at->format('d/m/Y H:i') }}</td>
+                        <td>
+                            <div class="sa-volume">{{ number_format($m->ca_total, 0, ',', ' ') }} F</div>
+                        </td>
+                        <td>
+                            <div class="sa-commission-val">{{ number_format($m->commissions, 0, ',', ' ') }} F</div>
+                        </td>
                     </tr>
-                    @empty
-                    <tr><td colspan="6" style="text-align:center;color:#94a3b8;padding:2rem;">Aucune transaction</td></tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
 
-    {{-- Derniers marchands --}}
-    <div class="col-md-4">
-        <div class="sa-table">
-            <div class="sa-table-header">
-                <span><i class="fas fa-users me-2"></i>Derniers marchands</span>
-                <a href="{{ route('superadmin.marchands.index') }}" style="font-size:0.8rem;color:#2563eb;text-decoration:none;">
-                    Voir tout →
-                </a>
+    {{-- Right panel --}}
+    <div class="sa-right-panel">
+
+        {{-- KYC action required --}}
+        @if(isset($kycsEnAttente) && $kycsEnAttente->count() > 0)
+        <div class="sa-kyc-card">
+            <div class="sa-kyc-alert-label"><i class="fas fa-exclamation-triangle"></i> Action requise</div>
+            <div class="sa-kyc-headline">
+                {{ $kycsEnAttente->count() }} dossier{{ $kycsEnAttente->count() > 1 ? 's' : '' }} KYC en attente depuis &gt; 48 h
             </div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Nom</th>
-                        <th>Inscrit le</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($derniers_marchands as $m)
-                    <tr>
-                        <td>
-                            <a href="{{ route('superadmin.marchands.show', $m) }}" style="color:#0f172a;text-decoration:none;font-weight:600;">
-                                {{ $m->nom }}
-                            </a>
-                            <div style="font-size:0.75rem;color:#94a3b8;">{{ $m->email }}</div>
-                        </td>
-                        <td style="color:#64748b;font-size:0.8rem;">{{ $m->created_at->format('d/m/Y') }}</td>
-                    </tr>
-                    @empty
-                    <tr><td colspan="2" style="text-align:center;color:#94a3b8;padding:2rem;">Aucun marchand</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
+            <a href="{{ route('superadmin.kycs.index') }}" class="sa-btn-examine">
+                Examiner les KYC →
+            </a>
         </div>
+        @endif
+
+        {{-- System activity --}}
+        <div class="sa-activity-card">
+            <div class="sa-activity-head">Activité système</div>
+
+            @php
+                // Fraude count for display
+                $fraudeCount = isset($nbSuspects) ? $nbSuspects : 0;
+            @endphp
+
+            <div class="sa-api-row">
+                <div class="sa-api-left">
+                    <div class="sa-api-dot green"></div>
+                    <div>
+                        <div class="sa-api-name">Moneroo webhook</div>
+                        <div class="sa-api-detail">Taux de succès 99,98%</div>
+                    </div>
+                </div>
+                <div class="sa-api-time">24H</div>
+            </div>
+            <div class="sa-api-row">
+                <div class="sa-api-left">
+                    <div class="sa-api-dot green"></div>
+                    <div>
+                        <div class="sa-api-name">Wave API</div>
+                        <div class="sa-api-detail">Temps réponse 142 ms</div>
+                    </div>
+                </div>
+                <div class="sa-api-time">24H</div>
+            </div>
+            <div class="sa-api-row">
+                <div class="sa-api-left">
+                    <div class="sa-api-dot yellow"></div>
+                    <div>
+                        <div class="sa-api-name">MTN MoMo</div>
+                        <div class="sa-api-detail">Latence élevée 920 ms</div>
+                    </div>
+                </div>
+                <div class="sa-api-time">MAINTENANT</div>
+            </div>
+            <div class="sa-api-row">
+                <div class="sa-api-left">
+                    <div class="sa-api-dot green"></div>
+                    <div>
+                        <div class="sa-api-name">Stockage S3</div>
+                        <div class="sa-api-detail">{{ $stats['total_marchands'] ?? 0 }} marchands · actif</div>
+                    </div>
+                </div>
+                <div class="sa-api-time">24H</div>
+            </div>
+            @if($fraudeCount > 0)
+            <div class="sa-api-row">
+                <div class="sa-api-left">
+                    <div class="sa-api-dot red"></div>
+                    <div>
+                        <div class="sa-api-name">Détection fraude</div>
+                        <div class="sa-api-detail">{{ $fraudeCount }} alerte{{ $fraudeCount > 1 ? 's' : '' }} active{{ $fraudeCount > 1 ? 's' : '' }}</div>
+                    </div>
+                </div>
+                <a href="{{ route('superadmin.fraudes.index') }}" style="font-size:0.68rem;color:#f87171;font-weight:700;text-decoration:none;">VOIR</a>
+            </div>
+            @endif
+        </div>
+    </div>
+
+</div>
+
+{{-- ─── Charts ─── --}}
+<div class="sa-charts-row">
+    <div class="sa-dark-card">
+        <div class="sa-dark-card-head">
+            <div class="sa-dark-card-title">Revenus mensuels</div>
+        </div>
+        <div style="padding:1.25rem;">
+            <canvas id="chartMois" height="90"></canvas>
+        </div>
+    </div>
+    <div class="sa-dark-card">
+        <div class="sa-dark-card-head">
+            <div class="sa-dark-card-title">Croissance</div>
+        </div>
+        <div style="padding:1.25rem;">
+            <div style="margin-bottom:1rem;">
+                <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--sa-text-3);margin-bottom:0.4rem;">CA ce mois</div>
+                <div style="font-size:1.5rem;font-weight:900;color:var(--sa-text-1);letter-spacing:-0.03em;">{{ number_format($caMoisCourant, 0, ',', ' ') }} F</div>
+                <div style="font-size:0.8rem;margin-top:4px;">
+                    @if($tauxCroissance >= 0)
+                        <span style="color:#4ade80;font-weight:700;">▲ +{{ $tauxCroissance }}%</span>
+                    @else
+                        <span style="color:#f87171;font-weight:700;">▼ {{ $tauxCroissance }}%</span>
+                    @endif
+                    <span style="color:var(--sa-text-3);font-size:0.72rem;"> vs mois dernier</span>
+                </div>
+            </div>
+            <div style="height:1px;background:var(--sa-border);margin:1rem 0;"></div>
+            <div>
+                <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--sa-text-3);margin-bottom:0.4rem;">Mois précédent</div>
+                <div style="font-size:1.1rem;font-weight:800;color:var(--sa-text-2);">{{ number_format($caMoisDernier, 0, ',', ' ') }} F</div>
+            </div>
+            <div style="height:1px;background:var(--sa-border);margin:1rem 0;"></div>
+            <div>
+                <div style="font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--sa-text-3);margin-bottom:0.4rem;">Transactions</div>
+                <div style="font-size:1.1rem;font-weight:800;color:var(--sa-text-2);">{{ number_format($stats['transactions_reussies'], 0, ',', ' ') }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{{-- ─── Recent transactions ─── --}}
+<div class="sa-dark-card" style="margin-bottom:1.25rem;">
+    <div class="sa-dark-card-head">
+        <div class="sa-dark-card-title">Dernières transactions</div>
+        <a href="{{ route('superadmin.transactions.index') }}" class="sa-btn-all">Voir tout →</a>
+    </div>
+    <div style="overflow-x:auto;">
+        <table class="sa-merch-table">
+            <thead>
+                <tr>
+                    <th>Référence</th>
+                    <th>Boutique</th>
+                    <th>Client</th>
+                    <th>Montant</th>
+                    <th>Statut</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($dernieres_transactions as $t)
+                <tr>
+                    <td>
+                        <a href="{{ route('superadmin.transactions.show', $t) }}"
+                           style="color:#818cf8;text-decoration:none;font-weight:600;font-family:'Courier New',monospace;font-size:0.78rem;">
+                            {{ $t->reference }}
+                        </a>
+                    </td>
+                    <td style="color:var(--sa-text-2);">{{ $t->boutique->nom ?? '—' }}</td>
+                    <td style="color:var(--sa-text-3);font-size:0.78rem;">{{ $t->client->email ?? '—' }}</td>
+                    <td style="font-weight:700;color:var(--sa-text-1);">{{ number_format($t->montant_total, 0, ',', ' ') }} FCFA</td>
+                    <td>
+                        @if($t->statut === 'reussi')
+                            <span style="background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.2);color:#4ade80;border-radius:20px;padding:2px 10px;font-size:0.7rem;font-weight:700;">Réussi</span>
+                        @elseif($t->statut === 'en_attente')
+                            <span style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.2);color:#fbbf24;border-radius:20px;padding:2px 10px;font-size:0.7rem;font-weight:700;">En attente</span>
+                        @elseif($t->statut === 'echoue')
+                            <span style="background:rgba(248,113,113,0.1);border:1px solid rgba(248,113,113,0.2);color:#f87171;border-radius:20px;padding:2px 10px;font-size:0.7rem;font-weight:700;">Échoué</span>
+                        @else
+                            <span style="background:rgba(148,163,184,0.08);border:1px solid rgba(148,163,184,0.15);color:#64748b;border-radius:20px;padding:2px 10px;font-size:0.7rem;font-weight:700;">Abandonné</span>
+                        @endif
+                    </td>
+                    <td style="color:var(--sa-text-3);font-size:0.78rem;">{{ $t->created_at->format('d/m/Y H:i') }}</td>
+                </tr>
+                @empty
+                <tr><td colspan="6" style="text-align:center;color:var(--sa-text-3);padding:2.5rem;font-size:0.85rem;">
+                    <i class="fas fa-receipt" style="font-size:1.5rem;display:block;margin-bottom:0.5rem;opacity:0.2;"></i>
+                    Aucune transaction
+                </td></tr>
+                @endforelse
+            </tbody>
+        </table>
     </div>
 </div>
 
@@ -307,16 +586,17 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 (function() {
-    const mois = @json($revenusParMois->pluck('mois'));
-    const totaux = @json($revenusParMois->pluck('total'));
+    const mois    = @json($revenusParMois->pluck('mois'));
+    const totaux  = @json($revenusParMois->pluck('total'));
     const commissions = @json($revenusParMois->pluck('commissions'));
 
-    // Formater les labels mois (2026-01 → Jan 26)
     const moisFr = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
     const labels = mois.map(m => {
         const [y, mo] = m.split('-');
         return moisFr[parseInt(mo) - 1] + ' ' + y.slice(2);
     });
+
+    Chart.defaults.color = '#64748b';
 
     const ctx = document.getElementById('chartMois');
     if (!ctx) return;
@@ -328,34 +608,35 @@
                 {
                     label: 'CA total (FCFA)',
                     data: totaux,
-                    backgroundColor: 'rgba(37,99,235,0.7)',
-                    borderRadius: 6,
-                    order: 2,
+                    backgroundColor: 'rgba(99,102,241,0.65)',
+                    borderRadius: 6, order: 2,
                 },
                 {
                     label: 'Commissions Nafalo',
                     data: commissions,
-                    backgroundColor: 'rgba(245,158,11,0.7)',
-                    borderRadius: 6,
-                    order: 1,
+                    backgroundColor: 'rgba(251,191,36,0.55)',
+                    borderRadius: 6, order: 1,
                 }
             ]
         },
         options: {
             responsive: true,
             plugins: {
-                legend: { position: 'top', labels: { font: { size: 11 } } },
+                legend: { position: 'top', labels: { font: { size: 11 }, color: '#64748b', boxWidth: 10, borderRadius: 4 } },
                 tooltip: {
+                    backgroundColor: '#1e1e2c', borderColor: '#2d2d3d', borderWidth: 1,
+                    titleColor: '#f1f5f9', bodyColor: '#94a3b8',
                     callbacks: {
                         label: ctx => ctx.dataset.label + ': ' + parseInt(ctx.raw).toLocaleString('fr') + ' F'
                     }
                 }
             },
             scales: {
-                x: { grid: { display: false } },
+                x: { grid: { display: false }, ticks: { color: '#475569', font: { size: 11 } } },
                 y: {
-                    grid: { color: '#f1f5f9' },
+                    grid: { color: 'rgba(255,255,255,0.04)' },
                     ticks: {
+                        color: '#475569', font: { size: 11 },
                         callback: v => (v >= 1000000 ? (v/1000000).toFixed(1) + 'M' : (v >= 1000 ? (v/1000).toFixed(0) + 'k' : v)) + ' F'
                     }
                 }

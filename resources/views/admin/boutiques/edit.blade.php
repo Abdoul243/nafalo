@@ -12,7 +12,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h5 class="mb-0">DÃ©tails de la boutique</h5>
+        <h5 class="mb-0">Détails de la boutique</h5>
     </div>
     <div class="card-body">
         <form action="{{ route('admin.boutiques.update', $boutique) }}" method="POST" enctype="multipart/form-data">
@@ -48,7 +48,7 @@
                 </div>
                 
                 <div class="col-md-6 mb-3">
-                    <label for="telephone" class="form-label">TÃ©lÃ©phone</label>
+                    <label for="telephone" class="form-label">Téléphone</label>
                     <input type="text" class="form-control @error('telephone') is-invalid @enderror" 
                            id="telephone" name="telephone" value="{{ old('telephone', $boutique->telephone) }}">
                     @error('telephone')
@@ -72,7 +72,7 @@
             </div>
             
             <div class="mb-3">
-                <label for="domaine_personnalise" class="form-label">Domaine personnalisÃ©</label>
+                <label for="domaine_personnalise" class="form-label">Domaine personnalisé</label>
                 <input type="text" class="form-control @error('domaine_personnalise') is-invalid @enderror" 
                        id="domaine_personnalise" name="domaine_personnalise" 
                        value="{{ old('domaine_personnalise', $boutique->domaine_personnalise) }}" 
@@ -83,7 +83,7 @@
             </div>
             
             <div class="mb-3">
-                <label class="form-label">RÃ©seaux sociaux</label>
+                <label class="form-label">Réseaux sociaux</label>
                 <div id="socials-container">
                     <div class="input-group mb-2">
                         <span class="input-group-text"><i class="fab fa-facebook"></i></span>
@@ -113,11 +113,12 @@
             </div>
             
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save me-1"></i>Mettre Ã  jour
+                <button type="submit" class="btn" style="background:#0f172a;color:#fff;border:none;border-radius:10px;font-weight:600;">
+                    <i class="fas fa-save me-1"></i>Mettre à jour
                 </button>
             </div>
         </form>
     </div>
 </div>
 @endsection
+

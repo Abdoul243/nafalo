@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
-@section('title', 'Modifier la catÃ©gorie')
+@section('title', 'Modifier la catégorie')
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Modifier la catÃ©gorie</h1>
+    <h1>Modifier la catégorie</h1>
     <a href="{{ route('admin.categories.index') }}" class="btn btn-outline-secondary">
         <i class="fas fa-arrow-left"></i> Retour
     </a>
@@ -12,7 +12,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h5 class="mb-0">Ã‰diter les informations</h5>
+        <h5 class="mb-0">Éditer les informations</h5>
     </div>
     <div class="card-body">
         <form action="{{ route('admin.categories.update', ['category' => $categorie->id]) }}" method="POST">
@@ -38,11 +38,12 @@
             </div>
             
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-save me-1"></i>Mettre Ã  jour
+                <button type="submit" class="btn" style="background:#0f172a;color:#fff;border:none;border-radius:10px;font-weight:600;">
+                    <i class="fas fa-save me-1"></i>Mettre à jour
                 </button>
             </div>
         </form>
     </div>
 </div>
 @endsection
+

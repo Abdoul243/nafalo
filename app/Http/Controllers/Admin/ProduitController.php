@@ -24,11 +24,19 @@ class ProduitController extends Controller
             $query->where('categorie_id', $request->categorie);
         }
         
-        if ($request->has('recherche')) {
+        if ($request->filled('recherche')) {
             $query->where('nom', 'like', '%' . $request->recherche . '%');
         }
-        
-        $produits = $query->paginate(15);
+
+        if ($request->filled('statut')) {
+            if ($request->statut === 'publie') {
+                $query->where('est_publie', true);
+            } elseif ($request->statut === 'brouillon') {
+                $query->where('est_publie', false);
+            }
+        }
+
+        $produits = $query->latest()->paginate(15);
         $categories = Categorie::where('boutique_id', $boutiqueId)->get();
         
         return view('admin.produits.index', compact('produits', 'categories'));
@@ -74,7 +82,7 @@ class ProduitController extends Controller
     
     public function show(Produit $produit)
     {
-        return view('admin.produits.show', compact('produit'));
+        return redirect()->route('admin.produits.edit', $produit);
     }
 
     public function edit(Produit $produit)

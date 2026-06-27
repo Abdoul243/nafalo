@@ -6,7 +6,7 @@
     <a href="{{ route('admin.produits.upsells.index', $produit) }}" class="btn btn-sm btn-outline-secondary rounded-pill">
         <i class="fas fa-arrow-left me-1"></i> Retour
     </a>
-    <h1 class="h4 fw-bold mb-0">‚úèÔ∏è Modifier l'upsell</h1>
+    <h1 class="h4 fw-bold mb-0">?? Modifier l'upsell</h1>
 </div>
 
 <div class="row justify-content-center">
@@ -17,9 +17,9 @@
                     @csrf @method('PUT')
 
                     <div class="mb-4">
-                        <label class="form-label fw-semibold">Produit propos√©</label>
+                        <label class="form-label fw-semibold">Produit proposÈ</label>
                         <input type="text" class="form-control rounded-3 bg-light"
-                               value="{{ $upsell->produitUpsell->nom ?? '‚Äî' }}" disabled>
+                               value="{{ $upsell->produitUpsell->nom ?? 'ó' }}" disabled>
                     </div>
 
                     <div class="mb-4">
@@ -38,7 +38,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label class="form-label fw-semibold">Prix sp√©cial (F CFA)</label>
+                        <label class="form-label fw-semibold">Prix spÈcial (F CFA)</label>
                         <div class="input-group" style="max-width:250px;">
                             <input type="number" name="prix_special" step="1" min="0"
                                    class="form-control rounded-start-3"
@@ -66,8 +66,8 @@
                         <a href="{{ route('admin.produits.upsells.index', $produit) }}" class="btn btn-outline-secondary rounded-pill px-4">
                             Annuler
                         </a>
-                        <button type="submit" class="btn btn-primary rounded-pill px-5">
-                            <i class="fas fa-save me-1"></i> Mettre √† jour
+                        <button type="submit" class="btn rounded-pill px-5">
+                            <i class="fas fa-save me-1"></i> Mettre ‡ jour
                         </button>
                     </div>
                 </form>
@@ -76,3 +76,4 @@
     </div>
 </div>
 @endsection
+

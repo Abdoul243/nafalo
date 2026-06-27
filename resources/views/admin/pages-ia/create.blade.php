@@ -1,5 +1,5 @@
-@extends('layouts.admin')
-@section('title', 'Générer une page IA — ' . $produit->nom)
+﻿@extends('layouts.admin')
+@section('title', 'G�n�rer une page IA � ' . $produit->nom)
 
 @push('styles')
 <style>
@@ -23,7 +23,7 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h1 class="h3 mb-1 fw-bold">✨ Générer une page de vente IA</h1>
+        <h1 class="h3 mb-1 fw-bold">? G�n�rer une page de vente IA</h1>
         <p class="text-muted mb-0" style="font-size:0.85rem;">Produit : <strong>{{ $produit->nom }}</strong></p>
     </div>
     <a href="{{ route('admin.produits.index') }}" class="btn btn-light" style="border-radius:10px;">
@@ -33,10 +33,10 @@
 
 {{-- Hero IA --}}
 <div class="ia-hero">
-    <div class="ia-badge"><i class="fas fa-wand-magic-sparkles"></i> Propulsé par Claude AI (Anthropic)</div>
-    <h2 class="fw-black mb-2" style="font-size:1.4rem;">L'IA analyse votre produit et crée la page 🚀</h2>
+    <div class="ia-badge"><i class="fas fa-wand-magic-sparkles"></i> Propuls� par Claude AI (Anthropic)</div>
+    <h2 class="fw-black mb-2" style="font-size:1.4rem;">L'IA analyse votre produit et cr�e la page ??</h2>
     <p class="mb-0" style="opacity:0.85;font-size:0.88rem;line-height:1.6;">
-        Pas besoin de ressaisir quoi que ce soit — l'IA lit directement les informations de votre produit (nom, description, prix, image) et génère une page de vente professionnelle optimisée pour le marché africain en moins de 30 secondes.
+        Pas besoin de ressaisir quoi que ce soit � l'IA lit directement les informations de votre produit (nom, description, prix, image) et g�n�re une page de vente professionnelle optimis�e pour le march� africain en moins de 30 secondes.
     </p>
 </div>
 
@@ -45,11 +45,11 @@
 <div class="existing-page">
     <div class="d-flex align-items-center justify-content-between flex-wrap gap-2">
         <div>
-            <div class="fw-bold text-success"><i class="fas fa-check-circle me-2"></i>Page existante générée</div>
+            <div class="fw-bold text-success"><i class="fas fa-check-circle me-2"></i>Page existante g�n�r�e</div>
             <div class="text-muted mt-1" style="font-size:0.82rem;">
-                Créée {{ $pageExistante->created_at->diffForHumans() }} ·
-                Statut : {{ $pageExistante->est_publiee ? '🟢 Publiée' : '⚪ Non publiée' }}
-                {{ $pageExistante->tokens_utilises ? '· ' . number_format($pageExistante->tokens_utilises) . ' tokens' : '' }}
+                Cr��e {{ $pageExistante->created_at->diffForHumans() }} �
+                Statut : {{ $pageExistante->est_publiee ? '?? Publi�e' : '? Non publi�e' }}
+                {{ $pageExistante->tokens_utilises ? '� ' . number_format($pageExistante->tokens_utilises) . ' tokens' : '' }}
             </div>
         </div>
         <a href="{{ route('admin.pages-ia.apercu', ['produit' => $produit->id, 'page' => $pageExistante->id]) }}"
@@ -60,7 +60,7 @@
 </div>
 @endif
 
-{{-- Données lues depuis le produit --}}
+{{-- Donn�es lues depuis le produit --}}
 <div class="product-data-card mb-4">
     <div class="fw-bold mb-3" style="font-size:0.88rem;color:#475569;">
         <i class="fas fa-database me-2 text-primary"></i>
@@ -73,15 +73,15 @@
         </div>
         <div class="col-6 col-md-2">
             <div class="pdc-label">Prix</div>
-            <div class="pdc-value" style="color:#2563eb;">
+            <div class="pdc-value" style="color:#0f172a;">
                 @if($produit->type === 'gratuit') GRATUIT
                 @else {{ number_format($produit->prix, 0, ',', ' ') }} FCFA
                 @endif
             </div>
         </div>
         <div class="col-6 col-md-2">
-            <div class="pdc-label">Catégorie</div>
-            <div class="pdc-value">{{ $produit->categorie?->nom ?? '—' }}</div>
+            <div class="pdc-label">Cat�gorie</div>
+            <div class="pdc-value">{{ $produit->categorie?->nom ?? '�' }}</div>
         </div>
         <div class="col-6 col-md-2">
             <div class="pdc-label">Image</div>
@@ -106,9 +106,9 @@
     </div>
     @if($produit->image)
     <div class="mt-3" style="display:flex;align-items:center;gap:1rem;">
-        <img src="{{ asset('storage/' . $produit->image) }}" alt="{{ $produit->nom }}"
+        <img src="{{ $produit->image_url }}" alt="{{ $produit->nom }}"
              style="width:80px;height:60px;object-fit:cover;border-radius:10px;border:1px solid #e2e8f0;">
-        <span class="text-muted" style="font-size:0.8rem;">Cette image apparaîtra dans le hero de votre page de vente</span>
+        <span class="text-muted" style="font-size:0.8rem;">Cette image appara�tra dans le hero de votre page de vente</span>
     </div>
     @endif
 </div>
@@ -121,13 +121,13 @@
 
             {{-- Style --}}
             <div class="mb-4">
-                <label class="form-label fw-bold">🖌️ Style de la page</label>
+                <label class="form-label fw-bold">??? Style de la page</label>
                 <div class="row g-2">
                     @foreach([
-                        ['moderne',       '⚡', 'Moderne',        'Dynamique et percutant'],
-                        ['minimaliste',   '☁️', 'Minimaliste',     'Épuré et élégant'],
-                        ['audacieux',     '🔥', 'Audacieux',       'Couleurs vives, impactant'],
-                        ['professionnel', '💼', 'Professionnel',   'Sobre et crédible'],
+                        ['moderne',       '?', 'Moderne',        'Dynamique et percutant'],
+                        ['minimaliste',   '??', 'Minimaliste',     '�pur� et �l�gant'],
+                        ['audacieux',     '??', 'Audacieux',       'Couleurs vives, impactant'],
+                        ['professionnel', '??', 'Professionnel',   'Sobre et cr�dible'],
                     ] as [$val, $emoji, $nom, $desc])
                     <div class="col-6 col-md-3">
                         <input type="radio" class="style-radio" name="style" id="style_{{ $val }}" value="{{ $val }}"
@@ -144,37 +144,37 @@
 
             {{-- Couleur --}}
             <div class="mb-4">
-                <label class="form-label fw-semibold">🎨 Couleur principale de la page</label>
+                <label class="form-label fw-semibold">?? Couleur principale de la page</label>
                 <div class="d-flex align-items-center gap-2">
-                    <input type="color" name="couleur_theme" id="couleur_theme" value="{{ old('couleur_theme', '#2563eb') }}"
+                    <input type="color" name="couleur_theme" id="couleur_theme" value="{{ old('couleur_theme', '#0f172a') }}"
                         style="width:48px;height:42px;border:none;border-radius:10px;cursor:pointer;padding:2px;">
-                    <input type="text" id="couleur_hex" value="{{ old('couleur_theme', '#2563eb') }}"
+                    <input type="text" id="couleur_hex" value="{{ old('couleur_theme', '#0f172a') }}"
                         class="form-control" style="border-radius:12px;width:110px;" maxlength="7"
                         oninput="document.getElementById('couleur_theme').value=this.value">
-                    <span class="text-muted" style="font-size:0.82rem;">Sera utilisée pour les boutons et sections colorées</span>
+                    <span class="text-muted" style="font-size:0.82rem;">Sera utilis�e pour les boutons et sections color�es</span>
                 </div>
             </div>
 
             {{-- Instructions optionnelles --}}
             <div class="mb-4">
                 <label class="form-label fw-semibold">
-                    📝 Instructions supplémentaires <span class="text-muted fw-normal">(optionnel)</span>
+                    ?? Instructions suppl�mentaires <span class="text-muted fw-normal">(optionnel)</span>
                 </label>
                 <textarea name="instructions" class="form-control" rows="3" maxlength="1000"
                     style="border-radius:12px;resize:vertical;"
-                    placeholder="Ex: Mets l'accent sur la rapidité des résultats. Cible les entrepreneurs de 25-40 ans. Mentionne que le support WhatsApp est inclus...">{{ old('instructions') }}</textarea>
-                <div class="text-muted mt-1" style="font-size:0.75rem;">Précisions pour affiner la page générée (public cible, angle marketing, éléments à mettre en avant...)</div>
+                    placeholder="Ex: Mets l'accent sur la rapidit� des r�sultats. Cible les entrepreneurs de 25-40 ans. Mentionne que le support WhatsApp est inclus...">{{ old('instructions') }}</textarea>
+                <div class="text-muted mt-1" style="font-size:0.75rem;">Pr�cisions pour affiner la page g�n�r�e (public cible, angle marketing, �l�ments � mettre en avant...)</div>
             </div>
 
             {{-- Bouton --}}
             <button type="submit" class="generate-btn" id="btn-generer">
-                <span id="btn-text"><i class="fas fa-wand-magic-sparkles me-2"></i> Générer ma page de vente avec l'IA</span>
+                <span id="btn-text"><i class="fas fa-wand-magic-sparkles me-2"></i> G�n�rer ma page de vente avec l'IA</span>
                 <span id="btn-loading" style="display:none;">
-                    <span class="spinner-border spinner-border-sm me-2"></span> Génération en cours (15-30 sec)...
+                    <span class="spinner-border spinner-border-sm me-2"></span> G�n�ration en cours (15-30 sec)...
                 </span>
             </button>
             <p class="text-center text-muted mt-2 mb-0" style="font-size:0.78rem;">
-                ⚡ Claude AI analyse votre produit · Résultat en 15-30 secondes
+                ? Claude AI analyse votre produit � R�sultat en 15-30 secondes
             </p>
         </form>
     </div>
@@ -196,3 +196,4 @@ document.getElementById('form-ia')?.addEventListener('submit', function() {
 });
 </script>
 @endpush
+

@@ -1,92 +1,127 @@
-@extends('layouts.admin')
-@section('title', 'Configuration générale')
+﻿@extends('layouts.admin')
+@section('title', 'Identité générale')
 @push('styles')
 <style>
-    .config-header { margin-bottom:2rem; }
-    .config-header h1 { font-size:1.4rem; font-weight:800; color:#0f172a; margin-bottom:0.25rem; }
-    .config-header p  { color:#64748b; font-size:0.875rem; }
+/* ── Configuration générale — style Chariow ── */
+.config-header { margin-bottom: 2rem; }
+.config-header h1 {
+    font-size: 1.45rem; font-weight: 800; color: #0f172a;
+    letter-spacing: -0.02em; margin: 0 0 0.2rem;
+}
+.config-header p { color: #64748b; font-size: 0.875rem; margin: 0; }
 
-    .config-card {
-        background:white; border-radius:18px; border:1px solid #f1f5f9;
-        box-shadow:0 2px 12px rgba(0,0,0,0.04); overflow:hidden; margin-bottom:1.5rem;
-    }
-    .config-card-header {
-        padding:1.25rem 1.5rem; border-bottom:1px solid #f8fafc;
-        display:flex; align-items:center; gap:12px;
-        background:linear-gradient(90deg,#f8fafc,#fff);
-    }
-    .config-card-header .icon {
-        width:38px; height:38px; border-radius:10px;
-        background:#eff6ff; display:flex; align-items:center; justify-content:center;
-        color:#2563eb; font-size:1rem; flex-shrink:0;
-    }
-    .config-card-header h5 { font-size:0.95rem; font-weight:700; color:#0f172a; margin:0; }
-    .config-card-header p  { font-size:0.78rem; color:#94a3b8; margin:0; }
-    .config-card-body { padding:1.75rem 1.5rem; }
+/* Breadcrumb / back link */
+.config-back {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 0.8rem; font-weight: 600; color: #64748b;
+    text-decoration: none; margin-bottom: 1.25rem;
+    transition: color .15s;
+}
+.config-back:hover { color: #0f172a; }
 
-    .form-label { font-size:0.82rem; font-weight:600; color:#374151; margin-bottom:0.4rem; }
-    .form-control, .form-select {
-        border:1.5px solid #e2e8f0 !important; border-radius:11px !important;
-        padding:0.75rem 1rem !important; font-size:0.9rem !important;
-        transition:all 0.2s; color:#0f172a;
-    }
-    .form-control:focus, .form-select:focus {
-        border-color:#2563eb !important;
-        box-shadow:0 0 0 3px rgba(37,99,235,0.1) !important;
-    }
-    .input-group .input-group-text {
-        border:1.5px solid #e2e8f0; border-right:none; border-radius:11px 0 0 11px;
-        background:#f8fafc; color:#64748b; font-size:0.9rem;
-    }
-    .input-group .form-control { border-radius:0 11px 11px 0 !important; border-left:none !important; }
+/* Cards */
+.config-card {
+    background: #fff; border: 1px solid #e5e7eb;
+    border-radius: 14px; overflow: hidden; margin-bottom: 1.25rem;
+}
+.config-card-header {
+    padding: 1rem 1.25rem; border-bottom: 1px solid #f1f5f9;
+    display: flex; align-items: center; gap: 12px;
+    background: #fafafa;
+}
+.config-card-header .icon {
+    width: 36px; height: 36px; border-radius: 9px;
+    background: #f1f5f9; border: 1px solid #e5e7eb;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.88rem; color: #0f172a; flex-shrink: 0;
+}
+.config-card-header h5 { font-size: 0.9rem; font-weight: 700; color: #0f172a; margin: 0; }
+.config-card-header p  { font-size: 0.74rem; color: #94a3b8; margin: 0; }
+.config-card-body { padding: 1.5rem 1.25rem; }
 
-    .logo-preview {
-        display:flex; align-items:center; gap:1rem;
-        padding:1rem; background:#f8fafc; border-radius:12px; margin-bottom:1rem;
-    }
-    .logo-preview img { height:60px; border-radius:8px; object-fit:contain; background:white; padding:4px; }
-    .logo-preview-text { font-size:0.82rem; color:#64748b; }
+/* Form */
+.form-label { font-size: 0.81rem; font-weight: 600; color: #374151; margin-bottom: 0.4rem; }
+.form-control, .form-select {
+    border: 1.5px solid #e2e8f0 !important; border-radius: 10px !important;
+    padding: 0.65rem 0.9rem !important; font-size: 0.875rem !important;
+    color: #0f172a; background: #fff; transition: border-color .15s;
+}
+.form-control:focus, .form-select:focus {
+    border-color: #0f172a !important;
+    box-shadow: 0 0 0 3px rgba(15,23,42,0.06) !important;
+    outline: none;
+}
+.input-group .input-group-text {
+    border: 1.5px solid #e2e8f0; border-right: none;
+    border-radius: 10px 0 0 10px; background: #f8fafc;
+    color: #64748b; font-size: 0.85rem;
+}
+.input-group .form-control {
+    border-radius: 0 10px 10px 0 !important;
+    border-left: none !important;
+}
+.field-hint { font-size: 0.76rem; color: #94a3b8; margin-top: 0.3rem; }
 
-    .btn-save {
-        background:linear-gradient(135deg,#2563eb,#1d4ed8);
-        color:white; font-weight:700; border:none;
-        border-radius:11px; padding:0.75rem 2rem;
-        font-size:0.9rem; cursor:pointer; transition:all 0.2s;
-        display:inline-flex; align-items:center; gap:8px;
-    }
-    .btn-save:hover { transform:translateY(-1px); box-shadow:0 8px 20px rgba(37,99,235,0.3); }
-    .btn-back {
-        background:#f1f5f9; color:#64748b; border:none;
-        border-radius:11px; padding:0.75rem 1.25rem;
-        font-size:0.875rem; font-weight:600; text-decoration:none;
-        display:inline-flex; align-items:center; gap:8px; transition:all 0.15s;
-    }
-    .btn-back:hover { background:#e2e8f0; color:#0f172a; }
-    .field-hint { font-size:0.78rem; color:#94a3b8; margin-top:0.35rem; }
+/* Logo preview */
+.logo-preview {
+    display: flex; align-items: center; gap: 1rem;
+    padding: 0.875rem 1rem; background: #f8fafc;
+    border-radius: 10px; border: 1px solid #e5e7eb; margin-bottom: 0.875rem;
+}
+.logo-preview img {
+    height: 52px; border-radius: 6px;
+    object-fit: contain; background: white; padding: 4px;
+}
+.logo-preview-text { font-size: 0.8rem; color: #64748b; }
+.logo-preview-text strong { display: block; color: #0f172a; font-size: 0.82rem; margin-bottom: 2px; }
 
-    /* ── Responsive ── */
-    @media (max-width:640px) {
-        .config-card-body { padding:1rem !important; }
-        .config-card-header { padding:1rem; }
-        .config-header .d-flex { flex-direction:column; align-items:flex-start !important; gap:0.75rem; }
-        .btn-save, .btn-back { width:100%; justify-content:center; }
-    }
+/* Buttons */
+.btn-save {
+    height: 40px; padding: 0 20px; font-size: 0.85rem; font-weight: 700;
+    background: #0f172a; color: #fff; border: none; border-radius: 10px;
+    cursor: pointer; display: inline-flex; align-items: center; gap: 7px;
+    transition: background .15s;
+}
+.btn-save:hover { background: #1e293b; }
+.btn-cancel {
+    height: 40px; padding: 0 16px; font-size: 0.85rem; font-weight: 600;
+    background: #f8fafc; color: #64748b; border: 1px solid #e5e7eb;
+    border-radius: 10px; text-decoration: none;
+    display: inline-flex; align-items: center; gap: 7px; transition: all .15s;
+}
+.btn-cancel:hover { background: #f1f5f9; color: #0f172a; }
+
+/* Alert success */
+.alert-success-custom {
+    background: #f0fdf4; border-left: 3px solid #22c55e;
+    padding: 0.875rem 1.1rem; border-radius: 10px;
+    margin-bottom: 1.25rem; color: #166534; font-size: 0.85rem;
+    display: flex; align-items: center; gap: 8px;
+}
+
+@media (max-width: 640px) {
+    .config-card-body { padding: 1rem; }
+    .btn-save, .btn-cancel { width: 100%; justify-content: center; }
+}
 </style>
 @endpush
 
 @section('content')
 
+<a href="{{ route('admin.configurations.index') }}" class="config-back">
+    <i class="fas fa-arrow-left"></i> Paramètres
+</a>
+
 <div class="config-header">
-    <div class="d-flex align-items-center justify-content-between">
-        <div>
-            <h1>Configuration générale</h1>
-            <p>Personnalisez les informations et l'apparence de votre boutique</p>
-        </div>
-        <a href="{{ route('admin.configurations.index') }}" class="btn-back">
-            <i class="fas fa-arrow-left"></i> Retour
-        </a>
-    </div>
+    <h1>Identité générale</h1>
+    <p>Nom, logo, contact et domaine de votre boutique</p>
 </div>
+
+@if(session('success'))
+<div class="alert-success-custom">
+    <i class="fas fa-check-circle"></i> {{ session('success') }}
+</div>
+@endif
 
 <form action="{{ route('admin.configurations.general') }}" method="POST" enctype="multipart/form-data">
 @csrf
@@ -97,7 +132,7 @@
         <div class="icon"><i class="fas fa-store"></i></div>
         <div>
             <h5>Identité de la boutique</h5>
-            <p>Nom, description et informations principales</p>
+            <p>Nom et description publics de votre boutique</p>
         </div>
     </div>
     <div class="config-card-body">
@@ -139,7 +174,7 @@
                            id="email" name="email" value="{{ old('email', $boutique->email) }}"
                            placeholder="contact@maboutique.com" required>
                 </div>
-                @error('email')<div class="text-danger" style="font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
+                @error('email')<div class="text-danger" style="font-size:0.78rem;margin-top:4px;">{{ $message }}</div>@enderror
             </div>
             <div class="col-md-6">
                 <label for="telephone" class="form-label">Téléphone</label>
@@ -149,7 +184,7 @@
                            id="telephone" name="telephone" value="{{ old('telephone', $boutique->telephone) }}"
                            placeholder="+225 07 00 00 00 00">
                 </div>
-                @error('telephone')<div class="text-danger" style="font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
+                @error('telephone')<div class="text-danger" style="font-size:0.78rem;margin-top:4px;">{{ $message }}</div>@enderror
             </div>
         </div>
     </div>
@@ -161,33 +196,33 @@
         <div class="icon"><i class="fas fa-image"></i></div>
         <div>
             <h5>Logo de la boutique</h5>
-            <p>Image affichée dans la navigation et le footer de votre boutique</p>
+            <p>Affiché dans la navigation et le footer de votre boutique</p>
         </div>
     </div>
     <div class="config-card-body">
         @if($boutique->logo)
         <div class="logo-preview">
-            <img src="{{ asset('storage/' . $boutique->logo) }}" alt="Logo actuel">
+            <img src="{{ $boutique->logo_url }}" alt="Logo actuel">
             <div class="logo-preview-text">
-                <div style="font-weight:600;color:#0f172a;margin-bottom:2px;">Logo actuel</div>
-                <div>Uploadez un nouveau fichier pour le remplacer</div>
+                <strong>Logo actuel</strong>
+                Uploadez un nouveau fichier pour le remplacer
             </div>
         </div>
         @endif
         <input type="file" class="form-control @error('logo') is-invalid @enderror"
                id="logo" name="logo" accept="image/*">
-        <div class="field-hint"><i class="fas fa-info-circle me-1"></i>Formats acceptés : PNG, JPG, SVG. Taille recommandée : 200×80px minimum.</div>
+        <div class="field-hint"><i class="fas fa-info-circle me-1"></i>PNG, JPG ou SVG · Taille recommandée : 200×80px minimum</div>
         @error('logo')<div class="invalid-feedback">{{ $message }}</div>@enderror
     </div>
 </div>
 
-{{-- Domaine --}}
+{{-- Domaine personnalisé --}}
 <div class="config-card">
     <div class="config-card-header">
         <div class="icon"><i class="fas fa-globe"></i></div>
         <div>
             <h5>Domaine personnalisé</h5>
-            <p>Utilisez votre propre nom de domaine pour votre boutique</p>
+            <p>Utilisez votre propre nom de domaine</p>
         </div>
     </div>
     <div class="config-card-body">
@@ -199,7 +234,7 @@
                    placeholder="votre-domaine.com">
         </div>
         <div class="field-hint"><i class="fas fa-info-circle me-1"></i>Configurez d'abord un enregistrement DNS CNAME pointant vers notre serveur.</div>
-        @error('domaine_personnalise')<div class="text-danger" style="font-size:0.8rem;margin-top:4px;">{{ $message }}</div>@enderror
+        @error('domaine_personnalise')<div class="text-danger" style="font-size:0.78rem;margin-top:4px;">{{ $message }}</div>@enderror
     </div>
 </div>
 
@@ -233,7 +268,7 @@
                        value="{{ old('reseaux_sociaux.instagram', $boutique->reseaux_sociaux['instagram'] ?? '') }}">
             </div>
             <div class="col-md-6">
-                <label class="form-label"><i class="fab fa-tiktok me-1" style="color:#010101;"></i> TikTok</label>
+                <label class="form-label"><i class="fab fa-tiktok me-1"></i> TikTok</label>
                 <input type="url" class="form-control" name="reseaux_sociaux[tiktok]"
                        placeholder="https://tiktok.com/@votreboutique"
                        value="{{ old('reseaux_sociaux.tiktok', $boutique->reseaux_sociaux['tiktok'] ?? '') }}">
@@ -242,11 +277,11 @@
     </div>
 </div>
 
-{{-- Bouton save --}}
-<div class="d-flex justify-content-end gap-2 mb-4">
-    <a href="{{ route('admin.configurations.index') }}" class="btn-back">Annuler</a>
+{{-- Actions --}}
+<div class="d-flex justify-content-end gap-2 mb-5">
+    <a href="{{ route('admin.configurations.index') }}" class="btn-cancel">Annuler</a>
     <button type="submit" class="btn-save">
-        <i class="fas fa-save"></i> Enregistrer les modifications
+        <i class="fas fa-save"></i> Enregistrer
     </button>
 </div>
 

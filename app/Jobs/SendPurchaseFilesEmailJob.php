@@ -15,6 +15,9 @@ class SendPurchaseFilesEmailJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public int $tries = 3;
+    public int $backoff = 30;
+
     public function __construct(public int $transactionId)
     {
         $this->afterCommit();
@@ -36,5 +39,13 @@ class SendPurchaseFilesEmailJob implements ShouldQueue
         }
 
         $emailService->envoyerFichiersAchat($transaction);
+    }
+
+    public function failed(\Throwable $e): void
+    {
+        Log::error('SendPurchaseFilesEmailJob failed', [
+            'transaction_id' => $this->transactionId,
+            'error'          => $e->getMessage(),
+        ]);
     }
 }

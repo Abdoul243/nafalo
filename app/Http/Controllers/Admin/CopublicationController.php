@@ -7,6 +7,8 @@ use App\Models\Copublication;
 use App\Models\Produit;
 use App\Models\Utilisateur;
 use App\Models\Boutique;
+use App\Models\Transaction;
+use App\Services\CollaborationSearchService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -54,7 +56,144 @@ class CopublicationController extends Controller
             ? Produit::find($request->produit_id)
             : null;
 
-        return view('admin.copublications.create', compact('produits', 'produitSelectionne'));
+        // Pré-remplissage email depuis la recherche IA
+        $emailPartenaire = $request->get('email', '');
+        $nomPartenaire   = $request->get('partenaire', '');
+
+        return view('admin.copublications.create', compact(
+            'produits',
+            'produitSelectionne',
+            'emailPartenaire',
+            'nomPartenaire'
+        ));
+    }
+
+    // ─────────────────────────────────────────────────────────────
+    //  RECHERCHE IA DE PARTENAIRES
+    // ─────────────────────────────────────────────────────────────
+
+    /**
+     * Page de recherche IA de partenaires.
+     */
+    public function rechercher()
+    {
+        return view('admin.copublications.rechercher');
+    }
+
+    /**
+     * Endpoint AJAX : analyse la requête avec Claude et retourne
+     * les boutiques partenaires classées par popularité.
+     */
+    public function iaSearch(Request $request)
+    {
+        $request->validate([
+            'query' => 'required|string|min:2|max:500',
+        ]);
+
+        try {
+            $utilisateur    = Auth::user();
+            $boutiqueActive = session('boutique_id');
+            // Exclure toutes les boutiques de l'utilisateur connecté
+            $mesBoutiqueIds = $utilisateur->boutiques()->pluck('id')->toArray();
+            // Inclure aussi la boutique active si elle ne lui appartient pas (super admin)
+            if ($boutiqueActive && !in_array($boutiqueActive, $mesBoutiqueIds)) {
+                $mesBoutiqueIds[] = $boutiqueActive;
+            }
+
+            // ── 1. Analyse IA de la requête ──────────────────────────
+            $service = new CollaborationSearchService();
+            $analyse = $service->analyserRequete($request->input('query'));
+
+            $niches = array_values(array_filter(
+                array_map('trim', array_merge(
+                    $analyse['niches'] ?? [],
+                    $analyse['niches_complementaires'] ?? [],
+                    $analyse['mots_cles_produits'] ?? []
+                )),
+                fn($n) => $n !== ''
+            ));
+
+            // Si aucune niche extraite, utiliser les mots de la requête brute
+            if (empty($niches)) {
+                $niches = array_values(array_filter(
+                    array_map('trim', explode(' ', strtolower($request->query))),
+                    fn($m) => strlen($m) > 2
+                ));
+            }
+
+            // ── 2. Recherche boutiques — tout dans un seul groupe OR ──
+            $query = Boutique::with(['utilisateur', 'categories'])
+                ->where('est_active', true)
+                ->where(function ($q) use ($niches, $mesBoutiqueIds) {
+                    // Exclure nos boutiques
+                    $q->whereNotIn('id', $mesBoutiqueIds);
+                    // Correspondance dans nom/description boutique OU catégories OU produits
+                    $q->where(function ($inner) use ($niches) {
+                        foreach ($niches as $niche) {
+                            $inner->orWhere('nom', 'LIKE', "%{$niche}%")
+                                  ->orWhere('description', 'LIKE', "%{$niche}%");
+                        }
+                        // Correspondance via catégories
+                        $inner->orWhereHas('categories', function ($c) use ($niches) {
+                            $c->where(function ($cc) use ($niches) {
+                                foreach ($niches as $niche) {
+                                    $cc->orWhere('nom', 'LIKE', "%{$niche}%");
+                                }
+                            });
+                        });
+                        // Correspondance via produits
+                        $inner->orWhereHas('produits', function ($p) use ($niches) {
+                            $p->where(function ($pp) use ($niches) {
+                                foreach ($niches as $niche) {
+                                    $pp->orWhere('nom', 'LIKE', "%{$niche}%")
+                                       ->orWhere('description', 'LIKE', "%{$niche}%");
+                                }
+                            });
+                        });
+                    });
+                });
+
+            // ── 3. Classement par popularité ─────────────────────────
+            $boutiques = $query
+                ->withCount(['transactions as total_ventes' => fn($q) => $q->where('statut', Transaction::STATUT_REUSSI)])
+                ->withCount('produits as nb_produits')
+                ->orderBy('total_ventes', 'desc')
+                ->limit(24)
+                ->get();
+
+            // ── 4. Exclure partenaires déjà invités ──────────────────
+            $dejaInvitesIds = Copublication::where('proprietaire_id', $utilisateur->id)
+                ->join('boutiques', 'boutiques.utilisateur_id', '=', 'copublications.copublicateur_id')
+                ->pluck('boutiques.id')
+                ->toArray();
+
+            $boutiques = $boutiques->whereNotIn('id', $dejaInvitesIds)->values();
+
+        } catch (\Throwable $e) {
+            \Illuminate\Support\Facades\Log::error('iaSearch error', ['msg' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+            return response()->json(['error' => 'Erreur serveur : ' . $e->getMessage()], 500);
+        }
+
+        // ── 5. Formatage de la réponse ───────────────────────────
+        return response()->json([
+            'analyse'   => $analyse,
+            'boutiques' => $boutiques->map(fn($b) => [
+                'id'           => $b->id,
+                'nom'          => $b->nom,
+                'description'  => $b->description
+                                  ? mb_substr(strip_tags($b->description), 0, 120) . '...'
+                                  : null,
+                'logo_url'     => $b->logo_url,
+                'total_ventes' => $b->total_ventes,
+                'nb_produits'  => $b->nb_produits,
+                'email'        => $b->utilisateur?->email ?? '',
+                'invite_url'   => route('admin.copublications.create', [
+                    'email'      => $b->utilisateur?->email ?? '',
+                    'partenaire' => $b->nom,
+                ]),
+            ]),
+            'total' => $boutiques->count(),
+        ]);
     }
 
     /**

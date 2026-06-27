@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 
-@section('title', 'CrÃ©er une catÃ©gorie')
+@section('title', 'Créer une catégorie')
 
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>CrÃ©er une catÃ©gorie</h1>
+    <h1>Créer une catégorie</h1>
     <a href="{{ route('admin.categories.index') }}" class="btn btn-outline-secondary">
         <i class="fas fa-arrow-left"></i> Retour
     </a>
@@ -37,7 +37,7 @@
             </div>
             
             <div class="d-flex justify-content-end">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn" style="background:#0f172a;color:#fff;border:none;border-radius:10px;font-weight:600;">
                     <i class="fas fa-save me-1"></i>Enregistrer
                 </button>
             </div>

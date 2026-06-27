@@ -1,205 +1,227 @@
-@extends('layouts.boutique')
+﻿@extends('layouts.boutique')
 
 @section('title', 'Détails — ' . $achat->produit->nom)
 
 @push('styles')
 <style>
-.detail-page { max-width: 900px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+.detail-page { max-width: 900px; margin: 0 auto; padding: 2.5rem 1.25rem 5rem; }
 
 /* Breadcrumb */
 .breadcrumb-nav {
     display: flex; align-items: center; gap: 8px;
-    font-size: 0.82rem; color: #94a3b8; margin-bottom: 1.75rem;
+    font-size: 0.78rem; color: var(--text-3); margin-bottom: 1.75rem;
 }
-.breadcrumb-nav a { color: #64748b; text-decoration: none; font-weight: 500; }
-.breadcrumb-nav a:hover { color: #2563eb; }
-.breadcrumb-nav i { font-size: 0.6rem; color: #cbd5e1; }
-.breadcrumb-nav span { color: #0f172a; font-weight: 600; }
-
-/* Hero produit */
-.product-hero {
-    background: white; border: 1px solid #e2e8f0; border-radius: 24px;
-    overflow: hidden; margin-bottom: 1.5rem;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
-}
-.product-hero-top {
-    display: grid; grid-template-columns: 280px 1fr; gap: 0;
-}
-@media(max-width: 640px) {
-    .product-hero-top { grid-template-columns: 1fr; }
-}
-.product-hero-img {
-    height: 280px; overflow: hidden;
-    background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-    display: flex; align-items: center; justify-content: center;
-    position: relative;
-}
-.product-hero-img img { width: 100%; height: 100%; object-fit: cover; }
-.product-hero-img-ph { color: #94a3b8; font-size: 3.5rem; }
-
-.product-hero-info {
-    padding: 2rem 2rem 1.75rem;
-    display: flex; flex-direction: column;
-}
-.product-hero-cat {
-    font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
-    letter-spacing: 0.08em; color: #2563eb; margin-bottom: 0.5rem;
-}
-.product-hero-name {
-    font-size: 1.45rem; font-weight: 900; color: #0f172a;
-    line-height: 1.25; margin-bottom: 1rem;
-}
-.product-hero-meta {
-    display: flex; flex-wrap: wrap; gap: 0.85rem; margin-bottom: 1.5rem;
-}
-.meta-pill {
-    display: inline-flex; align-items: center; gap: 6px;
-    background: #f8fafc; border: 1px solid #e2e8f0;
-    border-radius: 20px; padding: 0.35rem 0.85rem;
-    font-size: 0.8rem; color: #475569; font-weight: 500;
-}
-.meta-pill i { color: #94a3b8; font-size: 0.75rem; }
-
-.product-hero-price {
-    font-size: 1.6rem; font-weight: 900; color: #2563eb;
-    margin-top: auto; padding-top: 1rem;
-    border-top: 1px solid #f1f5f9;
-}
-.paid-badge {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: #dcfce7; color: #15803d; border-radius: 20px;
-    font-size: 0.72rem; font-weight: 800; padding: 0.25rem 0.75rem;
-    margin-left: 0.75rem; vertical-align: middle;
-}
-
-/* Actions sidebar */
-.layout-grid {
-    display: grid; grid-template-columns: 1fr 280px; gap: 1.5rem; align-items: start;
-}
-@media(max-width: 768px) { .layout-grid { grid-template-columns: 1fr; } }
-
-/* Sidebar sticky */
-.sidebar-card {
-    background: white; border: 1px solid #e2e8f0; border-radius: 20px;
-    padding: 1.5rem; position: sticky; top: 90px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-}
-.sidebar-title {
-    font-size: 0.85rem; font-weight: 800; color: #0f172a;
-    margin-bottom: 1rem; text-transform: uppercase; letter-spacing: 0.04em;
-}
-.btn-download-main {
-    display: flex; align-items: center; justify-content: center; gap: 9px;
-    width: 100%; padding: 1rem;
-    background: linear-gradient(135deg, #2563eb, #1d4ed8);
-    color: white; border: none; border-radius: 14px;
-    font-weight: 800; font-size: 0.95rem; text-decoration: none;
-    cursor: pointer; transition: all 0.2s; margin-bottom: 0.75rem;
-    box-shadow: 0 6px 20px rgba(37,99,235,0.3);
-}
-.btn-download-main:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(37,99,235,0.4); color: white; }
-.btn-product-page {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; padding: 0.8rem;
-    background: #f8fafc; color: #475569;
-    border: 1.5px solid #e2e8f0; border-radius: 12px;
-    font-weight: 600; font-size: 0.875rem; text-decoration: none;
-    transition: all 0.2s; margin-bottom: 0.75rem;
-}
-.btn-product-page:hover { background: #f1f5f9; color: #0f172a; border-color: #cbd5e1; }
-.btn-avis {
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    width: 100%; padding: 0.8rem;
-    background: #fffbeb; color: #b45309;
-    border: 1.5px solid #fde68a; border-radius: 12px;
-    font-weight: 600; font-size: 0.875rem; text-decoration: none;
-    transition: all 0.2s;
-}
-.btn-avis:hover { background: #fef3c7; color: #92400e; }
-
-/* Téléchargements */
-.dl-history {
-    background: white; border: 1px solid #e2e8f0; border-radius: 18px;
-    overflow: hidden; margin-bottom: 1.5rem;
-}
-.section-header {
-    padding: 1.1rem 1.5rem; border-bottom: 1px solid #f1f5f9;
-    display: flex; align-items: center; gap: 8px;
-}
-.section-header h3 {
-    font-size: 0.95rem; font-weight: 800; color: #0f172a; margin: 0;
-}
-.section-header i { color: #2563eb; }
-.section-body { padding: 1.25rem 1.5rem; }
-
-.dl-row {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0.6rem 0; border-bottom: 1px solid #f8fafc;
-    font-size: 0.83rem;
-}
-.dl-row:last-child { border-bottom: none; }
-.dl-date { color: #0f172a; font-weight: 600; }
-.dl-ip { color: #94a3b8; font-family: monospace; font-size: 0.78rem; }
-.dl-empty { text-align: center; color: #94a3b8; font-size: 0.875rem; padding: 1rem 0; }
-.dl-count-badge {
-    display: inline-flex; align-items: center; gap: 5px;
-    background: #eff6ff; color: #2563eb; border-radius: 20px;
-    font-size: 0.72rem; font-weight: 700; padding: 0.2rem 0.65rem; margin-left: 8px;
-}
-
-/* Description */
-.desc-section {
-    background: white; border: 1px solid #e2e8f0; border-radius: 18px;
-    overflow: hidden; margin-bottom: 1.5rem;
-}
-.desc-body {
-    padding: 1.5rem;
-    font-size: 0.9rem; line-height: 1.75; color: #334155;
-}
-.desc-body h1, .desc-body h2, .desc-body h3 {
-    color: #0f172a; font-weight: 800; margin-top: 1.25rem; margin-bottom: 0.5rem;
-}
-.desc-body h1 { font-size: 1.3rem; }
-.desc-body h2 { font-size: 1.1rem; }
-.desc-body h3 { font-size: 0.95rem; }
-.desc-body p { margin-bottom: 0.85rem; }
-.desc-body strong { color: #0f172a; }
-.desc-body ul, .desc-body ol { padding-left: 1.5rem; margin-bottom: 0.85rem; }
-.desc-body li { margin-bottom: 0.35rem; }
-
-/* Transaction info */
-.transaction-info {
-    background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 14px;
-    padding: 1.1rem 1.25rem;
-    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
-    font-size: 0.82rem;
-}
-.txn-item { display: flex; flex-direction: column; gap: 2px; }
-.txn-label { color: #94a3b8; font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
-.txn-value { color: #0f172a; font-weight: 700; font-family: monospace; }
+.breadcrumb-nav a { color: var(--text-3); text-decoration: none; transition: color 0.2s; }
+.breadcrumb-nav a:hover { color: var(--accent); }
+.breadcrumb-nav i { font-size: 0.55rem; }
+.breadcrumb-nav span { color: var(--text-2); font-weight: 600; }
 
 /* Back button */
 .btn-back {
     display: inline-flex; align-items: center; gap: 8px;
-    padding: 0.6rem 1.2rem; background: white;
-    border: 1.5px solid #e2e8f0; border-radius: 10px;
-    color: #64748b; font-size: 0.85rem; font-weight: 600;
+    padding: 0.55rem 1.1rem;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border); border-radius: 10px;
+    color: var(--text-2); font-size: 0.82rem; font-weight: 600;
     text-decoration: none; margin-bottom: 1.5rem;
     transition: all 0.2s;
 }
-.btn-back:hover { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
+.btn-back:hover { border-color: var(--accent); color: var(--accent); background: rgba(124,58,237,0.07); }
+
+/* Hero */
+.product-hero {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    overflow: hidden; margin-bottom: 1.5rem;
+}
+.product-hero-top {
+    display: grid; grid-template-columns: 260px 1fr; gap: 0;
+}
+@media(max-width: 640px) { .product-hero-top { grid-template-columns: 1fr; } }
+
+.product-hero-img {
+    height: 260px; overflow: hidden;
+    background: rgba(255,255,255,0.04);
+    display: flex; align-items: center; justify-content: center;
+}
+.product-hero-img img { width: 100%; height: 100%; object-fit: cover; }
+.product-hero-img-ph { color: var(--text-3); font-size: 3rem; }
+
+.product-hero-info {
+    padding: 1.75rem 1.75rem 1.5rem;
+    display: flex; flex-direction: column;
+    border-left: 1px solid var(--border);
+}
+@media(max-width: 640px) { .product-hero-info { border-left: none; border-top: 1px solid var(--border); } }
+
+.product-hero-cat {
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: var(--accent); margin-bottom: 0.5rem;
+}
+.product-hero-name {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.35rem; font-weight: 700; color: var(--text-1);
+    line-height: 1.3; margin-bottom: 1rem;
+}
+.product-hero-meta {
+    display: flex; flex-wrap: wrap; gap: 0.65rem; margin-bottom: 1.25rem;
+}
+.meta-pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 20px; padding: 0.3rem 0.75rem;
+    font-size: 0.77rem; color: var(--text-2); font-weight: 500;
+}
+.meta-pill i { color: var(--text-3); font-size: 0.7rem; }
+
+.product-hero-price {
+    font-size: 1.5rem; font-weight: 900; color: var(--accent);
+    margin-top: auto; padding-top: 1rem;
+    border-top: 1px solid var(--border);
+    display: flex; align-items: center; gap: 0.75rem;
+}
+.paid-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.25);
+    color: #22c55e; border-radius: 20px;
+    font-size: 0.72rem; font-weight: 800; padding: 0.25rem 0.65rem;
+}
+
+/* Transaction info */
+.txn-row {
+    display: flex; gap: 1.5rem; flex-wrap: wrap;
+    padding: 1rem 1.75rem; border-top: 1px solid var(--border);
+}
+.txn-item { display: flex; flex-direction: column; gap: 2px; }
+.txn-label { color: var(--text-3); font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+.txn-value { color: var(--text-1); font-weight: 700; font-family: 'Courier New', monospace; font-size: 0.88rem; }
+
+/* Layout */
+.layout-grid {
+    display: grid; grid-template-columns: 1fr 270px; gap: 1.5rem; align-items: start;
+}
+@media(max-width: 768px) { .layout-grid { grid-template-columns: 1fr; } }
+
+/* Sections */
+.detail-section {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 18px; overflow: hidden;
+    margin-bottom: 1.25rem;
+}
+.section-head {
+    padding: 1rem 1.4rem; border-bottom: 1px solid var(--border);
+    font-size: 0.76rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--text-3);
+    display: flex; align-items: center; gap: 7px;
+}
+.section-head i { color: var(--accent); }
+.section-body { padding: 1.25rem 1.4rem; }
+
+/* Description */
+.desc-body {
+    font-size: 0.9rem; line-height: 1.8; color: var(--text-2);
+}
+.desc-body h1, .desc-body h2, .desc-body h3 {
+    color: var(--text-1); font-weight: 800; margin-top: 1.25rem; margin-bottom: 0.5rem;
+}
+.desc-body h1 { font-size: 1.2rem; }
+.desc-body h2 { font-size: 1rem; }
+.desc-body h3 { font-size: 0.9rem; }
+.desc-body p { margin-bottom: 0.85rem; }
+.desc-body strong { color: var(--text-1); }
+.desc-body ul, .desc-body ol { padding-left: 1.5rem; margin-bottom: 0.85rem; }
+
+/* Download history */
+.dl-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.6rem 0; border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+}
+.dl-row:last-child { border-bottom: none; }
+.dl-date { color: var(--text-2); font-weight: 600; }
+.dl-ip { color: var(--text-3); font-family: 'Courier New', monospace; font-size: 0.75rem; }
+.dl-empty { text-align: center; color: var(--text-3); font-size: 0.875rem; padding: 1rem 0; }
+.dl-count-chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(124,58,237,0.1);
+    border: 1px solid rgba(124,58,237,0.2);
+    color: var(--accent); border-radius: 20px;
+    font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.55rem;
+}
+
+/* Sidebar */
+.sidebar-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 1.4rem;
+    position: sticky; top: 90px;
+}
+.sidebar-title {
+    font-size: 0.75rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.08em;
+    color: var(--text-3); margin-bottom: 1.1rem;
+    display: flex; align-items: center; gap: 7px;
+}
+.sidebar-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+}
+
+.btn-download-main {
+    display: flex; align-items: center; justify-content: center; gap: 9px;
+    width: 100%; padding: 0.9rem;
+    background: var(--accent);
+    color: white; border: none; border-radius: 12px;
+    font-weight: 700; font-size: 0.9rem; text-decoration: none;
+    cursor: pointer; transition: all 0.2s; margin-bottom: 0.6rem;
+    box-shadow: 0 4px 16px rgba(124,58,237,0.3);
+}
+.btn-download-main:hover { background: var(--accent-hover); transform: translateY(-2px); color: white; }
+
+.btn-sidebar-secondary {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 0.75rem;
+    background: rgba(255,255,255,0.04);
+    color: var(--text-2);
+    border: 1px solid var(--border); border-radius: 11px;
+    font-weight: 600; font-size: 0.83rem; text-decoration: none;
+    transition: all 0.2s; margin-bottom: 0.5rem;
+}
+.btn-sidebar-secondary:hover { background: rgba(255,255,255,0.08); color: var(--text-1); border-color: rgba(255,255,255,0.2); }
+
+.btn-review {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; padding: 0.75rem;
+    background: rgba(234,179,8,0.08);
+    color: #fbbf24;
+    border: 1px solid rgba(234,179,8,0.2); border-radius: 11px;
+    font-weight: 600; font-size: 0.83rem; text-decoration: none;
+    transition: all 0.2s;
+}
+.btn-review:hover { background: rgba(234,179,8,0.14); color: #fbbf24; }
+
+.security-note {
+    font-size: 0.72rem; color: var(--text-3);
+    text-align: center; line-height: 1.6;
+    padding-top: 1rem; margin-top: 1rem;
+    border-top: 1px solid var(--border);
+}
+.security-note i { color: #22c55e; }
 </style>
 @endpush
 
 @section('content')
 <div class="detail-page">
 
-    {{-- Retour --}}
     <a href="{{ route('client.mes-achats.index') }}" class="btn-back">
         <i class="fas fa-arrow-left"></i> Retour à mes achats
     </a>
 
-    {{-- Breadcrumb --}}
     <div class="breadcrumb-nav">
         <a href="{{ route('boutique.accueil') }}">Boutique</a>
         <i class="fas fa-chevron-right"></i>
@@ -208,12 +230,12 @@
         <span>{{ Str::limit($achat->produit->nom, 40) }}</span>
     </div>
 
-    {{-- Hero produit --}}
+    {{-- Hero --}}
     <div class="product-hero">
         <div class="product-hero-top">
             <div class="product-hero-img">
                 @if($achat->produit->image)
-                    <img src="{{ asset('storage/' . $achat->produit->image) }}" alt="{{ $achat->produit->nom }}">
+                    <img src="{{ $achat->produit->image_url }}" alt="{{ $achat->produit->nom }}">
                 @else
                     <i class="fas fa-file-download product-hero-img-ph"></i>
                 @endif
@@ -245,65 +267,57 @@
                     @endif
                 </div>
 
-                @if($achat->transaction)
-                <div class="transaction-info">
-                    <div class="txn-item">
-                        <span class="txn-label">Référence</span>
-                        <span class="txn-value">{{ $achat->transaction->reference }}</span>
-                    </div>
-                    <div class="txn-item">
-                        <span class="txn-label">Statut</span>
-                        <span class="txn-value" style="color:#15803d;font-family:inherit;">
-                            <i class="fas fa-check-circle" style="color:#22c55e;"></i> Confirmé
-                        </span>
-                    </div>
-                </div>
-                @endif
-
                 <div class="product-hero-price">
                     {{ number_format($achat->produit->prix, 0, ',', ' ') }} FCFA
                     <span class="paid-badge"><i class="fas fa-check"></i> Payé</span>
                 </div>
             </div>
         </div>
+
+        @if($achat->transaction)
+        <div class="txn-row">
+            <div class="txn-item">
+                <span class="txn-label">Référence</span>
+                <span class="txn-value">{{ $achat->transaction->reference }}</span>
+            </div>
+            <div class="txn-item">
+                <span class="txn-label">Statut</span>
+                <span class="txn-value" style="font-family:inherit;color:#22c55e;">
+                    <i class="fas fa-check-circle"></i> Confirmé
+                </span>
+            </div>
+        </div>
+        @endif
     </div>
 
-    {{-- Layout 2 colonnes --}}
+    {{-- Layout 2 cols --}}
     <div class="layout-grid">
 
-        {{-- Colonne gauche --}}
         <div>
-
             {{-- Description --}}
             @if($achat->produit->description)
-            <div class="desc-section">
-                <div class="section-header">
-                    <i class="fas fa-align-left"></i>
-                    <h3>Description du produit</h3>
-                </div>
-                <div class="desc-body">
-                    {!! $achat->produit->description !!}
+            <div class="detail-section">
+                <div class="section-head"><i class="fas fa-align-left"></i> Description du produit</div>
+                <div class="section-body">
+                    <div class="desc-body">{!! $achat->produit->description !!}</div>
                 </div>
             </div>
             @endif
 
-            {{-- Historique téléchargements --}}
-            <div class="dl-history">
-                <div class="section-header">
-                    <i class="fas fa-history"></i>
-                    <h3>
-                        Historique des téléchargements
-                        @if($dlCount > 0)
-                        <span class="dl-count-badge">{{ $dlCount }}</span>
-                        @endif
-                    </h3>
+            {{-- Download history --}}
+            <div class="detail-section">
+                <div class="section-head">
+                    <i class="fas fa-history"></i> Historique des téléchargements
+                    @if($dlCount > 0)
+                        <span class="dl-count-chip">{{ $dlCount }}</span>
+                    @endif
                 </div>
                 <div class="section-body">
                     @if($achat->telechargements->count() > 0)
                         @foreach($achat->telechargements as $dl)
                         <div class="dl-row">
                             <div class="dl-date">
-                                <i class="fas fa-download" style="color:#2563eb;margin-right:6px;font-size:0.75rem;"></i>
+                                <i class="fas fa-download" style="color:var(--accent);margin-right:6px;font-size:0.7rem;"></i>
                                 {{ $dl->created_at->format('d/m/Y à H:i:s') }}
                             </div>
                             <div class="dl-ip">{{ $dl->ip_adresse }}</div>
@@ -311,13 +325,12 @@
                         @endforeach
                     @else
                         <div class="dl-empty">
-                            <i class="fas fa-download" style="font-size:1.5rem;color:#e2e8f0;display:block;margin-bottom:0.5rem;"></i>
+                            <i class="fas fa-download" style="font-size:1.4rem;color:var(--text-3);display:block;margin-bottom:0.5rem;"></i>
                             Aucun téléchargement pour le moment
                         </div>
                     @endif
                 </div>
             </div>
-
         </div>
 
         {{-- Sidebar --}}
@@ -329,12 +342,12 @@
                     <i class="fas fa-download"></i> Télécharger le fichier
                 </a>
 
-                <a href="{{ route('boutique.produit.show', $achat->produit->slug) }}" class="btn-product-page" target="_blank">
+                <a href="{{ route('boutique.produit.show', $achat->produit->slug) }}" class="btn-sidebar-secondary" target="_blank">
                     <i class="fas fa-external-link-alt"></i> Voir la page produit
                 </a>
 
                 @if(!$achat->avis)
-                <a href="{{ route('boutique.avis.create', $achat->produit) }}" class="btn-avis">
+                <a href="{{ route('boutique.avis.create', $achat->produit) }}" class="btn-review">
                     <i class="fas fa-star"></i> Laisser un avis
                 </a>
                 @else
@@ -343,11 +356,9 @@
                 </div>
                 @endif
 
-                <div style="border-top:1px solid #f1f5f9;margin-top:1.25rem;padding-top:1.25rem;">
-                    <div style="font-size:0.72rem;color:#94a3b8;text-align:center;line-height:1.6;">
-                        <i class="fas fa-shield-alt" style="color:#22c55e;"></i>
-                        Fichier sécurisé — protégé par filigrane numérique
-                    </div>
+                <div class="security-note">
+                    <i class="fas fa-shield-alt"></i>
+                    Fichier protégé par filigrane numérique
                 </div>
             </div>
         </div>

@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -54,6 +55,8 @@ class AppServiceProvider extends ServiceProvider
         if (config('app.env') !== 'local' || str_starts_with(config('app.url'), 'https')) {
             URL::forceScheme('https');
         }
+
+        Paginator::useBootstrapFive();
 
         Schema::defaultStringLength(191);
 

@@ -5,7 +5,7 @@
 @section('content')
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Boutiques</h1>
-    <a href="{{ route('admin.boutiques.create') }}" class="btn btn-primary">
+    <a href="{{ route('admin.boutiques.create') }}" class="btn" style="background:#0f172a;color:#fff;border:none;border-radius:10px;font-weight:600;">
         <i class="fas fa-plus"></i> Nouvelle boutique
     </a>
 </div>
@@ -45,10 +45,10 @@
                             </div>
                         </td>
                         <td class="text-end">
-                            <a href="{{ route('admin.boutiques.edit', $boutique) }}" class="btn btn-sm btn-outline-primary" title="Ã‰diter">
+                            <a href="{{ route('admin.boutiques.edit', $boutique) }}" class="btn btn-sm btn-outline-primary" title="Éditer">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <button type="button" class="btn btn-sm btn-outline-danger" data-confirm-message="ÃŠtes-vous sÃ»r de vouloir supprimer cette boutique ?" data-target-form="delete-form-{{ $boutique->id }}" title="Supprimer">
+                            <button type="button" class="btn btn-sm btn-outline-danger" data-confirm-message="Êtes-vous sûr de vouloir supprimer cette boutique ?" data-target-form="delete-form-{{ $boutique->id }}" title="Supprimer">
                                 <i class="fas fa-trash"></i>
                             </button>
                             <form id="delete-form-{{ $boutique->id }}" 
@@ -61,7 +61,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="text-center">Aucune boutique trouvÃ©e.</td>
+                        <td colspan="7" class="text-center">Aucune boutique trouvée.</td>
                     </tr>
                     @endforelse
                 </tbody>
@@ -90,3 +90,4 @@ document.querySelectorAll('.toggle-activation').forEach(checkbox => {
 });
 </script>
 @endpush
+

@@ -55,7 +55,7 @@
                 <label class="form-check-label" for="est_actif">Pixel actif</label>
             </div>
             
-            <button type="submit" class="btn btn-primary">Ajouter le pixel</button>
+            <button type="submit" class="btn" style="background:#0f172a;color:#fff;border:none;border-radius:10px;font-weight:600;">Ajouter le pixel</button>
         </form>
     </div>
 </div>

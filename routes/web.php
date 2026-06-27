@@ -64,7 +64,7 @@ Route::get('/boutiques', function () {
         ->orderBy('nom')
         ->get(['id', 'nom', 'description', 'domaine_personnalise']);
 
-    return view('boutiques.liste', compact('boutiques'));
+    return view('boutique.liste', compact('boutiques'));
 })->name('boutiques.accueil');
 
 Route::get('/media/produits/{produit}/image', [MediaController::class, 'produitImage'])
@@ -123,10 +123,11 @@ Route::middleware(['web', 'domaine'])->prefix('boutique')->group(function () {
         Route::get('/succes', [Boutique\CheckoutController::class, 'succes'])->name('succes');
         Route::get('/annulation', [Boutique\CheckoutController::class, 'annulation'])->name('annulation');
         Route::get('/callback', [Boutique\CheckoutController::class, 'callback'])->name('callback');
+        Route::get('/verifier-statut', [Boutique\CheckoutController::class, 'verifierStatut'])->name('verifier-statut');
     });
     
-    // Webhook GeniusPay (sans CSRF)
-    Route::post('/checkout/webhook/geniuspay', [Boutique\CheckoutController::class, 'webhook'])
+    // Webhook Moneroo (sans CSRF)
+    Route::post('/checkout/webhook/moneroo', [Boutique\CheckoutController::class, 'webhook'])
         ->name('boutique.checkout.webhook')
         ->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
     
@@ -180,6 +181,7 @@ Route::prefix('superadmin')->name('superadmin.')->group(function () {
             Route::get('/', [App\Http\Controllers\SuperAdmin\BoutiqueController::class, 'index'])->name('index');
             Route::get('/{boutique}', [App\Http\Controllers\SuperAdmin\BoutiqueController::class, 'show'])->name('show');
             Route::patch('/{boutique}/toggle', [App\Http\Controllers\SuperAdmin\BoutiqueController::class, 'toggle'])->name('toggle');
+            Route::patch('/{boutique}/reassigner', [App\Http\Controllers\SuperAdmin\BoutiqueController::class, 'reassigner'])->name('reassigner');
         });
 
         // Transactions

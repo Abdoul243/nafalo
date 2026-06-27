@@ -87,6 +87,11 @@ class Boutique extends Model
             return null;
         }
 
+        // URL externe stockée directement dans le champ logo
+        if (str_starts_with($this->logo, 'http://') || str_starts_with($this->logo, 'https://')) {
+            return $this->logo;
+        }
+
         return route('media.boutiques.logo', $this);
     }
 }

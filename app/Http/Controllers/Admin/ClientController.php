@@ -13,7 +13,7 @@ class ClientController extends Controller
         $boutiqueId = session('boutique_id');
         
         $query = Client::where('boutique_id', $boutiqueId)
-            ->withCount('achats', 'transactions');
+            ->withCount(['achats', 'transactions']);
             
         if ($request->has('recherche')) {
             $query->where(function($q) use ($request) {

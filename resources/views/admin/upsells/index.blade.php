@@ -2,113 +2,106 @@
 @section('title', 'Upsells — ' . $produit->nom)
 
 @section('content')
-<div class="d-flex align-items-center justify-content-between mb-4">
-    <div class="d-flex align-items-center gap-3">
-        <a href="{{ route('admin.produits.index') }}" class="btn btn-sm btn-outline-secondary rounded-pill">
-            <i class="fas fa-arrow-left me-1"></i> Retour
-        </a>
-        <div>
-            <h1 class="h4 fw-bold mb-0">🔥 Upsells</h1>
-            <p class="text-muted small mb-0">Produit : <strong>{{ $produit->nom }}</strong></p>
+<div class="cw-page">
+
+    <div class="cw-toolbar">
+        <div style="display:flex;align-items:center;gap:10px;">
+            <a href="{{ route('admin.produits.index') }}" class="cw-btn-secondary">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <div>
+                <div style="font-weight:700;color:#111827;font-size:.9rem;">Upsells</div>
+                <div style="font-size:.75rem;color:#9ca3af;">{{ $produit->nom }}</div>
+            </div>
         </div>
-    </div>
-    <a href="{{ route('admin.produits.upsells.create', $produit) }}" class="btn btn-primary rounded-pill px-4">
-        <i class="fas fa-plus me-1"></i> Ajouter un upsell
-    </a>
-</div>
-
-@if(session('success'))
-    <div class="alert alert-success alert-dismissible fade show rounded-3">
-        {{ session('success') }}
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-@endif
-
-{{-- Info --}}
-<div class="alert alert-info border-0 rounded-3 mb-4" style="background:#eff6ff;">
-    <i class="fas fa-lightbulb me-2 text-primary"></i>
-    <strong>Qu'est-ce qu'un upsell ?</strong>
-    Après l'achat de <strong>{{ $produit->nom }}</strong>, le client voit une offre spéciale
-    pour un autre produit. C'est une façon d'augmenter votre chiffre d'affaires automatiquement.
-</div>
-
-@if($upsells->isEmpty())
-    <div class="text-center py-5 text-muted">
-        <i class="fas fa-fire fa-3x mb-3 opacity-25"></i>
-        <p>Aucun upsell configuré pour ce produit.</p>
-        <a href="{{ route('admin.produits.upsells.create', $produit) }}" class="btn btn-primary rounded-pill px-4">
-            <i class="fas fa-plus me-1"></i> Créer mon premier upsell
+        <a href="{{ route('admin.produits.upsells.create', $produit) }}" class="cw-btn-primary">
+            <i class="fas fa-plus"></i> Ajouter un upsell
         </a>
     </div>
-@else
-    <div class="card border-0 shadow-sm" style="border-radius:16px;overflow:hidden;">
-        <div class="table-responsive">
-            <table class="table table-hover align-middle mb-0">
-                <thead style="background:#f8fafc;">
-                    <tr>
-                        <th class="px-4 py-3">Produit proposé</th>
-                        <th>Titre de l'offre</th>
-                        <th>Prix spécial</th>
-                        <th>Ordre</th>
-                        <th>Statut</th>
-                        <th class="text-end px-4">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($upsells as $upsell)
-                    <tr>
-                        <td class="px-4">
-                            @if($upsell->produitUpsell)
-                                <div class="fw-semibold">{{ $upsell->produitUpsell->nom }}</div>
-                                <div class="text-muted small">
-                                    Prix normal : {{ number_format($upsell->produitUpsell->prix, 0, ',', ' ') }} F CFA
-                                </div>
-                            @else
-                                <span class="text-danger">Produit supprimé</span>
-                            @endif
-                        </td>
-                        <td>
-                            <div class="fw-semibold" style="max-width:200px;">{{ $upsell->titre_offre }}</div>
-                            @if($upsell->description_offre)
-                                <div class="text-muted small text-truncate" style="max-width:200px;">{{ $upsell->description_offre }}</div>
-                            @endif
-                        </td>
-                        <td>
-                            @if($upsell->prix_special !== null)
-                                <span class="text-success fw-bold">{{ number_format($upsell->prix_special, 0, ',', ' ') }} F CFA</span>
-                            @else
-                                <span class="text-muted small">Prix normal</span>
-                            @endif
-                        </td>
-                        <td>{{ $upsell->ordre }}</td>
-                        <td>
-                            <form action="{{ route('admin.produits.upsells.toggle', [$produit, $upsell]) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="btn btn-sm rounded-pill {{ $upsell->est_actif ? 'btn-success' : 'btn-outline-secondary' }}">
-                                    {{ $upsell->est_actif ? '✅ Actif' : '⏸ Inactif' }}
-                                </button>
-                            </form>
-                        </td>
-                        <td class="text-end px-4">
-                            <div class="d-flex gap-2 justify-content-end">
-                                <a href="{{ route('admin.produits.upsells.edit', [$produit, $upsell]) }}"
-                                   class="btn btn-sm btn-outline-primary rounded-pill">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="{{ route('admin.produits.upsells.destroy', [$produit, $upsell]) }}"
-                                      method="POST" onsubmit="return confirm('Supprimer cet upsell ?')">
-                                    @csrf @method('DELETE')
-                                    <button class="btn btn-sm btn-outline-danger rounded-pill">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+
+    <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:12px;padding:12px 16px;margin-bottom:16px;font-size:.83rem;color:#1e40af;">
+        <i class="fas fa-lightbulb me-2"></i>
+        Après l'achat de <strong>{{ $produit->nom }}</strong>, le client verra une offre spéciale pour un autre produit.
     </div>
-@endif
+
+    <div class="cw-table-wrap">
+        <table class="cw-table">
+            <thead>
+                <tr>
+                    <th>Produit proposé</th>
+                    <th>Titre de l'offre</th>
+                    <th>Prix spécial</th>
+                    <th>Ordre</th>
+                    <th>Statut</th>
+                    <th style="width:80px;"></th>
+                </tr>
+            </thead>
+            <tbody>
+            @forelse($upsells as $upsell)
+            <tr>
+                <td>
+                    @if($upsell->produitUpsell)
+                        <div style="font-weight:600;color:#111827;font-size:.84rem;">{{ $upsell->produitUpsell->nom }}</div>
+                        <div style="font-size:.72rem;color:#9ca3af;">Prix normal : {{ number_format($upsell->produitUpsell->prix, 0, ',', ' ') }} FCFA</div>
+                    @else
+                        <span style="color:#dc2626;font-size:.8rem;">Produit supprimé</span>
+                    @endif
+                </td>
+                <td style="max-width:180px;">
+                    <div style="font-weight:600;color:#111827;font-size:.83rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $upsell->titre_offre }}</div>
+                    @if($upsell->description_offre)
+                        <div style="font-size:.72rem;color:#9ca3af;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ $upsell->description_offre }}</div>
+                    @endif
+                </td>
+                <td>
+                    @if($upsell->prix_special !== null)
+                        <span style="font-weight:700;color:#059669;">{{ number_format($upsell->prix_special, 0, ',', ' ') }} FCFA</span>
+                    @else
+                        <span style="color:#9ca3af;font-size:.78rem;font-style:italic;">Prix normal</span>
+                    @endif
+                </td>
+                <td style="color:#6b7280;font-weight:600;">{{ $upsell->ordre }}</td>
+                <td>
+                    <form action="{{ route('admin.produits.upsells.toggle', [$produit, $upsell]) }}" method="POST">
+                        @csrf
+                        <button type="submit" class="cw-badge {{ $upsell->est_actif ? 'cw-badge-green' : 'cw-badge-gray' }}"
+                                style="border:none;cursor:pointer;padding:4px 12px;">
+                            {{ $upsell->est_actif ? 'Actif' : 'Inactif' }}
+                        </button>
+                    </form>
+                </td>
+                <td>
+                    <div style="display:flex;gap:5px;justify-content:flex-end;">
+                        <a href="{{ route('admin.produits.upsells.edit', [$produit, $upsell]) }}" class="cw-btn-row" title="Modifier">
+                            <i class="fas fa-pen"></i>
+                        </a>
+                        <button class="cw-btn-row" style="color:#dc2626;border-color:#fecaca;"
+                                data-confirm-message="Supprimer cet upsell ?"
+                                data-target-form="del-{{ $upsell->id }}" title="Supprimer">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <form id="del-{{ $upsell->id }}" action="{{ route('admin.produits.upsells.destroy', [$produit, $upsell]) }}" method="POST" class="d-none">
+                            @csrf @method('DELETE')
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="6">
+                    <div class="cw-empty">
+                        <i class="fas fa-fire"></i>
+                        <p>Aucun upsell configuré pour ce produit</p>
+                        <a href="{{ route('admin.produits.upsells.create', $produit) }}" class="cw-btn-primary" style="display:inline-flex;">
+                            <i class="fas fa-plus"></i> Créer mon premier upsell
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            @endforelse
+            </tbody>
+        </table>
+    </div>
+
+</div>
 @endsection

@@ -57,6 +57,55 @@
     </div>
 </div>
 
+{{-- Réassigner à un autre marchand --}}
+@if($marchands->count() > 0)
+<div class="sa-table mb-4">
+    <div class="sa-table-header">
+        <span><i class="fas fa-exchange-alt me-2"></i>Réassigner la boutique à un autre marchand</span>
+    </div>
+    <div style="padding:1.25rem;">
+        @if(session('success'))
+            <div class="alert alert-success mb-3" style="border-radius:10px;font-size:.875rem;">
+                <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
+            </div>
+        @endif
+        <form method="POST" action="{{ route('superadmin.boutiques.reassigner', $boutique) }}"
+              onsubmit="return confirm('Confirmer la réassignation de cette boutique ?')">
+            @csrf @method('PATCH')
+            <div class="d-flex gap-3 align-items-end flex-wrap">
+                <div style="flex:1;min-width:220px;">
+                    <label style="font-size:.8rem;font-weight:600;color:#64748b;display:block;margin-bottom:6px;">
+                        Propriétaire actuel
+                    </label>
+                    <input type="text" class="form-control" style="border-radius:10px;font-size:.875rem;"
+                           value="{{ $boutique->utilisateur->nom }} ({{ $boutique->utilisateur->email }})" disabled>
+                </div>
+                <div style="flex:2;min-width:240px;">
+                    <label style="font-size:.8rem;font-weight:600;color:#64748b;display:block;margin-bottom:6px;">
+                        Nouveau propriétaire
+                    </label>
+                    <select name="nouveau_marchand_id" class="form-select" required style="border-radius:10px;font-size:.875rem;">
+                        <option value="">— Sélectionner un marchand —</option>
+                        @foreach($marchands as $m)
+                            <option value="{{ $m->id }}">{{ $m->nom }} ({{ $m->email }})</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div>
+                    <button type="submit" class="btn btn-warning"
+                            style="border-radius:10px;font-weight:600;white-space:nowrap;">
+                        <i class="fas fa-exchange-alt me-1"></i> Réassigner
+                    </button>
+                </div>
+            </div>
+            @error('nouveau_marchand_id')
+                <div style="color:#dc2626;font-size:.8rem;margin-top:6px;">{{ $message }}</div>
+            @enderror
+        </form>
+    </div>
+</div>
+@endif
+
 {{-- Dernières transactions --}}
 <div class="sa-table">
     <div class="sa-table-header">

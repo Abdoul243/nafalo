@@ -19,9 +19,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'superadmin' => App\Http\Middleware\SuperAdminMiddleware::class,
         ]);
 
-        // Exclure le webhook GeniusPay de la vérification CSRF
+        // Exclure les webhooks de paiement de la vérification CSRF
         $middleware->validateCsrfTokens(except: [
             'boutique/checkout/webhook/geniuspay',
+            'paiement/webhook',
+            'paiement/webhook/*',
+            'api/*',
         ]);
 
         // Forcer le schéma HTTPS pour les URLs générées par Laravel

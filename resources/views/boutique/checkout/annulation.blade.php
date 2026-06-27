@@ -3,28 +3,28 @@
 @section('title', 'Paiement annulé')
 
 @section('content')
-<div style="max-width:600px;margin:4rem auto;padding:0 1rem;text-align:center;">
+<div style="max-width:560px;margin:5rem auto;padding:0 1.25rem;text-align:center;">
 
-    <div style="width:80px;height:80px;background:#fef2f2;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
+    <div style="width:80px;height:80px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.25);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;">
         <i class="fas fa-times" style="font-size:2rem;color:#ef4444;"></i>
     </div>
 
-    <h1 style="font-size:1.8rem;font-weight:900;color:#0f172a;margin-bottom:0.5rem;">
+    <h1 style="font-family:'Playfair Display',Georgia,serif;font-size:1.75rem;font-weight:700;color:var(--text-1);margin-bottom:0.5rem;">
         Paiement annulé
     </h1>
-    <p style="color:#64748b;font-size:1rem;line-height:1.7;margin-bottom:2rem;">
-        Votre paiement a été annulé. Votre panier est toujours disponible.
+    <p style="color:var(--text-3);font-size:0.95rem;line-height:1.7;margin-bottom:2rem;">
+        Votre paiement a été annulé. Votre panier est toujours disponible.<br>
         Vous pouvez réessayer quand vous le souhaitez.
     </p>
 
     <div style="display:flex;flex-direction:column;gap:0.75rem;">
         <a href="{{ route('boutique.panier.index') }}"
-           style="display:block;background:#2563eb;color:white;border-radius:12px;padding:0.875rem;font-weight:700;text-decoration:none;">
-            <i class="fas fa-shopping-cart me-2"></i> Retourner au panier
+           style="display:flex;align-items:center;justify-content:center;gap:9px;background:var(--accent);color:white;border-radius:14px;padding:1rem;font-weight:700;font-size:0.95rem;text-decoration:none;transition:all 0.2s;box-shadow:0 4px 18px rgba(124,58,237,0.3);">
+            <i class="fas fa-shopping-cart"></i> Retourner au panier
         </a>
         <a href="{{ route('boutique.accueil') }}"
-           style="display:block;background:white;color:#0f172a;border:1.5px solid #e2e8f0;border-radius:12px;padding:0.875rem;font-weight:600;text-decoration:none;">
-            <i class="fas fa-arrow-left me-2"></i> Retour à la boutique
+           style="display:flex;align-items:center;justify-content:center;gap:9px;background:rgba(255,255,255,0.04);color:var(--text-2);border:1px solid var(--border);border-radius:14px;padding:1rem;font-weight:600;font-size:0.9rem;text-decoration:none;transition:all 0.2s;">
+            <i class="fas fa-arrow-left"></i> Retour à la boutique
         </a>
     </div>
 </div>

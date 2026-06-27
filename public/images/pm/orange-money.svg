@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <rect width="120" height="120" rx="16" fill="#FF6600"/>
+  <!-- Orange circle brand mark -->
+  <circle cx="60" cy="46" r="28" fill="none" stroke="white" stroke-width="7"/>
+  <!-- OM text -->
+  <text x="60" y="52" text-anchor="middle" fill="white" font-family="Arial Black, Arial" font-weight="900" font-size="22">OM</text>
+  <!-- Orange Money text -->
+  <text x="60" y="80" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-weight="700" font-size="11">Orange</text>
+  <text x="60" y="95" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-weight="700" font-size="11">Money</text>
+</svg>

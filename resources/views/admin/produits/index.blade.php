@@ -3,274 +3,352 @@
 
 @push('styles')
 <style>
-/* ── Layout ── */
-.produits-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; gap:1rem; flex-wrap:wrap; }
-.produits-header h1 { margin:0; font-size:1.4rem; font-weight:800; }
+/* ══ PAGE PRODUITS — Chariow Style ══ */
+.page-wrap { background: #fff; border-radius: 16px; overflow: hidden; min-height: 80vh; }
 
-/* ── Filtres ── */
-.filter-card { background:white; border-radius:16px; border:1px solid #f1f5f9; padding:1rem 1.25rem; margin-bottom:1.5rem; box-shadow:0 1px 4px rgba(0,0,0,0.04); }
+/* Toolbar */
+.p-toolbar {
+    display: flex; align-items: center; gap: 10px;
+    padding: 16px 20px; border-bottom: 1px solid #f1f5f9;
+}
+.p-search {
+    flex: 1; position: relative;
+}
+.p-search i {
+    position: absolute; left: 12px; top: 50%; transform: translateY(-50%);
+    color: #94a3b8; font-size: .8rem; pointer-events: none;
+}
+.p-search input {
+    width: 100%; height: 38px; padding: 0 12px 0 34px;
+    font-size: .84rem; border: 1px solid #e5e7eb; border-radius: 10px;
+    outline: none; background: #f9fafb; color: #111827;
+    transition: border-color .15s, background .15s;
+}
+.p-search input:focus { border-color: #6d28d9; background: #fff; }
+.p-search input::placeholder { color: #9ca3af; }
+.p-filter-btn {
+    width: 38px; height: 38px; border: 1px solid #e5e7eb; border-radius: 10px;
+    background: #f9fafb; color: #6b7280; font-size: .82rem;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; flex-shrink: 0; transition: all .15s;
+}
+.p-filter-btn:hover { border-color: #374151; color: #111827; background: #fff; }
+.btn-add {
+    height: 38px; padding: 0 18px; font-size: .84rem; font-weight: 600;
+    background: #f59e0b; color: #fff; border: none; border-radius: 10px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 7px;
+    white-space: nowrap; flex-shrink: 0; transition: background .15s;
+}
+.btn-add:hover { background: #d97706; color: #fff; }
 
-/* ── Cards produits (mobile) ── */
-.produit-card {
-    background:white; border-radius:16px; border:1px solid #f1f5f9;
-    box-shadow:0 2px 8px rgba(0,0,0,0.05); overflow:visible;
-    transition:box-shadow .2s; position:relative;
+/* Tabs */
+.p-tabs {
+    display: flex; gap: 4px; padding: 12px 20px 0;
+    border-bottom: 1px solid #f1f5f9;
 }
-.produit-card:hover { box-shadow:0 6px 20px rgba(0,0,0,0.09); }
-.produit-img { width:56px; height:56px; border-radius:12px; object-fit:cover; flex-shrink:0; }
-.produit-img-placeholder { width:56px; height:56px; border-radius:12px; background:#f1f5f9; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.p-tab {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 14px; font-size: .83rem; font-weight: 500;
+    color: #6b7280; border: none; background: none; cursor: pointer;
+    border-bottom: 2px solid transparent; margin-bottom: -1px;
+    text-decoration: none; transition: all .15s; white-space: nowrap;
+}
+.p-tab:hover { color: #111827; }
+.p-tab.active { color: #111827; font-weight: 700; border-bottom-color: #111827; }
+.p-tab-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
 
-/* ── Table desktop ── */
-.table-produits { border-collapse:separate; border-spacing:0; }
-.table-produits thead th { background:#f8fafc; font-size:.75rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:#64748b; border-bottom:1px solid #e2e8f0; padding:.85rem 1rem; }
-.table-produits tbody tr { transition:background .15s; }
-.table-produits tbody tr:hover { background:#fafbff; }
-.table-produits tbody td { padding:.85rem 1rem; border-bottom:1px solid #f1f5f9; vertical-align:middle; }
-.table-produits tbody tr:last-child td { border-bottom:none; }
+/* Table */
+.p-table { width: 100%; border-collapse: collapse; }
+.p-table thead th {
+    padding: 10px 16px; font-size: .71rem; font-weight: 700;
+    color: #9ca3af; text-transform: uppercase; letter-spacing: .06em;
+    background: #fafafa; white-space: nowrap;
+    border-bottom: 1px solid #f1f5f9;
+}
+.p-table tbody tr { border-bottom: 1px solid #f9fafb; transition: background .1s; }
+.p-table tbody tr:last-child { border-bottom: none; }
+.p-table tbody tr:hover { background: #fafafa; }
+.p-table td { padding: 12px 16px; vertical-align: middle; font-size: .84rem; color: #374151; }
 
-/* ── Dropdown fix ── */
-.action-menu { position:relative; }
-.action-btn {
-    width:34px; height:34px; border-radius:8px; border:1px solid #e2e8f0;
-    background:white; display:flex; align-items:center; justify-content:center;
-    cursor:pointer; color:#64748b; transition:all .15s; padding:0;
+/* Thumbnail */
+.p-thumb {
+    width: 36px; height: 36px; border-radius: 8px;
+    object-fit: cover; display: block; flex-shrink: 0;
 }
-.action-btn:hover { background:#f1f5f9; border-color:#cbd5e1; color:#0f172a; }
-.action-dropdown {
-    position:fixed; background:white; border-radius:14px; border:1px solid #e2e8f0;
-    box-shadow:0 12px 40px rgba(0,0,0,0.15); min-width:200px; z-index:99999;
-    display:none; padding:.4rem 0; animation:dropFade .15s ease;
+.p-thumb-empty {
+    width: 36px; height: 36px; border-radius: 8px;
+    background: #f3f4f6; display: flex; align-items: center;
+    justify-content: center; color: #d1d5db; font-size: .8rem;
+    flex-shrink: 0;
 }
-.action-dropdown.open { display:block; }
-@keyframes dropFade { from{opacity:0;transform:translateY(-6px)} to{opacity:1;transform:translateY(0)} }
-.action-dropdown a, .action-dropdown button {
-    display:flex; align-items:center; gap:10px; padding:.55rem 1rem;
-    color:#374151; font-size:.85rem; font-weight:500; text-decoration:none;
-    background:none; border:none; width:100%; text-align:left; cursor:pointer;
-    transition:background .12s;
-}
-.action-dropdown a:hover, .action-dropdown button:hover { background:#f8fafc; color:#0f172a; }
-.action-dropdown .menu-divider { border:none; border-top:1px solid #f1f5f9; margin:.3rem 0; }
-.action-dropdown .danger:hover { background:#fef2f2; color:#dc2626; }
 
-/* ── Statut badges ── */
-.badge-publie { background:#dcfce7; color:#16a34a; font-size:.72rem; font-weight:700; padding:4px 10px; border-radius:20px; }
-.badge-brouillon { background:#f1f5f9; color:#64748b; font-size:.72rem; font-weight:700; padding:4px 10px; border-radius:20px; }
-.badge-type { background:#ede9fe; color:#7c3aed; font-size:.7rem; font-weight:600; padding:2px 8px; border-radius:10px; }
-.badge-type.gratuit { background:#fef9c3; color:#ca8a04; }
+/* Product name */
+.p-name { font-weight: 600; color: #111827; font-size: .85rem; }
+.p-copy {
+    background: none; border: none; padding: 0 3px;
+    color: #d1d5db; font-size: .72rem; cursor: pointer;
+    transition: color .15s; vertical-align: middle;
+}
+.p-copy:hover { color: #6b7280; }
 
-/* ── Responsive ── */
-@media(max-width:767px) {
-    .desktop-only { display:none !important; }
-    .mobile-list { display:flex !important; flex-direction:column; gap:.75rem; }
+/* Price */
+.p-price { font-size: .84rem; color: #374151; white-space: nowrap; }
+.p-price.free { color: #d97706; font-weight: 600; }
+
+/* Status */
+.p-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    padding: 3px 10px; border-radius: 20px;
+    font-size: .73rem; font-weight: 600; white-space: nowrap;
 }
-@media(min-width:768px) {
-    .mobile-list { display:none !important; }
-    .desktop-table { display:block !important; }
+.p-badge.pub  { background: #ecfdf5; color: #059669; }
+.p-badge.draft{ background: #f3f4f6; color: #6b7280; }
+.p-badge i { font-size: .65rem; }
+
+/* 3-dot menu */
+.p-action { position: relative; display: inline-block; }
+.p-action-btn {
+    width: 32px; height: 32px; border-radius: 8px;
+    border: 1px solid #e5e7eb; background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; color: #6b7280; transition: all .15s; padding: 0;
 }
-.desktop-table { display:none; }
+.p-action-btn:hover { background: #f9fafb; border-color: #374151; color: #111827; }
+.p-dropdown {
+    position: fixed; background: #fff; border-radius: 12px;
+    border: 1px solid #e5e7eb; box-shadow: 0 8px 30px rgba(0,0,0,.1);
+    min-width: 185px; z-index: 99999; display: none; padding: .35rem 0;
+    animation: dFade .12s ease;
+}
+.p-dropdown.open { display: block; }
+@keyframes dFade { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
+.p-dropdown a, .p-dropdown button {
+    display: flex; align-items: center; gap: 9px;
+    padding: .48rem 1rem; color: #374151; font-size: .82rem; font-weight: 500;
+    text-decoration: none; background: none; border: none;
+    width: 100%; text-align: left; cursor: pointer; transition: background .1s;
+}
+.p-dropdown a:hover, .p-dropdown button:hover { background: #f9fafb; color: #111827; }
+.p-dropdown .divider { border: none; border-top: 1px solid #f1f5f9; margin: .3rem 0; }
+.p-dropdown .danger:hover { background: #fef2f2; color: #dc2626; }
+
+/* Empty */
+.p-empty { text-align: center; padding: 4rem 1rem; color: #9ca3af; }
+.p-empty i { font-size: 2.5rem; display: block; margin-bottom: .75rem; color: #e5e7eb; }
+.p-empty p { font-size: .85rem; margin: 0 0 1rem; }
+
+/* Pagination */
+.p-pages { padding: 1rem; border-top: 1px solid #f1f5f9; }
+.pagination { justify-content: center; gap: 4px; margin: 0; }
+.pagination .page-link {
+    border-radius: 8px !important; border: 1px solid #e5e7eb;
+    color: #374151; font-size: .8rem; padding: 5px 11px;
+    background: #fff;
+}
+.pagination .page-item.active .page-link { background: #111827; border-color: #111827; color: #fff; }
+.pagination .page-link:hover { background: #f9fafb; }
+
+/* Mobile */
+.p-card-mobile {
+    background: #fff; border: 1px solid #f1f5f9; border-radius: 12px;
+    padding: 12px 14px; display: flex; align-items: center; gap: 12px;
+    margin-bottom: .5rem;
+}
+@media (max-width: 767px) {
+    .desk { display: none !important; }
+    .mob  { display: block !important; }
+    .p-toolbar { flex-wrap: wrap; }
+    .btn-add { width: 100%; justify-content: center; }
+}
+@media (min-width: 768px) {
+    .mob  { display: none !important; }
+    .desk { display: block !important; }
+}
+.mob { display: none; }
 </style>
 @endpush
 
 @section('content')
 
-{{-- Header --}}
-<div class="produits-header">
-    <h1>🛍️ Produits</h1>
-    <div class="d-flex gap-2 flex-wrap">
-        <a href="{{ route('admin.exports.produits') }}" class="btn btn-outline-success btn-sm px-3" style="border-radius:10px;">
-            <i class="fas fa-file-csv me-1"></i> <span class="d-none d-sm-inline">Exporter</span>
-        </a>
-        <a href="{{ route('admin.produits.create') }}" class="btn btn-primary btn-sm px-3" style="border-radius:10px;background:linear-gradient(135deg,#4f46e5,#7c3aed);border:none;">
-            <i class="fas fa-plus me-1"></i> Nouveau produit
-        </a>
-    </div>
-</div>
-
-{{-- Alertes --}}
 @if(session('success'))
-<div class="alert alert-success alert-dismissible fade show mb-3" style="border-radius:12px;">
-    <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
+<div class="alert alert-success alert-dismissible fade show mb-3" style="border-radius:10px;font-size:.84rem;">
+    <i class="fas fa-check-circle me-2"></i>{{ session('success') }}
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
 @endif
 @if(session('error'))
-<div class="alert alert-danger alert-dismissible fade show mb-3" style="border-radius:12px;">
-    <i class="fas fa-exclamation-circle me-2"></i> {{ session('error') }}
+<div class="alert alert-danger alert-dismissible fade show mb-3" style="border-radius:10px;font-size:.84rem;">
+    <i class="fas fa-exclamation-circle me-2"></i>{{ session('error') }}
     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
 @endif
 
-{{-- Filtres --}}
-<div class="filter-card">
-    <form method="GET" class="row g-2 align-items-end">
-        <div class="col-12 col-sm-6 col-md-5">
-            <div class="input-group input-group-sm">
-                <span class="input-group-text bg-light border-0" style="border-radius:10px 0 0 10px;">
-                    <i class="fas fa-search text-muted"></i>
-                </span>
-                <input type="text" class="form-control border-0 bg-light" name="recherche"
-                       placeholder="Rechercher un produit..." value="{{ request('recherche') }}"
-                       style="border-radius:0 10px 10px 0;">
+<div class="page-wrap">
+
+    {{-- Toolbar --}}
+    <form method="GET" id="sf">
+        <input type="hidden" name="statut" value="{{ request('statut') }}">
+        <div class="p-toolbar">
+            <div class="p-search">
+                <i class="fas fa-search"></i>
+                <input type="text" name="recherche" value="{{ request('recherche') }}"
+                       placeholder="Rechercher un produit..."
+                       oninput="document.getElementById('sf').submit()">
             </div>
-        </div>
-        <div class="col-12 col-sm-6 col-md-4">
-            <select class="form-select form-select-sm" name="categorie" style="border-radius:10px;border:1.5px solid #e2e8f0;">
-                <option value="">Toutes les catégories</option>
-                @foreach($categories as $cat)
-                    <option value="{{ $cat->id }}" {{ request('categorie') == $cat->id ? 'selected' : '' }}>
-                        {{ $cat->nom }}
-                    </option>
-                @endforeach
-            </select>
-        </div>
-        <div class="col-12 col-md-3 d-flex gap-2">
-            <button type="submit" class="btn btn-primary btn-sm flex-grow-1" style="border-radius:10px;">
-                <i class="fas fa-filter me-1"></i> Filtrer
+            <button type="submit" class="p-filter-btn" title="Filtrer">
+                <i class="fas fa-sliders-h"></i>
             </button>
-            @if(request()->hasAny(['recherche','categorie']))
-            <a href="{{ route('admin.produits.index') }}" class="btn btn-outline-secondary btn-sm" style="border-radius:10px;">
-                <i class="fas fa-times"></i>
+            <a href="{{ route('admin.produits.create') }}" class="btn-add">
+                <i class="fas fa-plus"></i> Ajouter un produit
             </a>
-            @endif
         </div>
     </form>
-</div>
 
-{{-- ═══ VUE MOBILE (cards) ═══ --}}
-<div class="mobile-list">
-    @forelse($produits as $produit)
-    <div class="produit-card p-3">
-        <div class="d-flex align-items-center gap-3">
-            {{-- Image --}}
-            @if($produit->image)
-                <img src="{{ asset('storage/'.$produit->image) }}" alt="{{ $produit->nom }}" class="produit-img">
+    {{-- Tabs --}}
+    @php $statut = request('statut', ''); @endphp
+    <div class="p-tabs">
+        <a href="{{ route('admin.produits.index', array_merge(request()->except('statut','page'), [])) }}"
+           class="p-tab {{ $statut === '' ? 'active' : '' }}">
+            <span class="p-tab-dot" style="background:#9ca3af;"></span> Tout
+        </a>
+        <a href="{{ route('admin.produits.index', array_merge(request()->except('statut','page'), ['statut'=>'brouillon'])) }}"
+           class="p-tab {{ $statut === 'brouillon' ? 'active' : '' }}">
+            <span class="p-tab-dot" style="background:#374151;"></span> Brouillon
+        </a>
+        <a href="{{ route('admin.produits.index', array_merge(request()->except('statut','page'), ['statut'=>'publie'])) }}"
+           class="p-tab {{ $statut === 'publie' ? 'active' : '' }}">
+            <span class="p-tab-dot" style="background:#059669;"></span> Publié
+        </a>
+    </div>
+
+    {{-- Mobile list --}}
+    <div class="mob" style="padding:12px;">
+        @forelse($produits as $produit)
+        <div class="p-card-mobile">
+            @if($produit->image_url)
+                <img src="{{ $produit->image_url }}" class="p-thumb" alt="{{ $produit->nom }}">
             @else
-                <div class="produit-img-placeholder">
-                    <i class="fas fa-box text-muted" style="font-size:1.2rem;"></i>
-                </div>
+                <div class="p-thumb-empty"><i class="fas fa-box"></i></div>
             @endif
-
-            {{-- Infos --}}
-            <div class="flex-grow-1 min-width-0">
-                <div class="fw-bold text-dark" style="font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
-                    {{ $produit->nom }}
-                </div>
-                <div class="d-flex align-items-center gap-2 mt-1 flex-wrap">
-                    <span class="{{ $produit->est_publie ? 'badge-publie' : 'badge-brouillon' }}">
-                        {{ $produit->est_publie ? '● Publié' : '○ Brouillon' }}
+            <div style="flex:1;min-width:0;">
+                <div class="p-name text-truncate">{{ $produit->nom }}</div>
+                <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+                    <span class="p-badge {{ $produit->est_publie ? 'pub' : 'draft' }}">
+                        <i class="fas {{ $produit->est_publie ? 'fa-check-circle' : 'fa-circle' }}"></i>
+                        {{ $produit->est_publie ? 'Publié' : 'Brouillon' }}
                     </span>
-                    <span class="badge-type {{ $produit->type === 'gratuit' ? 'gratuit' : '' }}">
+                    <span class="p-price {{ $produit->type === 'gratuit' ? 'free' : '' }}" style="font-size:.78rem;">
                         {{ $produit->type === 'gratuit' ? 'Gratuit' : number_format($produit->prix,0,',',' ').' FCFA' }}
                     </span>
                 </div>
-                <div class="text-muted mt-1" style="font-size:.75rem;">
-                    <i class="fas fa-shopping-cart me-1"></i>{{ $produit->achats_count ?? 0 }} vente(s)
-                </div>
             </div>
-
-            {{-- Actions mobile --}}
-            <div class="action-menu">
-                <button class="action-btn" onclick="toggleMenu(this)">
-                    <i class="fas fa-ellipsis-v"></i>
+            <div class="p-action">
+                <button class="p-action-btn" onclick="toggleMenu(this)">
+                    <i class="fas fa-ellipsis-v" style="font-size:.78rem;"></i>
                 </button>
-                <div class="action-dropdown">
+                <div class="p-dropdown">
                     @include('admin.produits._menu_actions', ['produit' => $produit])
                 </div>
             </div>
         </div>
-    </div>
-    @empty
-    <div class="text-center py-5 text-muted">
-        <i class="fas fa-box-open fa-3x mb-3 d-block" style="opacity:.3;"></i>
-        Aucun produit trouvé.
-        <br><a href="{{ route('admin.produits.create') }}" class="btn btn-primary btn-sm mt-3" style="border-radius:10px;">Créer un produit</a>
-    </div>
-    @endforelse
-</div>
+        @empty
+        <div class="p-empty">
+            <i class="fas fa-box-open"></i>
+            <p>Aucun produit trouvé.</p>
+            <a href="{{ route('admin.produits.create') }}" class="btn-add" style="display:inline-flex;">
+                <i class="fas fa-plus"></i> Ajouter un produit
+            </a>
+        </div>
+        @endforelse
 
-{{-- ═══ VUE DESKTOP (table) ═══ --}}
-<div class="desktop-table">
-    <div style="background:white;border-radius:16px;border:1px solid #f1f5f9;box-shadow:0 2px 8px rgba(0,0,0,0.05);overflow:visible;">
-        <table class="table table-produits mb-0 w-100">
+        @if($produits->hasPages())
+        <div class="p-pages">{{ $produits->withQueryString()->links() }}</div>
+        @endif
+    </div>
+
+    {{-- Desktop table --}}
+    <div class="desk">
+        <table class="p-table">
             <thead>
                 <tr>
-                    <th style="width:56px;border-radius:16px 0 0 0;"></th>
+                    <th style="width:52px;padding-left:20px;"></th>
                     <th>Produit</th>
-                    <th>Catégorie</th>
                     <th>Prix</th>
                     <th>Ventes</th>
                     <th>Statut</th>
-                    <th class="text-end pe-3" style="border-radius:0 16px 0 0;width:60px;">Actions</th>
+                    <th style="width:52px;text-align:right;padding-right:20px;">Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @forelse($produits as $produit)
-                <tr>
-                    <td style="padding-left:1.25rem;">
-                        @if($produit->image)
-                            <img src="{{ asset('storage/'.$produit->image) }}"
-                                 alt="{{ $produit->nom }}"
-                                 style="width:44px;height:44px;border-radius:10px;object-fit:cover;">
-                        @else
-                            <div style="width:44px;height:44px;border-radius:10px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;">
-                                <i class="fas fa-box text-muted"></i>
-                            </div>
-                        @endif
-                    </td>
-                    <td>
-                        <div class="fw-semibold" style="color:#0f172a;">{{ $produit->nom }}</div>
-                        <div style="font-size:.72rem;color:#94a3b8;">{{ $produit->slug }}</div>
-                    </td>
-                    <td style="color:#64748b;font-size:.85rem;">{{ $produit->categorie->nom ?? '—' }}</td>
-                    <td>
-                        <span class="badge-type {{ $produit->type === 'gratuit' ? 'gratuit' : '' }}">
-                            {{ $produit->type === 'gratuit' ? '🎁 Gratuit' : number_format($produit->prix,0,',',' ').' FCFA' }}
-                        </span>
-                    </td>
-                    <td>
-                        <span style="font-size:.85rem;font-weight:600;color:#475569;">
-                            {{ $produit->achats_count ?? 0 }}
-                        </span>
-                    </td>
-                    <td>
-                        <span class="{{ $produit->est_publie ? 'badge-publie' : 'badge-brouillon' }}">
-                            {{ $produit->est_publie ? '● Publié' : '○ Brouillon' }}
-                        </span>
-                    </td>
-                    <td class="text-end pe-3">
-                        <div class="action-menu d-flex justify-content-end">
-                            <button class="action-btn" onclick="toggleMenu(this)">
-                                <i class="fas fa-ellipsis-v" style="font-size:.8rem;"></i>
-                            </button>
-                            <div class="action-dropdown">
-                                @include('admin.produits._menu_actions', ['produit' => $produit])
-                            </div>
+            @forelse($produits as $produit)
+            <tr>
+                <td style="padding-left:20px;">
+                    @if($produit->image_url)
+                        <img src="{{ $produit->image_url }}" class="p-thumb" alt="{{ $produit->nom }}">
+                    @else
+                        <div class="p-thumb-empty"><i class="fas fa-box"></i></div>
+                    @endif
+                </td>
+                <td>
+                    <div style="display:flex;align-items:center;gap:4px;">
+                        <span class="p-name">{{ $produit->nom }}</span>
+                        <button class="p-copy"
+                                onclick="copyLink('{{ route('boutique.produit.show', ['slug' => optional($produit->boutique)->slug ?? 'boutique', 'produit' => $produit->slug]) }}')"
+                                title="Copier le lien">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    </div>
+                    <div style="font-size:.71rem;color:#9ca3af;margin-top:1px;">{{ $produit->achats_count ?? 0 }} vente(s)</div>
+                </td>
+                <td>
+                    <span class="p-price {{ $produit->type === 'gratuit' ? 'free' : '' }}">
+                        {{ $produit->type === 'gratuit' ? 'Gratuit' : number_format($produit->prix,0,',',' ').' FCFA' }}
+                    </span>
+                </td>
+                <td style="color:#6b7280;font-weight:500;">{{ $produit->achats_count ?? 0 }}</td>
+                <td>
+                    <span class="p-badge {{ $produit->est_publie ? 'pub' : 'draft' }}">
+                        <i class="fas {{ $produit->est_publie ? 'fa-check-circle' : 'fa-circle' }}"></i>
+                        {{ $produit->est_publie ? 'Publié' : 'Brouillon' }}
+                    </span>
+                </td>
+                <td style="text-align:right;padding-right:20px;">
+                    <div class="p-action">
+                        <button class="p-action-btn" onclick="toggleMenu(this)">
+                            <i class="fas fa-ellipsis-v" style="font-size:.78rem;"></i>
+                        </button>
+                        <div class="p-dropdown">
+                            @include('admin.produits._menu_actions', ['produit' => $produit])
                         </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="7" class="text-center py-5 text-muted">
-                        <i class="fas fa-box-open fa-2x mb-2 d-block" style="opacity:.3;"></i>
-                        Aucun produit trouvé.
-                    </td>
-                </tr>
-                @endforelse
+                    </div>
+                </td>
+            </tr>
+            @empty
+            <tr>
+                <td colspan="6">
+                    <div class="p-empty">
+                        <i class="fas fa-box-open"></i>
+                        <p>Aucun produit trouvé.</p>
+                        <a href="{{ route('admin.produits.create') }}" class="btn-add" style="display:inline-flex;">
+                            <i class="fas fa-plus"></i> Ajouter un produit
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            @endforelse
             </tbody>
         </table>
 
         @if($produits->hasPages())
-        <div class="p-3 border-top">
-            {{ $produits->withQueryString()->links() }}
-        </div>
+        <div class="p-pages">{{ $produits->withQueryString()->links() }}</div>
         @endif
     </div>
+
 </div>
 
 {{-- Toast --}}
 <div class="position-fixed bottom-0 end-0 p-3" style="z-index:99999;">
-    <div id="copyToast" class="toast align-items-center text-bg-success border-0" role="alert">
+    <div id="copyToast" class="toast align-items-center text-bg-success border-0">
         <div class="d-flex">
             <div class="toast-body"><i class="fas fa-check me-2"></i> Lien copié !</div>
             <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
@@ -278,15 +356,15 @@
     </div>
 </div>
 
-{{-- Formulaires DELETE cachés --}}
+{{-- Formulaires cachés --}}
 @foreach($produits as $produit)
 <form id="delete-form-{{ $produit->id }}" action="{{ route('admin.produits.destroy', $produit) }}" method="POST" class="d-none">
     @csrf @method('DELETE')
 </form>
 <form id="toggle-form-{{ $produit->id }}" action="{{ route('admin.produits.update', $produit) }}" method="POST" class="d-none">
     @csrf @method('PUT')
-    <input type="hidden" name="nom" value="{{ $produit->nom }}">
-    <input type="hidden" name="prix" value="{{ $produit->prix }}">
+    <input type="hidden" name="nom"        value="{{ $produit->nom }}">
+    <input type="hidden" name="prix"       value="{{ $produit->prix }}">
     <input type="hidden" name="est_publie" value="{{ $produit->est_publie ? 0 : 1 }}">
 </form>
 @endforeach
@@ -300,77 +378,60 @@
     var openMenu = null;
 
     window.toggleMenu = function(btn) {
-        try {
-            var container = btn.closest('.action-menu');
-            if (!container) return;
-            var menu = container.querySelector('.action-dropdown');
-            if (!menu) return;
-
-            if (openMenu && openMenu !== menu) closeAllMenus();
-
-            if (menu.classList.contains('open')) {
-                closeAllMenus();
-                return;
-            }
-            positionMenu(btn, menu);
-            menu.classList.add('open');
-            openMenu = menu;
-        } catch(e) { console.error('toggleMenu:', e); }
+        var container = btn.closest('.p-action');
+        if (!container) return;
+        var menu = container.querySelector('.p-dropdown');
+        if (!menu) return;
+        if (openMenu && openMenu !== menu) closeAll();
+        if (menu.classList.contains('open')) { closeAll(); return; }
+        positionMenu(btn, menu);
+        menu.classList.add('open');
+        openMenu = menu;
     };
 
     function positionMenu(btn, menu) {
-        var rect = btn.getBoundingClientRect();
-        menu.style.top   = (rect.bottom + 4) + 'px';
+        var r = btn.getBoundingClientRect();
+        menu.style.top   = (r.bottom + 4) + 'px';
+        menu.style.right = Math.max(0, window.innerWidth - r.right) + 'px';
         menu.style.left  = 'auto';
-        menu.style.right = Math.max(0, window.innerWidth - rect.right) + 'px';
     }
 
-    function closeAllMenus() {
-        document.querySelectorAll('.action-dropdown.open')
-            .forEach(function(m) { m.classList.remove('open'); });
+    function closeAll() {
+        document.querySelectorAll('.p-dropdown.open').forEach(function(m){ m.classList.remove('open'); });
         openMenu = null;
     }
 
-    // Fermer en cliquant ailleurs — ne bloque rien d'autre
     document.addEventListener('click', function(e) {
-        if (!e.target.closest('.action-menu')) closeAllMenus();
-    }, true); // capture phase pour ne pas interférer avec Bootstrap
+        if (!e.target.closest('.p-action')) closeAll();
+    }, true);
 
-    // Repositionner au scroll
     window.addEventListener('scroll', function() {
         if (openMenu) {
-            var btn = openMenu.closest('.action-menu').querySelector('.action-btn');
+            var btn = openMenu.closest('.p-action').querySelector('.p-action-btn');
             if (btn) positionMenu(btn, openMenu);
         }
     }, { passive: true });
 
     window.copyLink = function(url) {
         navigator.clipboard.writeText(url).then(function() {
-            closeAllMenus();
-            try {
-                new bootstrap.Toast(document.getElementById('copyToast')).show();
-            } catch(e) {}
-        }).catch(function() {
-            prompt('Copiez ce lien :', url);
-        });
+            closeAll();
+            try { new bootstrap.Toast(document.getElementById('copyToast')).show(); } catch(e){}
+        }).catch(function() { prompt('Lien :', url); });
     };
 
     window.confirmDelete = function(id, nom) {
-        closeAllMenus();
+        closeAll();
         if (confirm('Supprimer "' + nom + '" ? Cette action est irréversible.')) {
             var f = document.getElementById('delete-form-' + id);
             if (f) f.submit();
-            else console.error('Formulaire delete-form-' + id + ' introuvable');
         }
     };
 
     window.togglePublier = function(id) {
-        closeAllMenus();
+        closeAll();
         var f = document.getElementById('toggle-form-' + id);
         if (f) f.submit();
-        else console.error('Formulaire toggle-form-' + id + ' introuvable');
     };
-
 })();
 </script>
 @endpush

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="utf-8">
@@ -63,7 +63,7 @@
             width: 44px;
             height: 44px;
             border-radius: 12px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #0f172a, #1e293b);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -125,13 +125,13 @@
 <body>
     <div class="selector-card position-relative">
         <h2>Changer de boutique</h2>
-        <p class="subtitle">Sélectionnez la boutique sur laquelle vous souhaitez travailler</p>
+        <p class="subtitle">S�lectionnez la boutique sur laquelle vous souhaitez travailler</p>
 
         @foreach($boutiques as $boutique)
         <a href="{{ route('admin.boutiques.select', $boutique->id) }}" class="boutique-item">
             <div class="boutique-avatar">
                 @if($boutique->logo)
-                    <img src="{{ asset('storage/' . $boutique->logo) }}" alt="{{ $boutique->nom }}">
+                    <img src="{{ $boutique->logo_url }}" alt="{{ $boutique->nom }}">
                 @else
                     {{ strtoupper(substr($boutique->nom, 0, 1)) }}
                 @endif
@@ -150,8 +150,9 @@
         @endforeach
 
         <a href="{{ route('admin.boutiques.create') }}" class="btn-create">
-            <i class="fas fa-plus"></i> Créer une boutique
+            <i class="fas fa-plus"></i> Cr�er une boutique
         </a>
     </div>
 </body>
 </html>
+

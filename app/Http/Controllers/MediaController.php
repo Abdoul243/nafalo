@@ -10,62 +10,74 @@ class MediaController extends Controller
 {
     public function produitImage(Produit $produit)
     {
-        if (!$produit->image) {
-            abort(404);
-        }
-
-        if ($this->isBinaryMedia($produit->image, $produit->image_mime, $produit->image_taille)) {
-            $mime = $produit->image_mime ?: 'application/octet-stream';
-            $content = $produit->image;
-
-            return response($content, 200, [
-                'Content-Type' => $mime,
-                'Content-Length' => (string) strlen($content),
-                'Cache-Control' => 'public, max-age=86400',
-            ]);
-        }
-
-        if (Storage::disk('public')->exists($produit->image)) {
-            return Storage::disk('public')->response($produit->image);
-        }
-
-        abort(404);
+        return $this->serveMedia(
+            $produit->image,
+            $produit->image_mime,
+            $produit->image_taille
+        );
     }
 
     public function boutiqueLogo(Boutique $boutique)
     {
-        if (!$boutique->logo) {
+        return $this->serveMedia(
+            $boutique->logo,
+            $boutique->logo_mime,
+            $boutique->logo_taille
+        );
+    }
+
+    /**
+     * Sert un média stocké de 3 façons possibles :
+     *  1. URL externe  → redirect
+     *  2. Fichier disk → Storage::response
+     *  3. Binaire DB   → response avec Content-Type
+     */
+    private function serveMedia(?string $content, ?string $mime, ?int $size)
+    {
+        if (!$content) {
             abort(404);
         }
 
-        if ($this->isBinaryMedia($boutique->logo, $boutique->logo_mime, $boutique->logo_taille)) {
-            $mime = $boutique->logo_mime ?: 'application/octet-stream';
-            $content = $boutique->logo;
-
-            return response($content, 200, [
-                'Content-Type' => $mime,
-                'Content-Length' => (string) strlen($content),
-                'Cache-Control' => 'public, max-age=86400',
-            ]);
+        // 1. URL externe
+        if (str_starts_with($content, 'http://') || str_starts_with($content, 'https://')) {
+            return redirect($content);
         }
 
-        if (Storage::disk('public')->exists($boutique->logo)) {
-            return Storage::disk('public')->response($boutique->logo);
+        // 2. Chemin de fichier sur le disque public
+        if (Storage::disk('public')->exists($content)) {
+            return Storage::disk('public')->response($content);
+        }
+
+        // 3. Données binaires stockées en DB (contient des octets nuls ou mime/taille renseignés
+        //    MAIS seulement si ce n'est pas un simple chemin lisible)
+        if ($this->isBinaryData($content)) {
+            return response($content, 200, [
+                'Content-Type'   => $mime ?: 'application/octet-stream',
+                'Content-Length' => (string) strlen($content),
+                'Cache-Control'  => 'public, max-age=86400',
+            ]);
         }
 
         abort(404);
     }
 
-    private function isBinaryMedia(mixed $content, ?string $mime, ?int $size): bool
+    /**
+     * Détecte si une chaîne contient de vraies données binaires
+     * (octets nuls ou caractères non-UTF8) plutôt qu'un chemin texte.
+     */
+    private function isBinaryData(string $content): bool
     {
-        if (!is_string($content)) {
-            return false;
-        }
-
-        if ($mime || $size) {
+        // Présence d'octet nul → binaire certain
+        if (str_contains($content, "\0")) {
             return true;
         }
 
-        return str_contains($content, "\0");
+        // Si ça ressemble à un chemin de fichier → pas binaire
+        if (preg_match('#^[\w/\-\.]+$#', $content)) {
+            return false;
+        }
+
+        // Teste si la chaîne est invalide en UTF-8 → probablement binaire
+        return !mb_check_encoding($content, 'UTF-8');
     }
 }

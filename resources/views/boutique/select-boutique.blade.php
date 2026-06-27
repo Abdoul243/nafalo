@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="utf-8">
@@ -125,7 +125,7 @@
         <a href="{{ route('admin.boutiques.select', $boutique->id) }}" class="boutique-item">
             <div class="boutique-avatar">
                 @if($boutique->logo)
-                    <img src="{{ asset('storage/' . $boutique->logo) }}" alt="{{ $boutique->nom }}">
+                    <img src="{{ $boutique->logo_url }}" alt="{{ $boutique->nom }}">
                 @else
                     {{ strtoupper(substr($boutique->nom, 0, 1)) }}
                 @endif

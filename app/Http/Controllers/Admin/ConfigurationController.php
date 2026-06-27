@@ -12,7 +12,7 @@ class ConfigurationController extends Controller
 {
     public function index()
     {
-        return redirect()->route('admin.configurations.general');
+        return view('admin.configurations.index');
     }
     
     public function general(Request $request)

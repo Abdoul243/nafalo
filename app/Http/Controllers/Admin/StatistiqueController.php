@@ -56,16 +56,51 @@ class StatistiqueController extends Controller
                   ->whereBetween('created_at', [$dateDebut, $dateFin]);
             })
             ->with('produit')
-            ->select('produit_id', DB::raw('COUNT(*) as total_ventes'), DB::raw('SUM(quantite) as quantite_totale'))
+            ->select('produit_id', DB::raw('COUNT(*) as total_ventes'), DB::raw('SUM(montant) as ca_total'))
             ->groupBy('produit_id')
             ->orderByDesc('total_ventes')
             ->limit(10)
             ->get();
-            
+
+        // Top moyens de paiement
+        $topMoyensPaiement = Transaction::where('boutique_id', $boutiqueId)
+            ->where('statut', Transaction::STATUT_REUSSI)
+            ->whereBetween('created_at', [$dateDebut, $dateFin])
+            ->whereNotNull('moyen_paiement')
+            ->select('moyen_paiement', DB::raw('COUNT(*) as total'), DB::raw('SUM(montant_total) as ca'))
+            ->groupBy('moyen_paiement')
+            ->orderByDesc('total')
+            ->get();
+
+        // Top pays (déduit du code du moyen de paiement ex: orange_ci → CI)
+        $topPays = Transaction::where('boutique_id', $boutiqueId)
+            ->where('statut', Transaction::STATUT_REUSSI)
+            ->whereBetween('created_at', [$dateDebut, $dateFin])
+            ->whereNotNull('moyen_paiement')
+            ->select('moyen_paiement', DB::raw('COUNT(*) as total'), DB::raw('SUM(montant_total) as ca'))
+            ->groupBy('moyen_paiement')
+            ->orderByDesc('total')
+            ->get()
+            ->groupBy(function($t) {
+                $parts = explode('_', $t->moyen_paiement);
+                return strtoupper(end($parts));
+            })
+            ->map(function($group, $code) {
+                return [
+                    'code'  => $code,
+                    'total' => $group->sum('total'),
+                    'ca'    => $group->sum('ca'),
+                ];
+            })
+            ->sortByDesc('total')
+            ->values();
+
         return view('admin.statistiques.ventes', compact(
-            'stats', 
-            'ventesParJour', 
+            'stats',
+            'ventesParJour',
             'topProduits',
+            'topMoyensPaiement',
+            'topPays',
             'dateDebut',
             'dateFin'
         ));

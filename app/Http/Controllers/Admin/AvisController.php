@@ -41,22 +41,22 @@ class AvisController extends Controller
     
     public function toggleVisibilite(Avis $avis)
     {
-        $this->authorize('update', $avis);
-        
+        abort_if($avis->produit?->boutique_id !== session('boutique_id'), 403);
+
         $avis->update(['est_visible' => !$avis->est_visible]);
-        
+
         return response()->json([
-            'success' => true,
-            'est_visible' => $avis->est_visible
+            'success'     => true,
+            'est_visible' => $avis->est_visible,
         ]);
     }
-    
+
     public function destroy(Avis $avis)
     {
-        $this->authorize('delete', $avis);
-        
+        abort_if($avis->produit?->boutique_id !== session('boutique_id'), 403);
+
         $avis->delete();
-        
+
         return redirect()->route('admin.avis.index')
             ->with('success', 'Avis supprimé avec succès.');
     }

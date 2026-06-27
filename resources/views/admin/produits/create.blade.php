@@ -5,6 +5,23 @@
 @push('styles')
 <link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
 <style>
+/* ── Générateur IA ── */
+.ia-generator-box {
+    background: linear-gradient(135deg,rgba(124,58,237,.08),rgba(168,85,247,.05));
+    border: 1.5px solid rgba(124,58,237,.25);
+    border-radius: 16px; padding: 1.1rem 1.25rem;
+}
+.ia-gen-header { display:flex;align-items:flex-start;gap:12px; }
+.ia-gen-icon { font-size:1.5rem;flex-shrink:0;line-height:1; }
+.ia-gen-title { font-weight:700;font-size:.88rem;color:var(--accent); }
+.ia-gen-sub { font-size:.75rem;color:var(--text-3);margin-top:2px; }
+.ia-gen-toggle {
+    margin-left:auto;background:none;border:none;color:var(--text-3);
+    cursor:pointer;font-size:.85rem;padding:4px;transition:transform .2s;
+}
+.ia-gen-toggle.open { transform:rotate(180deg); }
+</style>
+<style>
     .product-editor-layout {
         display: flex;
         gap: 0;
@@ -53,9 +70,9 @@
         color: #333;
     }
     .sidebar-nav li a.active {
-        background: #667eea15;
-        color: #667eea;
-        border-left-color: #667eea;
+        background: rgba(15,23,42,0.08);
+        color: #0f172a;
+        border-left-color: #0f172a;
         font-weight: 600;
     }
     .sidebar-nav li a i { width: 18px; text-align: center; }
@@ -67,8 +84,8 @@
         cursor: pointer; text-align: center; transition: all 0.2s; background: white;
         height: 100%;
     }
-    .type-card:hover { border-color: #667eea; background: #667eea08; }
-    .type-card.selected { border-color: #667eea; background: #667eea0f; }
+    .type-card:hover { border-color: #0f172a; background: rgba(15,23,42,0.04); }
+    .type-card.selected { border-color: #0f172a; background: rgba(15,23,42,0.06); }
     .type-card-icon {
         width: 48px; height: 48px; border-radius: 12px;
         display: flex; align-items: center; justify-content: center;
@@ -123,8 +140,8 @@
         transition: all 0.2s;
     }
     .form-control:focus, .form-select:focus {
-        border-color: #667eea;
-        box-shadow: 0 0 0 3px rgba(102,126,234,0.15);
+        border-color: #0f172a;
+        box-shadow: 0 0 0 3px rgba(15,23,42,0.15);
     }
     .ql-toolbar { border-radius: 10px 10px 0 0 !important; border-color: #e0e0e0 !important; }
     .ql-container { border-radius: 0 0 10px 10px !important; border-color: #e0e0e0 !important; min-height: 300px; font-size: 0.95rem; }
@@ -138,7 +155,7 @@
         transition: all 0.3s;
         background: #fafafa;
     }
-    .image-upload-area:hover { border-color: #667eea; background: #667eea08; }
+    .image-upload-area:hover { border-color: #0f172a; background: rgba(15,23,42,0.04); }
     .image-preview { display: none; margin-top: 1rem; }
     .image-preview img { max-height: 200px; border-radius: 10px; border: 1px solid #eee; }
     .price-input-wrapper { position: relative; }
@@ -165,7 +182,7 @@
         color: #1a1a2e;
     }
     .btn-save {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        background: #0f172a;
         color: white;
         border: none;
         border-radius: 12px;
@@ -176,7 +193,7 @@
     }
     .btn-save:hover {
         transform: translateY(-2px);
-        box-shadow: 0 5px 20px rgba(102,126,234,0.4);
+        box-shadow: 0 5px 20px rgba(15,23,42,0.3);
         color: white;
     }
     .btn-publish {
@@ -210,26 +227,26 @@
         background: white;
     }
     .category-item:hover {
-        border-color: #667eea;
-        background: #667eea08;
+        border-color: #0f172a;
+        background: rgba(15,23,42,0.04);
     }
     .category-item.selected {
-        border-color: #667eea;
-        background: #667eea12;
-        color: #667eea;
+        border-color: #0f172a;
+        background: rgba(15,23,42,0.07);
+        color: #0f172a;
     }
     .category-item i {
         font-size: 1.5rem;
         color: #888;
     }
-    .category-item.selected i { color: #667eea; }
+    .category-item.selected i { color: #0f172a; }
     .category-item span {
         font-size: 0.8rem;
         font-weight: 600;
         color: #444;
         line-height: 1.2;
     }
-    .category-item.selected span { color: #667eea; }
+    .category-item.selected span { color: #0f172a; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 640px) {
@@ -267,8 +284,8 @@
             font-size: 0.75rem;
         }
         .sidebar-nav li a.active {
-            border-bottom-color: #667eea;
-            background: #f7f7ff;
+            border-bottom-color: #0f172a;
+            background: rgba(15,23,42,0.06);
         }
         /* Contenu principal */
         .editor-main { padding: 1rem; }
@@ -334,7 +351,7 @@
     }
     .btn-wizard-prev:hover { border-color: #94a3b8; color: #334155; }
     .btn-wizard-next {
-        background: linear-gradient(135deg, #4f46e5, #7c3aed);
+        background: #0f172a;
         color: white;
         border: none;
         border-radius: 12px;
@@ -344,7 +361,7 @@
         cursor: pointer;
         transition: all 0.2s;
     }
-    .btn-wizard-next:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(79,70,229,0.4); }
+    .btn-wizard-next:hover { transform: translateY(-2px); box-shadow: 0 5px 20px rgba(15,23,42,0.3); }
 
     /* ── Wizard : états d'erreur ── */
     .is-invalid-wizard {
@@ -420,7 +437,7 @@
         <div style="padding:0 1.25rem 1rem;">
             <div style="font-size:.7rem;color:#94a3b8;margin-bottom:5px;font-weight:600;">PROGRESSION</div>
             <div style="height:5px;background:#f1f5f9;border-radius:10px;overflow:hidden;">
-                <div id="progress-bar" style="height:100%;background:linear-gradient(90deg,#4f46e5,#7c3aed);border-radius:10px;transition:width .4s;width:0%"></div>
+                <div id="progress-bar" style="height:100%;background:#0f172a;border-radius:10px;transition:width .4s;width:0%"></div>
             </div>
             <div id="progress-label" style="font-size:.7rem;color:#64748b;margin-top:4px;text-align:right;">0 / 5 requis</div>
         </div>
@@ -563,7 +580,7 @@
                             <input type="radio" name="type" value="payant"
                                    {{ old('type','payant') === 'payant' ? 'checked' : '' }}
                                    onchange="switchType('payant')" style="display:none;">
-                            <div class="type-card-icon" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);">
+                            <div class="type-card-icon" style="background:#0f172a;">
                                 <i class="fas fa-tag"></i>
                             </div>
                             <div class="type-card-label">Payant</div>
@@ -658,8 +675,7 @@
                     </div>
                 </div>
 
-                {{-- Prix caché à 0 --}}
-                <input type="hidden" name="prix" value="0">
+                {{-- Le prix à 0 est forcé par JS au submit (voir saveDraft/publish) --}}
             </div>
 
             {{-- Wizard Nav --}}
@@ -723,6 +739,42 @@
         <div class="section-block" id="section-description">
             <div class="section-title">Description</div>
             <div class="section-subtitle">Décrivez votre produit pour convaincre vos clients</div>
+
+            {{-- Générateur IA --}}
+            <div class="ia-generator-box mb-4" id="ia-generator-box">
+                <div class="ia-gen-header">
+                    <span class="ia-gen-icon">✨</span>
+                    <div>
+                        <div class="ia-gen-title">Générer avec l'IA</div>
+                        <div class="ia-gen-sub">Décrivez votre produit en quelques mots — l'IA rédige votre page de vente complète</div>
+                    </div>
+                    <button type="button" class="ia-gen-toggle" id="ia-gen-toggle-btn" onclick="toggleIaGenerator()">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+                <div id="ia-gen-body" style="display:none;margin-top:1rem;">
+                    <div class="mb-3">
+                        <textarea id="ia-brief" rows="3"
+                            placeholder="Ex: Formation complète sur l'élevage de poulets de chair pour générer 500 000 FCFA par mois..."
+                            style="width:100%;border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;font-size:.875rem;background:var(--bg-elevated);color:var(--text-1);resize:vertical;font-family:inherit;outline:none;"></textarea>
+                    </div>
+                    <button type="button" id="ia-gen-btn" onclick="lancerGenerationIA()"
+                        style="background:linear-gradient(135deg,#7c3aed,#a855f7);color:#fff;border:none;border-radius:12px;padding:10px 20px;font-weight:700;font-size:.875rem;cursor:pointer;display:flex;align-items:center;gap:8px;transition:opacity .2s;">
+                        <span id="ia-gen-btn-text">✨ Générer la page de vente</span>
+                        <span id="ia-gen-btn-loader" class="d-none"><span class="spinner-border spinner-border-sm"></span> Génération en cours…</span>
+                    </button>
+                    <div id="ia-gen-result" class="d-none" style="margin-top:1rem;">
+                        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem;">
+                            <span style="font-weight:700;font-size:.82rem;color:var(--accent);">✅ Page générée — cliquez sur Appliquer pour l'utiliser</span>
+                            <button type="button" onclick="appliquerResultatIA()"
+                                style="background:var(--accent);color:#fff;border:none;border-radius:10px;padding:6px 16px;font-weight:700;font-size:.8rem;cursor:pointer;">
+                                Appliquer tout
+                            </button>
+                        </div>
+                        <div id="ia-preview-content" style="background:var(--bg-elevated);border:1px solid var(--border);border-radius:12px;padding:1rem;font-size:.82rem;color:var(--text-2);max-height:300px;overflow-y:auto;"></div>
+                    </div>
+                </div>
+            </div>
 
             <div class="mb-4">
                 <label class="form-label">Description *</label>
@@ -1179,7 +1231,16 @@
     /* ═══════════════════════════════════════════════
        SAVE / PUBLISH
     ═══════════════════════════════════════════════ */
+    function forcePrixGratuit() {
+        var typeChecked = document.querySelector('input[name="type"]:checked');
+        var prixInput   = document.getElementById('prix-input');
+        if (typeChecked && typeChecked.value === 'gratuit' && prixInput) {
+            prixInput.value = '0';
+        }
+    }
+
     window.saveDraft = function() {
+        forcePrixGratuit();
         document.getElementById('description-hidden').value = quill.root.innerHTML;
         document.getElementById('est_publie_check').checked = false;
         document.getElementById('produit-form').submit();
@@ -1202,11 +1263,124 @@
             showErrors(missing[0]);
             return;
         }
+        forcePrixGratuit();
         document.getElementById('description-hidden').value = quill.root.innerHTML;
         document.getElementById('est_publie_check').checked = true;
         document.getElementById('produit-form').submit();
     };
 
 })();
+
+/* ══════════════════════════════════════════════════
+   FEATURE 1 — Générateur de page de vente IA
+══════════════════════════════════════════════════ */
+const IA_GEN_URL    = "{{ route('admin.ia.generer-page-vente') }}";
+const IA_CSRF       = document.querySelector('meta[name="csrf-token"]')?.content;
+let iaResultatData  = null;
+
+function toggleIaGenerator() {
+    const body = document.getElementById('ia-gen-body');
+    const btn  = document.getElementById('ia-gen-toggle-btn');
+    const open = body.style.display === 'none';
+    body.style.display = open ? 'block' : 'none';
+    btn.classList.toggle('open', open);
+}
+
+async function lancerGenerationIA() {
+    const brief = document.getElementById('ia-brief').value.trim();
+    if (!brief || brief.length < 10) {
+        document.getElementById('ia-brief').focus();
+        return;
+    }
+
+    const categorie = document.querySelector('input[name="categorie_id"]:checked')
+        ?.closest('label')?.querySelector('span')?.textContent || '';
+    const type = document.querySelector('#type_gratuit')?.checked ? 'gratuit' : 'payant';
+
+    const btnText   = document.getElementById('ia-gen-btn-text');
+    const btnLoader = document.getElementById('ia-gen-btn-loader');
+    const btn       = document.getElementById('ia-gen-btn');
+
+    btnText.classList.add('d-none');
+    btnLoader.classList.remove('d-none');
+    btn.disabled = true;
+
+    try {
+        const res = await fetch(IA_GEN_URL, {
+            method: 'POST',
+            headers: { 'Content-Type':'application/json','X-CSRF-TOKEN':IA_CSRF,'Accept':'application/json' },
+            body: JSON.stringify({ description: brief, categorie, type }),
+        });
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+
+        iaResultatData = data;
+        afficherPreviewIA(data);
+        document.getElementById('ia-gen-result').classList.remove('d-none');
+
+    } catch (e) {
+        alert('Erreur lors de la génération : ' + e.message);
+    } finally {
+        btnText.classList.remove('d-none');
+        btnLoader.classList.add('d-none');
+        btn.disabled = false;
+    }
+}
+
+function afficherPreviewIA(data) {
+    const preview = document.getElementById('ia-preview-content');
+    const bullets = (data.bullets || []).map(b => `<li>${b}</li>`).join('');
+    const faq = (data.faq || []).map(f =>
+        `<div style="margin-bottom:8px;"><strong style="color:var(--text-1);">${f.question}</strong><br><span style="color:var(--text-3);">${f.reponse}</span></div>`
+    ).join('');
+
+    preview.innerHTML = `
+        <div style="margin-bottom:8px;"><strong style="color:var(--accent);">Titre :</strong> ${data.titre}</div>
+        <div style="margin-bottom:8px;"><strong style="color:var(--accent);">Sous-titre :</strong> ${data.sous_titre}</div>
+        <div style="margin-bottom:8px;"><strong style="color:var(--accent);">Bénéfices :</strong><ul style="margin:4px 0 0 16px;">${bullets}</ul></div>
+        <div style="margin-bottom:8px;"><strong style="color:var(--accent);">FAQ :</strong><div style="margin-top:6px;">${faq}</div></div>
+        <div style="margin-bottom:4px;"><strong style="color:var(--accent);">CTA :</strong> ${data.cta}</div>
+        <div><strong style="color:var(--accent);">Urgence :</strong> ${data.urgence}</div>
+    `;
+}
+
+function appliquerResultatIA() {
+    if (!iaResultatData) return;
+
+    // Remplir le nom du produit si vide
+    const nomInput = document.getElementById('nom-input');
+    if (nomInput && !nomInput.value.trim()) {
+        nomInput.value = iaResultatData.titre;
+        nomInput.dispatchEvent(new Event('input'));
+    }
+
+    // Injecter la description complète dans Quill
+    if (quill && iaResultatData.description_html) {
+        const bulletsHtml = (iaResultatData.bullets || []).map(b => `<li>${b}</li>`).join('');
+        const faqHtml = (iaResultatData.faq || []).map(f =>
+            `<p><strong>${f.question}</strong><br>${f.reponse}</p>`
+        ).join('');
+
+        const html = `
+            <h3>${iaResultatData.titre}</h3>
+            <p><em>${iaResultatData.sous_titre}</em></p>
+            ${iaResultatData.description_html}
+            <h3>Ce que vous allez obtenir</h3>
+            <ul>${bulletsHtml}</ul>
+            <h3>Questions fréquentes</h3>
+            ${faqHtml}
+            <p><strong>⚠️ ${iaResultatData.urgence}</strong></p>
+        `;
+        quill.root.innerHTML = html;
+        document.getElementById('description-hidden').value = html;
+    }
+
+    // Fermer le générateur
+    document.getElementById('ia-gen-body').style.display = 'none';
+    document.getElementById('ia-gen-toggle-btn').classList.remove('open');
+
+    // Naviguer vers description pour voir le résultat
+    if (typeof showSection === 'function') showSection('description');
+}
 </script>
 @endpush

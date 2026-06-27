@@ -2,81 +2,153 @@
 
 @section('title', 'Donner mon avis')
 
+@push('styles')
+<style>
+.avis-wrap {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 2.5rem 1.25rem 5rem;
+}
+.avis-title {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: 1.75rem; font-weight: 700;
+    color: var(--text-1); margin-bottom: 0.35rem;
+}
+.avis-subtitle {
+    font-size: 0.875rem; color: var(--text-3);
+    margin-bottom: 2rem; line-height: 1.6;
+}
+
+.avis-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 2rem;
+}
+
+.avis-label {
+    display: block;
+    font-size: 0.8rem; font-weight: 600;
+    color: var(--text-2); margin-bottom: 0.5rem;
+}
+.avis-input {
+    width: 100%;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 0.8rem 1rem;
+    font-size: 0.9rem; color: var(--text-1);
+    font-family: inherit; outline: none;
+    transition: border-color 0.2s;
+    box-sizing: border-box; resize: vertical;
+}
+.avis-input::placeholder { color: var(--text-3); }
+.avis-input:focus { border-color: var(--accent); background: rgba(124,58,237,0.06); }
+.avis-error { font-size: 0.78rem; color: #fca5a5; margin-top: 0.35rem; display: block; }
+
+/* Star rating */
+.stars-row {
+    display: flex; flex-direction: row-reverse;
+    justify-content: flex-end; gap: 6px;
+    margin-bottom: 0.25rem;
+}
+.stars-row input[type="radio"] {
+    display: none;
+}
+.stars-row label {
+    font-size: 1.8rem; cursor: pointer; color: rgba(255,255,255,0.15);
+    transition: color 0.15s;
+    line-height: 1;
+}
+.stars-row label:hover,
+.stars-row label:hover ~ label,
+.stars-row input:checked ~ label {
+    color: #f59e0b;
+}
+
+.avis-note {
+    font-size: 0.78rem; color: var(--text-3);
+    background: rgba(124,58,237,0.07);
+    border: 1px solid rgba(124,58,237,0.15);
+    border-radius: 10px; padding: 0.75rem 1rem;
+    margin: 1.25rem 0;
+    display: flex; align-items: flex-start; gap: 7px;
+}
+.avis-note i { color: var(--accent); margin-top: 1px; flex-shrink: 0; }
+
+.btn-submit {
+    display: flex; align-items: center; justify-content: center; gap: 9px;
+    width: 100%; padding: 0.95rem;
+    background: var(--accent); color: white;
+    border: none; border-radius: 12px;
+    font-weight: 700; font-size: 0.95rem;
+    cursor: pointer; font-family: inherit;
+    transition: all 0.25s; margin-bottom: 0.6rem;
+    box-shadow: 0 4px 16px rgba(124,58,237,0.3);
+}
+.btn-submit:hover { background: var(--accent-hover); transform: translateY(-2px); }
+
+.btn-cancel {
+    display: flex; align-items: center; justify-content: center; gap: 7px;
+    width: 100%; padding: 0.75rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border); border-radius: 11px;
+    font-size: 0.875rem; font-weight: 600; color: var(--text-2);
+    text-decoration: none; transition: all 0.2s;
+}
+.btn-cancel:hover { color: var(--text-1); border-color: rgba(255,255,255,0.2); }
+</style>
+@endpush
+
 @section('content')
-<div class="row justify-content-center">
-    <div class="col-md-8">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">Donner mon avis sur "{{ $produit->nom }}"</h5>
+<div class="avis-wrap">
+
+    <h1 class="avis-title">Laisser un avis</h1>
+    <p class="avis-subtitle">Votre avis sur <strong style="color:var(--text-1);">{{ $produit->nom }}</strong></p>
+
+    <div class="avis-card">
+        <form action="{{ route('boutique.avis.store', $produit) }}" method="POST">
+            @csrf
+
+            <div style="margin-bottom:1.5rem;">
+                <label class="avis-label">Votre note *</label>
+                <div class="stars-row">
+                    @for($i = 5; $i >= 1; $i--)
+                    <input type="radio" name="note" id="note{{ $i }}" value="{{ $i }}" required {{ old('note') == $i ? 'checked' : '' }}>
+                    <label for="note{{ $i }}">★</label>
+                    @endfor
+                </div>
+                @error('note')
+                    <span class="avis-error"><i class="fas fa-exclamation-circle" style="font-size:0.7rem;"></i> {{ $message }}</span>
+                @enderror
             </div>
-            <div class="card-body">
-                <form action="{{ route('boutique.avis.store', $produit) }}" method="POST">
-                    @csrf
-                    
-                    <div class="mb-4">
-                        <label class="form-label">Votre note *</label>
-                        <div class="rating">
-                            @for($i = 5; $i >= 1; $i--)
-                            <div class="form-check form-check-inline">
-                                <input class="form-check-input" type="radio" name="note" 
-                                       id="note{{ $i }}" value="{{ $i }}" required>
-                                <label class="form-check-label" for="note{{ $i }}">
-                                    @for($j = 1; $j <= 5; $j++)
-                                        @if($j <= $i)
-                                            <i class="fas fa-star text-warning"></i>
-                                        @else
-                                            <i class="far fa-star text-warning"></i>
-                                        @endif
-                                    @endfor
-                                </label>
-                            </div>
-                            @endfor
-                        </div>
-                        @error('note')
-                            <div class="text-danger small">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                    <div class="mb-3">
-                        <label for="commentaire" class="form-label">Votre commentaire</label>
-                        <textarea class="form-control @error('commentaire') is-invalid @enderror" 
-                                  id="commentaire" name="commentaire" rows="5" 
-                                  placeholder="Partagez votre expérience avec ce produit...">{{ old('commentaire') }}</textarea>
-                        @error('commentaire')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    
-                    <div class="alert alert-info">
-                        <i class="fas fa-info-circle me-2"></i>
-                        Votre avis sera visible après modération par l'équipe.
-                    </div>
-                    
-                    <button type="submit" class="btn btn-primary">
-                        Publier mon avis
-                    </button>
-                    
-                    <a href="{{ route('boutique.produit.show', $produit->slug) }}" class="btn btn-link">
-                        Annuler
-                    </a>
-                </form>
+
+            <div style="margin-bottom:1.25rem;">
+                <label class="avis-label" for="commentaire">Votre commentaire</label>
+                <textarea
+                    class="avis-input"
+                    id="commentaire"
+                    name="commentaire"
+                    rows="5"
+                    placeholder="Partagez votre expérience avec ce produit...">{{ old('commentaire') }}</textarea>
+                @error('commentaire')
+                    <span class="avis-error">{{ $message }}</span>
+                @enderror
             </div>
-        </div>
+
+            <div class="avis-note">
+                <i class="fas fa-info-circle"></i>
+                Votre avis sera visible après modération par l'équipe.
+            </div>
+
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-star"></i> Publier mon avis
+            </button>
+
+            <a href="{{ route('boutique.produit.show', $produit->slug) }}" class="btn-cancel">
+                <i class="fas fa-times"></i> Annuler
+            </a>
+        </form>
     </div>
 </div>
 @endsection
-
-@push('styles')
-<style>
-.rating .form-check {
-    padding-left: 0;
-}
-.rating .form-check-input {
-    margin-right: 5px;
-    float: none;
-}
-.rating .form-check-label {
-    cursor: pointer;
-}
-</style>
-@endpush

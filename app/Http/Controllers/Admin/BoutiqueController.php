@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Boutique;
 use App\Http\Requests\BoutiqueRequest;
+use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class BoutiqueController extends Controller
 {
@@ -18,28 +20,60 @@ class BoutiqueController extends Controller
     {
         return view('admin.boutiques.create');
     }
-    
+
+    /**
+     * Vérification AJAX de la disponibilité du domaine (étape 5-6 du diagramme)
+     */
+    public function checkDomain(Request $request)
+    {
+        $domaine = trim($request->get('domaine', ''));
+
+        if (empty($domaine)) {
+            return response()->json(['available' => true, 'message' => '']);
+        }
+
+        // Slug-ify le domaine
+        $domaine = Str::slug($domaine);
+
+        $exists = Boutique::where('domaine_personnalise', $domaine)->exists();
+
+        return response()->json([
+            'available' => !$exists,
+            'domaine'   => $domaine,
+            'message'   => $exists
+                ? 'Ce domaine est déjà utilisé par une autre boutique.'
+                : 'Disponible !',
+        ]);
+    }
+
     public function store(BoutiqueRequest $request)
     {
         $data = $request->validated();
-        
+
+        // Slug-ify le domaine si renseigné
+        if (!empty($data['domaine_personnalise'])) {
+            $data['domaine_personnalise'] = Str::slug($data['domaine_personnalise']);
+        }
+
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
             $data['logo'] = file_get_contents($logo->getRealPath());
             $data['logo_mime'] = $logo->getMimeType();
             $data['logo_taille'] = $logo->getSize();
         }
-        
+
+        // Étape 9 : Enregistrer la boutique en base
         $boutique = Boutique::create($data);
-        
-        // Créer la configuration par défaut
+
+        // Étape 11 : INSERT configurations_boutique (paramètres par défaut)
         $boutique->configuration()->create([
-            'devise' => 'EUR',
-            'relance_delai_jours' => 3
+            'devise'               => 'XOF',
+            'relance_delai_jours'  => 3,
         ]);
-        
-        return redirect()->route('admin.boutiques.index')
-            ->with('success', 'Boutique créée avec succès.');
+
+        // Étape 13-14 : Retourner + message succès + redirection dashboard
+        return redirect()->route('admin.dashboard')
+            ->with('success', '🎉 Ta boutique "' . $boutique->nom . '" est créée et accessible !');
     }
     
     public function edit(Boutique $boutique)

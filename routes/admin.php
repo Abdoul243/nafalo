@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin;
 
 // ── Routes publiques (sans authentification) ──────────────────────────────────
 Route::prefix('admin')->name('admin.')->middleware(['web'])->group(function () {
+    Route::get('/register',  [Admin\RegisterController::class, 'create'])->name('register.form');
     Route::post('/register', [Admin\RegisterController::class, 'store'])->name('register');
 });
 
@@ -14,6 +15,16 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
     // Dashboard
     Route::get('/', [Admin\DashboardController::class, 'index'])->name('dashboard');
 
+    // Chatbot IA admin
+    Route::post('/chatbot', [Admin\ChatbotController::class, 'chat'])->name('chatbot');
+
+    // IA Produits
+    Route::prefix('ia')->name('ia.')->group(function () {
+        Route::post('/generer-page-vente', [Admin\ProduitIaController::class, 'genererPageVente'])->name('generer-page-vente');
+        Route::post('/traduire',           [Admin\ProduitIaController::class, 'traduire'])->name('traduire');
+        Route::post('/scorer-compatibilite', [Admin\ProduitIaController::class, 'scorerCompatibilite'])->name('scorer-compatibilite');
+    });
+
     // Sélection boutique
     Route::get('/choisir-boutique', [Admin\BoutiqueSelectController::class, 'choisir'])
         ->name('boutiques.choisir');
@@ -21,6 +32,8 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
         ->name('boutiques.select');
 
     // Gestion des boutiques
+    Route::get('boutiques/check-domain', [Admin\BoutiqueController::class, 'checkDomain'])
+        ->name('boutiques.check-domain');
     Route::resource('boutiques', Admin\BoutiqueController::class);
     Route::post('boutiques/{boutique}/toggle-activation', [Admin\BoutiqueController::class, 'toggleActivation'])
         ->name('boutiques.toggle-activation');
@@ -36,6 +49,9 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
         Route::post('/{copublication}/accepter',    [Admin\CopublicationController::class, 'accepter'])->name('accepter');
         Route::post('/{copublication}/refuser',     [Admin\CopublicationController::class, 'refuser'])->name('refuser');
         Route::delete('/{copublication}',           [Admin\CopublicationController::class, 'destroy'])->name('destroy');
+        // ── Recherche IA de partenaires ─────────────────────────
+        Route::get('/rechercher',                   [Admin\CopublicationController::class, 'rechercher'])->name('rechercher');
+        Route::post('/ia-search',                   [Admin\CopublicationController::class, 'iaSearch'])->name('ia-search');
     });
 
     // ── Upsells (imbriqués sous les produits) ─────────────────────────
@@ -59,6 +75,8 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
 
     // Gestion des transactions
     Route::resource('transactions', Admin\TransactionController::class)->only(['index', 'show']);
+    Route::post('/transactions/sync-moneroo',      [Admin\TransactionController::class, 'syncMoneroo'])->name('transactions.sync-moneroo');
+    Route::post('/transactions/{transaction}/sync', [Admin\TransactionController::class, 'syncUne'])->name('transactions.sync-une');
 
     // Gestion des codes promo
     Route::resource('codes-promo', Admin\CodePromoController::class);

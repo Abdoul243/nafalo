@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <rect width="120" height="120" rx="16" fill="#FFCC00"/>
+  <!-- MTN bold text -->
+  <text x="60" y="58" text-anchor="middle" fill="#003366" font-family="Arial Black, Arial" font-weight="900" font-size="36" letter-spacing="-1">MTN</text>
+  <!-- MoMo sub text -->
+  <text x="60" y="80" text-anchor="middle" fill="#003366" font-family="Arial Black, Arial" font-weight="900" font-size="16">MoMo</text>
+  <!-- Decorative bar -->
+  <rect x="20" y="88" width="80" height="5" rx="3" fill="#003366" opacity="0.3"/>
+</svg>

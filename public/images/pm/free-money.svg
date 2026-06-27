@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+  <rect width="120" height="120" rx="16" fill="#E2001A"/>
+  <text x="60" y="52" text-anchor="middle" fill="white" font-family="Arial Black, Arial" font-weight="900" font-size="30">Free</text>
+  <rect x="15" y="62" width="90" height="4" rx="2" fill="rgba(255,255,255,0.4)"/>
+  <text x="60" y="88" text-anchor="middle" fill="white" font-family="Arial, sans-serif" font-weight="700" font-size="14">Money</text>
+</svg>
