@@ -511,8 +511,13 @@
             </div>
 
             <div class="mb-4">
-                <label class="form-label">Catégorie *</label>
+                <label class="form-label">Catégorie <span class="text-muted fw-normal">(optionnel)</span></label>
                 <p class="text-muted small mb-3">Choisissez la catégorie qui correspond le mieux à votre produit</p>
+                @if($categories->isEmpty())
+                <div style="background:#f8fafc;border:1px dashed #d1d5db;border-radius:10px;padding:0.9rem 1.1rem;font-size:0.85rem;color:#6b7280;">
+                    <i class="fas fa-info-circle"></i> Aucune catégorie pour l'instant — ce n'est pas obligatoire, vous pouvez continuer. (Vous pourrez en créer plus tard.)
+                </div>
+                @endif
                 <div class="category-grid">
                     @php
                     $icons = [
@@ -557,7 +562,7 @@
                 <div class="wizard-nav-right">
                     <div class="wizard-error-msg" id="error-informations">
                         <i class="fas fa-exclamation-triangle me-1"></i>
-                        Veuillez renseigner le nom du produit et choisir une catégorie.
+                        Veuillez renseigner le nom du produit.
                     </div>
                     <button type="button" class="btn-wizard-next" onclick="nextSection()">
                         Tarification &nbsp;<i class="fas fa-arrow-right"></i>
@@ -894,9 +899,9 @@
     /* ── validation rules ── */
     function validateSection(section) {
         if (section === 'informations') {
+            // Catégorie facultative (une boutique peut ne pas en avoir).
             var nom = (document.getElementById('nom-input') || {}).value || '';
-            var catOk = !!document.querySelector('input[name="categorie_id"]:checked');
-            return nom.trim().length > 0 && catOk;
+            return nom.trim().length > 0;
         }
         if (section === 'tarification') {
             var type = (document.querySelector('input[name="type"]:checked') || {}).value || 'payant';
@@ -905,6 +910,9 @@
             return !isNaN(prix) && prix > 0;
         }
         if (section === 'fichiers') {
+            // Une formation n'exige pas de fichier téléchargeable.
+            var fmt = (document.querySelector('input[name="format"]:checked') || {}).value || 'fichier';
+            if (fmt === 'formation') return true;
             var fi = document.getElementById('fichier-input');
             return fi && fi.files.length > 0;
         }
@@ -969,10 +977,6 @@
         if (section === 'informations') {
             var nom = document.getElementById('nom-input');
             if (nom && !nom.value.trim()) { nom.classList.add('is-invalid-wizard'); nom.focus(); }
-            if (!document.querySelector('input[name="categorie_id"]:checked')) {
-                var grid = document.querySelector('.category-grid');
-                if (grid) grid.classList.add('grid-invalid');
-            }
         }
         if (section === 'tarification') {
             var type = (document.querySelector('input[name="type"]:checked') || {}).value || 'payant';
