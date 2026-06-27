@@ -152,6 +152,12 @@ Route::middleware(['web', 'domaine'])->prefix('boutique')->group(function () {
             Route::get('/mes-achats', [Client\MesAchatsController::class, 'index'])->name('mes-achats.index');
             Route::get('/mes-achats/{achat}', [Client\MesAchatsController::class, 'show'])->name('mes-achats.show');
             Route::get('/telechargement/{achat}', [Client\TelechargementController::class, 'telecharger'])->name('telechargement');
+
+            // ── Espace membre formation ──
+            Route::get('/formation/{produit}', [Client\FormationClientController::class, 'show'])->name('formation.show');
+            Route::post('/lecon/{lecon}/terminer', [Client\FormationClientController::class, 'terminerLecon'])->name('formation.lecon.terminer');
+            Route::get('/lecon/{lecon}/video', [Client\FormationClientController::class, 'video'])->name('formation.lecon.video');
+            Route::get('/lecon/{lecon}/ressource', [Client\FormationClientController::class, 'ressource'])->name('formation.lecon.ressource');
         });
     });
 });

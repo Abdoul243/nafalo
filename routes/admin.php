@@ -43,6 +43,18 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
     // Téléchargement du fichier produit par le marchand (protégé)
     Route::get('produits/{produit}/fichier', [Admin\ProduitController::class, 'telechargerFichier'])
         ->name('produits.fichier');
+
+    // ── Formation : constructeur de programme (modules + leçons) ──
+    Route::prefix('produits/{produit}/formation')->name('produits.formation.')->group(function () {
+        Route::get('/', [Admin\FormationController::class, 'programme'])->name('programme');
+        Route::post('/modules', [Admin\FormationController::class, 'storeModule'])->name('modules.store');
+    });
+    Route::put('formation/modules/{module}', [Admin\FormationController::class, 'updateModule'])->name('produits.formation.modules.update');
+    Route::delete('formation/modules/{module}', [Admin\FormationController::class, 'destroyModule'])->name('produits.formation.modules.destroy');
+    Route::post('formation/modules/{module}/lecons', [Admin\FormationController::class, 'storeLecon'])->name('produits.formation.lecons.store');
+    Route::put('formation/lecons/{lecon}', [Admin\FormationController::class, 'updateLecon'])->name('produits.formation.lecons.update');
+    Route::delete('formation/lecons/{lecon}', [Admin\FormationController::class, 'destroyLecon'])->name('produits.formation.lecons.destroy');
+
     Route::resource('produits', Admin\ProduitController::class);
 
     // ── Co-publication ────────────────────────────────────────────────

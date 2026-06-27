@@ -679,11 +679,33 @@
 
         {{-- ═══ SECTION : Fichiers ═══ --}}
         <div class="section-block" id="section-fichiers">
-            <div class="section-title">Fichiers</div>
-            <div class="section-subtitle">Le fichier numérique que vos clients recevront</div>
+            <div class="section-title">Livraison du produit</div>
+            <div class="section-subtitle">Un simple fichier à télécharger, ou une formation avec espace membre</div>
 
-            <div class="mb-4">
-                <label class="form-label">Fichier numérique (PDF, ZIP, MP4...)</label>
+            {{-- Formation : espace membre --}}
+            <div style="border:1px solid {{ $produit->estFormation() ? '#c7d2fe' : '#e9eaeb' }};background:{{ $produit->estFormation() ? '#eef2ff' : '#fafafa' }};border-radius:14px;padding:1.1rem 1.25rem;margin-bottom:1.25rem;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+                <div style="width:44px;height:44px;border-radius:11px;background:linear-gradient(135deg,#6366f1,#4f46e5);display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.2rem;flex-shrink:0;">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div style="flex:1;min-width:180px;">
+                    <div style="font-weight:700;color:#111827;">Formation en ligne (espace membre)</div>
+                    <div style="font-size:0.82rem;color:#6b7280;">
+                        @if($produit->estFormation())
+                            Ce produit est une formation — {{ $produit->modules()->count() }} module(s), {{ $produit->nbLecons() }} leçon(s).
+                        @else
+                            Proposez des vidéos (lien ou upload), modules et suivi de progression au lieu d'un simple fichier.
+                        @endif
+                    </div>
+                </div>
+                <a href="{{ route('admin.produits.formation.programme', $produit) }}"
+                   style="background:#4f46e5;color:#fff;text-decoration:none;padding:0.6rem 1.1rem;border-radius:10px;font-weight:700;font-size:0.85rem;white-space:nowrap;">
+                    <i class="fas fa-{{ $produit->estFormation() ? 'pen' : 'plus' }}"></i>
+                    {{ $produit->estFormation() ? 'Gérer le programme' : 'Créer une formation' }}
+                </a>
+            </div>
+
+            <div class="mb-4" @if($produit->estFormation()) style="opacity:0.6;" @endif>
+                <label class="form-label">Fichier numérique (PDF, ZIP, MP4...) <span class="text-muted small">— optionnel si formation</span></label>
 
                 @if($produit->fichier)
                     <div class="existing-file-pill">

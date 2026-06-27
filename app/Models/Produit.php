@@ -31,6 +31,7 @@ class Produit extends Model
         'image_mime',
         'image_taille',
         'fichier',
+        'format',
         'est_publie',
         'nb_ventes',
         // Lead magnet
@@ -103,6 +104,26 @@ class Produit extends Model
     public function upsellsInverse()
     {
         return $this->hasMany(Upsell::class, 'produit_upsell_id');
+    }
+
+    /* ── Formation (espace membre) ─────────────────────────────────── */
+
+    /** Modules de la formation (avec leurs leçons) */
+    public function modules()
+    {
+        return $this->hasMany(ModuleFormation::class, 'produit_id')->orderBy('ordre');
+    }
+
+    /** Ce produit est-il une formation (espace membre) ? */
+    public function estFormation(): bool
+    {
+        return $this->format === 'formation';
+    }
+
+    /** Nombre total de leçons de la formation */
+    public function nbLecons(): int
+    {
+        return Lecon::whereIn('module_id', $this->modules()->pluck('id'))->count();
     }
 
     /* ── Helpers Lead Magnet ───────────────────────────────────────── */
