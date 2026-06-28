@@ -9,6 +9,14 @@ class Boutique extends Model
 {
     use HasFactory;
 
+    /** À la création d'une boutique, on livre les catégories standard. */
+    protected static function booted(): void
+    {
+        static::created(function (Boutique $boutique) {
+            Categorie::creerStandards($boutique->id);
+        });
+    }
+
     protected $fillable = [
         'nom',
         'utilisateur_id',

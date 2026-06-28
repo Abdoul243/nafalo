@@ -124,6 +124,56 @@ class ProduitController extends Controller
             ->with('success', 'Séance de coaching créée ! Vos disponibilités sont enregistrées.');
     }
 
+    /** Wizard dédié à la création d'un produit Fichier (étapes Chariow). */
+    public function createFichier()
+    {
+        $categories = Categorie::where('boutique_id', session('boutique_id'))->orderBy('nom')->get();
+        return view('admin.produits.create-fichier', compact('categories'));
+    }
+
+    public function storeFichier(Request $request)
+    {
+        $data = $request->validate([
+            'nom'          => 'required|string|max:255',
+            'categorie_id' => 'nullable|exists:categories,id',
+            'description'  => 'nullable|string',
+            'prix'         => 'required|numeric|min:0',
+            'fichier'      => 'required|file|mimes:pdf,zip,mp3,mp4,docx,xlsx,png,jpg|max:102400',
+            'image'        => 'nullable|image|max:2048',
+            'est_publie'   => 'nullable|boolean',
+        ]);
+
+        $slug = Str::slug($data['nom']);
+        if (Produit::where('slug', $slug)->exists()) {
+            $slug .= '-' . Str::lower(Str::random(4));
+        }
+
+        $payload = [
+            'boutique_id'  => session('boutique_id'),
+            'nom'          => $data['nom'],
+            'slug'         => $slug,
+            'categorie_id' => $data['categorie_id'] ?? null,
+            'description'  => $data['description'] ?? null,
+            'prix'         => $data['prix'],
+            'type'         => 'payant',
+            'format'       => 'fichier',
+            'fichier'      => $request->file('fichier')->store('produits/fichiers', 'local'),
+            'est_publie'   => $request->boolean('est_publie'),
+        ];
+
+        if ($request->hasFile('image')) {
+            $img = $request->file('image');
+            $payload['image']        = $img->store('produits/images', 'public');
+            $payload['image_mime']   = $img->getMimeType();
+            $payload['image_taille'] = $img->getSize();
+        }
+
+        $produit = Produit::create($payload);
+
+        return redirect()->route('admin.produits.index')
+            ->with('success', 'Produit « ' . $produit->nom . ' » créé avec succès.');
+    }
+
     public function store(ProduitRequest $request)
     {
         $data = $request->validated();

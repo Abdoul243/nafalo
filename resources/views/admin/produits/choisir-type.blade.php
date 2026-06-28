@@ -91,7 +91,10 @@ $types = [
 </div>
 
 <script>
-var CT_ROUTES = { coaching: "{{ route('admin.produits.create-coaching') }}" };
+var CT_ROUTES = {
+    coaching: "{{ route('admin.produits.create-coaching') }}",
+    fichier:  "{{ route('admin.produits.create-fichier') }}"
+};
 function ctSelect(key){
     document.querySelectorAll('.ct-card').forEach(c => c.classList.toggle('sel', c.dataset.key === key));
     document.querySelectorAll('.ct-detail').forEach(d => d.style.display = 'none');
