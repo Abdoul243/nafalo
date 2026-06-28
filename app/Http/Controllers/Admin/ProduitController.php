@@ -72,7 +72,7 @@ class ProduitController extends Controller
     {
         $data = $request->validate([
             'nom'            => 'required|string|max:255',
-            'categorie_id'   => 'nullable|exists:categories,id',
+            'categorie_id'   => 'required|exists:categories,id',
             'description'    => 'nullable|string',
             'prix'           => 'required|numeric|min:0',
             'image'          => 'nullable|image|max:2048',
@@ -135,7 +135,7 @@ class ProduitController extends Controller
     {
         $data = $request->validate([
             'nom'          => 'required|string|max:255',
-            'categorie_id' => 'nullable|exists:categories,id',
+            'categorie_id' => 'required|exists:categories,id',
             'description'  => 'nullable|string',
             'prix'         => 'required|numeric|min:0',
             'fichier'      => 'required|file|mimes:pdf,zip,mp3,mp4,docx,xlsx,png,jpg|max:102400',
@@ -213,7 +213,7 @@ class ProduitController extends Controller
     {
         return [
             'nom'          => 'required|string|max:255',
-            'categorie_id' => 'nullable|exists:categories,id',
+            'categorie_id' => 'required|exists:categories,id',
             'description'  => 'nullable|string',
             'prix'         => 'required|numeric|min:0',
             'image'        => 'nullable|image|max:2048',

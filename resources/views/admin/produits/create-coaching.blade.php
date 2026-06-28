@@ -85,17 +85,16 @@
                 <input type="text" name="nom" id="wz-nom" value="{{ old('nom') }}" placeholder="Ex : Appel stratégique 1-à-1" required>
                 <div class="wz-err" id="err-nom">Le nom est requis.</div>
             </div>
-            @if($categories->count() > 0)
             <div class="wz-field">
-                <label>Catégorie <span style="color:#9ca3af;font-weight:400;">(optionnel)</span></label>
-                <select name="categorie_id">
-                    <option value="">— Aucune —</option>
+                <label>Catégorie *</label>
+                <select name="categorie_id" id="wz-cat" required>
+                    <option value="">Choisir…</option>
                     @foreach($categories as $cat)
                     <option value="{{ $cat->id }}">{{ $cat->nom }}</option>
                     @endforeach
                 </select>
+                <div class="wz-err" id="err-cat">Choisissez une catégorie.</div>
             </div>
-            @endif
             <div class="wz-row">
                 <div class="wz-field">
                     <label>Prix (FCFA) *</label>
@@ -200,6 +199,7 @@
         if(step===1){
             var ok = true;
             if(!document.getElementById('wz-nom').value.trim()){ document.getElementById('err-nom').style.display='block'; ok=false; }
+            if(!document.getElementById('wz-cat').value){ document.getElementById('err-cat').style.display='block'; ok=false; }
             var p = document.getElementById('wz-prix').value;
             if(p===''||parseFloat(p)<0){ document.getElementById('err-prix').style.display='block'; ok=false; }
             return ok;

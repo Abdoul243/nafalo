@@ -36,6 +36,7 @@ class Categorie extends Model
         'Éducation & Apprentissage',
         'Santé & Bien-être',
         'Divertissement',
+        'Autre',
     ];
 
     /** Crée les catégories standard pour une boutique (idempotent). */
