@@ -466,7 +466,7 @@
                     <span class="step-icon" id="icon-fichiers">
                         <i class="fas fa-file-alt"></i>
                     </span>
-                    <span class="sidebar-text"> Fichiers</span>
+                    <span class="sidebar-text"> Livraison</span>
                     <span class="step-badge" id="badge-fichiers" style="display:none;"></span>
                 </a>
             </li>
@@ -702,64 +702,43 @@
 
         {{-- SECTION : Fichiers --}}
         <div class="section-block" id="section-fichiers">
+            @php
+                $fmt = $formatInitial ?? 'fichier';
+                $typesMap = [
+                    'fichier'    => ['Fichier téléchargeable','fa-file-arrow-down','#f59e0b,#d97706', null],
+                    'formation'  => ['Formation','fa-graduation-cap','#6366f1,#4f46e5','Après l\'enregistrement, vous construirez le programme (modules, leçons vidéo).'],
+                    'licence'    => ['Licences','fa-key','#a855f7,#7c3aed','Après l\'enregistrement, vous ajouterez ou générerez vos clés de licence.'],
+                    'bundle'     => ['Bundle (pack)','fa-layer-group','#14b8a6,#0d9488','Après l\'enregistrement, vous choisirez les produits inclus dans le pack.'],
+                    'communaute' => ['Communauté','fa-users','#f43f5e,#e11d48','Après l\'enregistrement, vous publierez vos premières annonces à la communauté.'],
+                    'coaching'   => ['Coaching','fa-video','#ec4899,#db2777','Après l\'enregistrement, vous réglerez la durée et vos disponibilités hebdomadaires.'],
+                ];
+                $ti = $typesMap[$fmt] ?? $typesMap['fichier'];
+            @endphp
+
             <div class="section-title">Livraison du produit</div>
-            <div class="section-subtitle">Un fichier à télécharger, ou une formation avec espace membre</div>
-
-            {{-- Format de livraison --}}
-            <div class="mb-3" style="display:flex;gap:0.75rem;flex-wrap:wrap;">
-                @php $fmtInit = $formatInitial ?? 'fichier'; @endphp
-                <label style="flex:1;min-width:200px;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-fichier">
-                    <input type="radio" name="format" value="fichier" onchange="toggleFormat()" {{ $fmtInit === 'fichier' ? 'checked' : '' }}>
-                    <span><strong>Fichier téléchargeable</strong><br><span class="text-muted small">PDF, ZIP, vidéo…</span></span>
-                </label>
-                <label style="flex:1;min-width:200px;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-formation">
-                    <input type="radio" name="format" value="formation" onchange="toggleFormat()" {{ $fmtInit === 'formation' ? 'checked' : '' }}>
-                    <span><strong>Formation (espace membre)</strong><br><span class="text-muted small">Modules, leçons, vidéos</span></span>
-                </label>
-                <label style="flex:1;min-width:200px;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-licence">
-                    <input type="radio" name="format" value="licence" onchange="toggleFormat()" {{ $fmtInit === 'licence' ? 'checked' : '' }}>
-                    <span><strong>Licences (clés)</strong><br><span class="text-muted small">Clés uniques livrées auto.</span></span>
-                </label>
-                <label style="flex:1;min-width:200px;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-bundle">
-                    <input type="radio" name="format" value="bundle" onchange="toggleFormat()" {{ $fmtInit === 'bundle' ? 'checked' : '' }}>
-                    <span><strong>Bundle (pack)</strong><br><span class="text-muted small">Plusieurs produits réunis</span></span>
-                </label>
-                <label style="flex:1;min-width:200px;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-communaute">
-                    <input type="radio" name="format" value="communaute" onchange="toggleFormat()" {{ $fmtInit === 'communaute' ? 'checked' : '' }}>
-                    <span><strong>Communauté</strong><br><span class="text-muted small">Espace membre + discussions</span></span>
-                </label>
-                <label style="flex:1;min-width:200px;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-coaching">
-                    <input type="radio" name="format" value="coaching" onchange="toggleFormat()" {{ $fmtInit === 'coaching' ? 'checked' : '' }}>
-                    <span><strong>Coaching</strong><br><span class="text-muted small">Séances sur réservation</span></span>
-                </label>
+            <div class="section-subtitle">
+                @if($fmt === 'fichier') Le fichier que vos clients téléchargeront.
+                @else La configuration détaillée se fera juste après l'enregistrement. @endif
             </div>
 
-            {{-- Note formation --}}
-            <div id="bloc-formation" style="display:none;background:#eef2ff;border:1px solid #c7d2fe;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#4338ca;font-size:0.88rem;">
-                <i class="fas fa-graduation-cap"></i> Après avoir enregistré le produit, vous pourrez <strong>construire le programme</strong> (modules + leçons, vidéos par lien ou upload). Aucun fichier requis ici.
+            {{-- Type verrouillé (choisi à l'étape précédente) --}}
+            <input type="hidden" name="format" value="{{ $fmt }}">
+            <div style="display:flex;align-items:center;gap:14px;background:#f8f9fb;border:1px solid #e9eaeb;border-radius:14px;padding:1rem 1.25rem;margin-bottom:1.25rem;">
+                <div style="width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,{{ $ti[2] }});display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.2rem;flex-shrink:0;"><i class="fas {{ $ti[1] }}"></i></div>
+                <div style="flex:1;min-width:0;">
+                    <div style="font-size:0.7rem;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;">Type de produit</div>
+                    <div style="font-weight:800;color:#111827;">{{ $ti[0] }}</div>
+                </div>
+                <a href="{{ route('admin.produits.choisir') }}" style="font-size:0.82rem;color:#4f46e5;text-decoration:none;font-weight:600;white-space:nowrap;"><i class="fas fa-exchange-alt"></i> Changer</a>
             </div>
 
-            {{-- Note licence --}}
-            <div id="bloc-licence" style="display:none;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#6d28d9;font-size:0.88rem;">
-                <i class="fas fa-key"></i> Après avoir enregistré le produit, vous pourrez <strong>ajouter ou générer vos clés de licence</strong>. Une clé unique sera livrée automatiquement à chaque acheteur.
+            @if($ti[3])
+            <div style="background:#eef2ff;border:1px solid #c7d2fe;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#4338ca;font-size:0.88rem;">
+                <i class="fas {{ $ti[1] }}"></i> {{ $ti[3] }}
             </div>
+            @endif
 
-            {{-- Note bundle --}}
-            <div id="bloc-bundle" style="display:none;background:#f0fdfa;border:1px solid #99f6e4;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#0f766e;font-size:0.88rem;">
-                <i class="fas fa-layer-group"></i> Après avoir enregistré le produit, vous pourrez <strong>choisir les produits inclus dans le pack</strong>. L'achat du pack débloque tous les produits inclus.
-            </div>
-
-            {{-- Note communauté --}}
-            <div id="bloc-communaute" style="display:none;background:#fff1f2;border:1px solid #fecdd3;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#be123c;font-size:0.88rem;">
-                <i class="fas fa-users"></i> Après enregistrement, vous pourrez <strong>publier des annonces</strong>. Les membres (acheteurs/abonnés) échangent dans le fil de discussion. Astuce : passez le produit en <strong>Abonnement</strong> (section ci-dessus) pour un accès récurrent.
-            </div>
-
-            {{-- Note coaching --}}
-            <div id="bloc-coaching" style="display:none;background:#fdf2f8;border:1px solid #fbcfe8;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#be185d;font-size:0.88rem;">
-                <i class="fas fa-video"></i> Après paiement, le client <strong>demande un créneau</strong> ; vous le <strong>confirmez</strong> avec un lien visio. Vous réglerez la durée de la séance à l'étape suivante.
-            </div>
-
-            <div class="mb-4" id="bloc-fichier">
+            <div class="mb-4" id="bloc-fichier" @if($fmt !== 'fichier') style="display:none;" @endif>
                 <label class="form-label">Fichier numérique (PDF, ZIP, MP4...)</label>
                 <div class="image-upload-area" onclick="document.getElementById('fichier-input').click()">
                     <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
@@ -776,25 +755,7 @@
                     <div class="text-danger small mt-1">{{ $message }}</div>
                 @enderror
             </div>
-            <script>
-                function toggleFormat(){
-                    var fmt = (document.querySelector('input[name=format]:checked')||{}).value || 'fichier';
-                    var sansFichier = (fmt !== 'fichier');
-                    var bf = document.getElementById('bloc-fichier');
-                    if(bf) bf.style.display = sansFichier ? 'none' : '';
-                    document.getElementById('bloc-formation').style.display  = (fmt === 'formation')  ? '' : 'none';
-                    document.getElementById('bloc-licence').style.display    = (fmt === 'licence')    ? '' : 'none';
-                    document.getElementById('bloc-bundle').style.display      = (fmt === 'bundle')     ? '' : 'none';
-                    document.getElementById('bloc-communaute').style.display  = (fmt === 'communaute') ? '' : 'none';
-                    document.getElementById('bloc-coaching').style.display    = (fmt === 'coaching')   ? '' : 'none';
-                    ['fichier','formation','licence','bundle','communaute','coaching'].forEach(function(f){
-                        var el = document.getElementById('opt-'+f);
-                        if(el) el.style.borderColor = (fmt === f) ? '#4f46e5' : '#e5e7eb';
-                    });
-                }
-                // Synchronise l'UI avec le type pré-sélectionné (depuis l'écran de choix)
-                document.addEventListener('DOMContentLoaded', toggleFormat);
-            </script>
+            {{-- Le format est verrouillé (choisi à l'étape 1) : plus de sélecteur ici. --}}
 
             {{-- Wizard Nav --}}
             <div class="wizard-nav">
@@ -954,8 +915,8 @@
             return !isNaN(prix) && prix > 0;
         }
         if (section === 'fichiers') {
-            // Seul le format "fichier" exige un fichier téléchargeable.
-            var fmt = (document.querySelector('input[name="format"]:checked') || {}).value || 'fichier';
+            // Format verrouillé (champ caché). Seul "fichier" exige un upload.
+            var fmt = (document.querySelector('input[name="format"]') || {}).value || 'fichier';
             if (fmt !== 'fichier') return true;
             var fi = document.getElementById('fichier-input');
             return fi && fi.files.length > 0;
