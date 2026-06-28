@@ -141,6 +141,23 @@ class Produit extends Model
         return $this->hasMany(Abonnement::class, 'produit_id');
     }
 
+    /* ── Licences ──────────────────────────────────────────────────── */
+
+    public function estLicence(): bool
+    {
+        return $this->format === 'licence';
+    }
+
+    public function clesLicence()
+    {
+        return $this->hasMany(CleLicence::class, 'produit_id');
+    }
+
+    public function clesDisponibles(): int
+    {
+        return $this->clesLicence()->where('statut', 'disponible')->count();
+    }
+
     /* ── Helpers Lead Magnet ───────────────────────────────────────── */
 
     public function estGratuit(): bool

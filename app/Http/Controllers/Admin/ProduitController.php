@@ -53,8 +53,8 @@ class ProduitController extends Controller
         $boutiqueId = session('boutique_id');
         $categories = Categorie::where('boutique_id', $boutiqueId)->get();
 
-        // Format pré-sélectionné depuis l'écran de choix (fichier | formation)
-        $formatInitial = in_array($request->query('format'), ['fichier', 'formation'])
+        // Format pré-sélectionné depuis l'écran de choix
+        $formatInitial = in_array($request->query('format'), ['fichier', 'formation', 'licence'])
             ? $request->query('format')
             : 'fichier';
 
@@ -93,6 +93,12 @@ class ProduitController extends Controller
         if ($produit->estFormation()) {
             return redirect()->route('admin.produits.formation.programme', $produit)
                 ->with('success', 'Produit créé. Construisez maintenant le programme.');
+        }
+
+        // Si c'est une licence → aller gérer les clés.
+        if ($produit->estLicence()) {
+            return redirect()->route('admin.produits.licences.gestion', $produit)
+                ->with('success', 'Produit créé. Ajoutez maintenant vos clés de licence.');
         }
 
         return redirect()->route('admin.produits.index')

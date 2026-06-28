@@ -469,7 +469,7 @@ class CheckoutController extends BoutiqueBaseController
                 $produit = Produit::find($item['produit_id'] ?? null);
                 if (!$produit) continue;
 
-                \App\Models\Achat::firstOrCreate([
+                $achat = \App\Models\Achat::firstOrCreate([
                     'transaction_id' => $transaction->id,
                     'produit_id'     => $produit->id,
                     'client_id'      => $transaction->client_id,
@@ -484,6 +484,11 @@ class CheckoutController extends BoutiqueBaseController
                 // Abonnement : créer ou prolonger l'accès
                 if ($produit->estAbonnement() && $transaction->client_id) {
                     $this->prolongerAbonnement($produit, $transaction);
+                }
+
+                // Licence : attribuer une clé disponible au client
+                if ($produit->estLicence() && $transaction->client_id) {
+                    $this->attribuerCleLicence($produit, $transaction, $achat);
                 }
             }
 
@@ -523,5 +528,37 @@ class CheckoutController extends BoutiqueBaseController
             'rappel_envoye'           => false,
             'derniere_transaction_id' => $transaction->id,
         ])->save();
+    }
+
+    /**
+     * Attribue une clé de licence disponible au client (une seule fois par achat).
+     */
+    protected function attribuerCleLicence(Produit $produit, Transaction $transaction, $achat): void
+    {
+        // Déjà une clé pour cet achat ? on ne réattribue pas.
+        $dejaAttribuee = \App\Models\CleLicence::where('achat_id', $achat->id)->exists();
+        if ($dejaAttribuee) return;
+
+        $cle = \App\Models\CleLicence::where('produit_id', $produit->id)
+            ->where('statut', 'disponible')
+            ->orderBy('id')
+            ->lockForUpdate()
+            ->first();
+
+        if (!$cle) {
+            // Stock épuisé — à surveiller dans les logs (le marchand doit ajouter des clés).
+            Log::warning('Licence en rupture de stock', [
+                'produit_id'     => $produit->id,
+                'transaction_id' => $transaction->id,
+            ]);
+            return;
+        }
+
+        $cle->update([
+            'statut'       => 'attribuee',
+            'client_id'    => $transaction->client_id,
+            'achat_id'     => $achat->id,
+            'attribuee_at' => now(),
+        ]);
     }
 }

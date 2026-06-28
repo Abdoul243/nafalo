@@ -59,6 +59,12 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
     Route::put('formation/lecons/{lecon}', [Admin\FormationController::class, 'updateLecon'])->name('produits.formation.lecons.update');
     Route::delete('formation/lecons/{lecon}', [Admin\FormationController::class, 'destroyLecon'])->name('produits.formation.lecons.destroy');
 
+    // ── Licences : gestion des clés ──
+    Route::get('produits/{produit}/licences', [Admin\LicenceController::class, 'gestion'])->name('produits.licences.gestion');
+    Route::post('produits/{produit}/licences/ajouter', [Admin\LicenceController::class, 'ajouter'])->name('produits.licences.ajouter');
+    Route::post('produits/{produit}/licences/generer', [Admin\LicenceController::class, 'generer'])->name('produits.licences.generer');
+    Route::delete('licences/cle/{cle}', [Admin\LicenceController::class, 'supprimer'])->name('produits.licences.supprimer');
+
     Route::resource('produits', Admin\ProduitController::class);
 
     // ── Co-publication ────────────────────────────────────────────────

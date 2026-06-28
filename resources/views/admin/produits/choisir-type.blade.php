@@ -56,12 +56,12 @@
         </a>
 
         {{-- Licences --}}
-        <div class="ct-card disabled">
-            <span class="ct-badge soon">Bientôt</span>
+        <a href="{{ route('admin.produits.create', ['format' => 'licence']) }}" class="ct-card">
+            <span class="ct-badge new">Dispo</span>
             <div class="ct-icon" style="background:linear-gradient(135deg,#a855f7,#7c3aed);"><i class="fas fa-key"></i></div>
             <div class="ct-name">Licences</div>
             <div class="ct-desc">Vendez des clés de licence uniques (logiciels), générées et livrées automatiquement.</div>
-        </div>
+        </a>
 
         {{-- Bundle --}}
         <div class="ct-card disabled">

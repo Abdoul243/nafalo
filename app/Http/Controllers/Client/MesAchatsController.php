@@ -42,11 +42,17 @@ class MesAchatsController extends Controller
             ->get()
             ->keyBy('produit_id');
 
+        // Clés de licence attribuées, indexées par achat
+        $clesLicence = \App\Models\CleLicence::whereIn('achat_id', $achats->pluck('id'))
+            ->get()
+            ->keyBy('achat_id');
+
         return view('boutique.client.mes-achats.index', [
             'boutique'    => $boutique,
             'client'      => $client,
             'achats'      => $achats,
             'abonnements' => $abonnements,
+            'clesLicence' => $clesLicence,
         ]);
     }
     

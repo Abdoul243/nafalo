@@ -716,11 +716,20 @@
                     <input type="radio" name="format" value="formation" onchange="toggleFormat()" {{ $fmtInit === 'formation' ? 'checked' : '' }}>
                     <span><strong>Formation (espace membre)</strong><br><span class="text-muted small">Modules, leçons, vidéos</span></span>
                 </label>
+                <label style="flex:1;min-width:200px;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-licence">
+                    <input type="radio" name="format" value="licence" onchange="toggleFormat()" {{ $fmtInit === 'licence' ? 'checked' : '' }}>
+                    <span><strong>Licences (clés)</strong><br><span class="text-muted small">Clés uniques livrées auto.</span></span>
+                </label>
             </div>
 
             {{-- Note formation --}}
             <div id="bloc-formation" style="display:none;background:#eef2ff;border:1px solid #c7d2fe;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#4338ca;font-size:0.88rem;">
                 <i class="fas fa-graduation-cap"></i> Après avoir enregistré le produit, vous pourrez <strong>construire le programme</strong> (modules + leçons, vidéos par lien ou upload). Aucun fichier requis ici.
+            </div>
+
+            {{-- Note licence --}}
+            <div id="bloc-licence" style="display:none;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#6d28d9;font-size:0.88rem;">
+                <i class="fas fa-key"></i> Après avoir enregistré le produit, vous pourrez <strong>ajouter ou générer vos clés de licence</strong>. Une clé unique sera livrée automatiquement à chaque acheteur.
             </div>
 
             <div class="mb-4" id="bloc-fichier">
@@ -742,14 +751,15 @@
             </div>
             <script>
                 function toggleFormat(){
-                    var fmt = (document.querySelector('input[name=format]:checked')||{}).value;
-                    var estFormation = fmt === 'formation';
+                    var fmt = (document.querySelector('input[name=format]:checked')||{}).value || 'fichier';
+                    var sansFichier = (fmt === 'formation' || fmt === 'licence');
                     var bf = document.getElementById('bloc-fichier');
-                    var bForm = document.getElementById('bloc-formation');
-                    if(bf) bf.style.display = estFormation ? 'none' : '';
-                    if(bForm) bForm.style.display = estFormation ? '' : 'none';
-                    document.getElementById('opt-fichier').style.borderColor = estFormation ? '#e5e7eb' : '#4f46e5';
-                    document.getElementById('opt-formation').style.borderColor = estFormation ? '#4f46e5' : '#e5e7eb';
+                    if(bf) bf.style.display = sansFichier ? 'none' : '';
+                    document.getElementById('bloc-formation').style.display = (fmt === 'formation') ? '' : 'none';
+                    document.getElementById('bloc-licence').style.display   = (fmt === 'licence')   ? '' : 'none';
+                    document.getElementById('opt-fichier').style.borderColor   = (fmt === 'fichier')   ? '#4f46e5' : '#e5e7eb';
+                    document.getElementById('opt-formation').style.borderColor = (fmt === 'formation') ? '#4f46e5' : '#e5e7eb';
+                    document.getElementById('opt-licence').style.borderColor   = (fmt === 'licence')   ? '#4f46e5' : '#e5e7eb';
                 }
                 // Synchronise l'UI avec le type pré-sélectionné (depuis l'écran de choix)
                 document.addEventListener('DOMContentLoaded', toggleFormat);
@@ -913,9 +923,9 @@
             return !isNaN(prix) && prix > 0;
         }
         if (section === 'fichiers') {
-            // Une formation n'exige pas de fichier téléchargeable.
+            // Une formation ou une licence n'exige pas de fichier téléchargeable.
             var fmt = (document.querySelector('input[name="format"]:checked') || {}).value || 'fichier';
-            if (fmt === 'formation') return true;
+            if (fmt === 'formation' || fmt === 'licence') return true;
             var fi = document.getElementById('fichier-input');
             return fi && fi.files.length > 0;
         }

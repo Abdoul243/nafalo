@@ -308,12 +308,23 @@
 
                 <div class="achat-footer">
                     <div class="achat-prix">{{ number_format($achat->produit->prix, 0, ',', ' ') }} FCFA</div>
-                    @php $abo = ($abonnements ?? collect())->get($achat->produit_id); @endphp
+                    @php
+                        $abo = ($abonnements ?? collect())->get($achat->produit_id);
+                        $cleLic = $achat->produit->estLicence() ? ($clesLicence ?? collect())->get($achat->id) : null;
+                    @endphp
                     <div class="achat-actions">
                         <a href="{{ route('client.mes-achats.show', $achat) }}" class="btn-detail">
                             <i class="fas fa-eye"></i>
                         </a>
-                        @if($achat->produit->estAbonnement())
+                        @if($achat->produit->estLicence())
+                            @if($cleLic)
+                            <button type="button" class="btn-dl" style="background:#7c3aed;border:none;cursor:pointer;" onclick="copierCle(this, @js($cleLic->cle))">
+                                <i class="fas fa-key"></i> Copier la clé
+                            </button>
+                            @else
+                            <span class="btn-dl" style="background:#9ca3af;cursor:default;"><i class="fas fa-clock"></i> Clé en attente</span>
+                            @endif
+                        @elseif($achat->produit->estAbonnement())
                             @if($abo && $abo->estActif())
                                 <a href="{{ route('client.formation.show', $achat->produit) }}" class="btn-dl" style="background:#4f46e5;">
                                     <i class="fas fa-graduation-cap"></i> Accéder
@@ -337,6 +348,11 @@
                         <div style="font-size:0.72rem;margin-top:6px;{{ $abo->estActif() ? 'color:#16a34a;' : 'color:#dc2626;' }}">
                             <i class="fas fa-{{ $abo->estActif() ? 'check-circle' : 'times-circle' }}"></i>
                             {{ $abo->estActif() ? 'Actif jusqu’au ' . optional($abo->date_fin)->format('d/m/Y') : 'Abonnement expiré' }}
+                        </div>
+                    @endif
+                    @if($cleLic)
+                        <div style="margin-top:6px;font-family:monospace;font-size:0.78rem;color:#111827;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;padding:6px 10px;word-break:break-all;">
+                            🔑 {{ $cleLic->cle }}
                         </div>
                     @endif
                 </div>
@@ -371,3 +387,16 @@
 
 </div>
 @endsection
+
+@push('scripts')
+<script>
+function copierCle(btn, cle){
+    navigator.clipboard.writeText(cle).then(function(){
+        var span = btn.querySelector('i').nextSibling;
+        var old = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check"></i> Copiée !';
+        setTimeout(function(){ btn.innerHTML = old; }, 1500);
+    });
+}
+</script>
+@endpush
