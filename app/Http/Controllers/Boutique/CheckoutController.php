@@ -490,6 +490,11 @@ class CheckoutController extends BoutiqueBaseController
                 if ($produit->estLicence() && $transaction->client_id) {
                     $this->attribuerCleLicence($produit, $transaction, $achat);
                 }
+
+                // Bundle : débloquer chaque produit inclus
+                if ($produit->estBundle()) {
+                    $this->livrerBundle($produit, $transaction);
+                }
             }
 
             Log::info('Produits livrés pour transaction #' . $transaction->id);
@@ -560,5 +565,33 @@ class CheckoutController extends BoutiqueBaseController
             'achat_id'     => $achat->id,
             'attribuee_at' => now(),
         ]);
+    }
+
+    /**
+     * Débloque tous les produits inclus dans un bundle : crée un achat pour
+     * chacun et applique sa livraison spécifique (clé de licence, etc.).
+     */
+    protected function livrerBundle(Produit $produit, Transaction $transaction): void
+    {
+        foreach ($produit->produitsInclus as $inclus) {
+            $achatInclus = \App\Models\Achat::firstOrCreate([
+                'transaction_id' => $transaction->id,
+                'produit_id'     => $inclus->id,
+                'client_id'      => $transaction->client_id,
+            ], [
+                'boutique_id'          => $transaction->boutique_id,
+                'montant'              => 0, // inclus dans le pack
+                'prix_unitaire'        => 0,
+                'quantite'             => 1,
+                'token_telechargement' => Str::random(40),
+            ]);
+
+            if ($inclus->estLicence() && $transaction->client_id) {
+                $this->attribuerCleLicence($inclus, $transaction, $achatInclus);
+            }
+            if ($inclus->estAbonnement() && $transaction->client_id) {
+                $this->prolongerAbonnement($inclus, $transaction);
+            }
+        }
     }
 }

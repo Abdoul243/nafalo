@@ -59,6 +59,10 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
     Route::put('formation/lecons/{lecon}', [Admin\FormationController::class, 'updateLecon'])->name('produits.formation.lecons.update');
     Route::delete('formation/lecons/{lecon}', [Admin\FormationController::class, 'destroyLecon'])->name('produits.formation.lecons.destroy');
 
+    // ── Bundle : composition du pack ──
+    Route::get('produits/{produit}/bundle', [Admin\BundleController::class, 'gestion'])->name('produits.bundle.gestion');
+    Route::post('produits/{produit}/bundle', [Admin\BundleController::class, 'enregistrer'])->name('produits.bundle.enregistrer');
+
     // ── Licences : gestion des clés ──
     Route::get('produits/{produit}/licences', [Admin\LicenceController::class, 'gestion'])->name('produits.licences.gestion');
     Route::post('produits/{produit}/licences/ajouter', [Admin\LicenceController::class, 'ajouter'])->name('produits.licences.ajouter');

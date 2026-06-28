@@ -338,6 +338,10 @@
                             <a href="{{ route('client.formation.show', $achat->produit) }}" class="btn-dl" style="background:#4f46e5;">
                                 <i class="fas fa-graduation-cap"></i> Accéder à la formation
                             </a>
+                        @elseif($achat->produit->estBundle())
+                            <span class="btn-dl" style="background:#0d9488;cursor:default;">
+                                <i class="fas fa-layer-group"></i> Pack ({{ $achat->produit->produitsInclus->count() }} produits)
+                            </span>
                         @else
                             <a href="{{ route('client.telechargement', $achat) }}" class="btn-dl">
                                 <i class="fas fa-download"></i> Télécharger

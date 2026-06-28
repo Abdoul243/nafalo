@@ -720,6 +720,10 @@
                     <input type="radio" name="format" value="licence" onchange="toggleFormat()" {{ $fmtInit === 'licence' ? 'checked' : '' }}>
                     <span><strong>Licences (clés)</strong><br><span class="text-muted small">Clés uniques livrées auto.</span></span>
                 </label>
+                <label style="flex:1;min-width:200px;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-bundle">
+                    <input type="radio" name="format" value="bundle" onchange="toggleFormat()" {{ $fmtInit === 'bundle' ? 'checked' : '' }}>
+                    <span><strong>Bundle (pack)</strong><br><span class="text-muted small">Plusieurs produits réunis</span></span>
+                </label>
             </div>
 
             {{-- Note formation --}}
@@ -730,6 +734,11 @@
             {{-- Note licence --}}
             <div id="bloc-licence" style="display:none;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#6d28d9;font-size:0.88rem;">
                 <i class="fas fa-key"></i> Après avoir enregistré le produit, vous pourrez <strong>ajouter ou générer vos clés de licence</strong>. Une clé unique sera livrée automatiquement à chaque acheteur.
+            </div>
+
+            {{-- Note bundle --}}
+            <div id="bloc-bundle" style="display:none;background:#f0fdfa;border:1px solid #99f6e4;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#0f766e;font-size:0.88rem;">
+                <i class="fas fa-layer-group"></i> Après avoir enregistré le produit, vous pourrez <strong>choisir les produits inclus dans le pack</strong>. L'achat du pack débloque tous les produits inclus.
             </div>
 
             <div class="mb-4" id="bloc-fichier">
@@ -752,14 +761,16 @@
             <script>
                 function toggleFormat(){
                     var fmt = (document.querySelector('input[name=format]:checked')||{}).value || 'fichier';
-                    var sansFichier = (fmt === 'formation' || fmt === 'licence');
+                    var sansFichier = (fmt !== 'fichier');
                     var bf = document.getElementById('bloc-fichier');
                     if(bf) bf.style.display = sansFichier ? 'none' : '';
                     document.getElementById('bloc-formation').style.display = (fmt === 'formation') ? '' : 'none';
                     document.getElementById('bloc-licence').style.display   = (fmt === 'licence')   ? '' : 'none';
-                    document.getElementById('opt-fichier').style.borderColor   = (fmt === 'fichier')   ? '#4f46e5' : '#e5e7eb';
-                    document.getElementById('opt-formation').style.borderColor = (fmt === 'formation') ? '#4f46e5' : '#e5e7eb';
-                    document.getElementById('opt-licence').style.borderColor   = (fmt === 'licence')   ? '#4f46e5' : '#e5e7eb';
+                    document.getElementById('bloc-bundle').style.display     = (fmt === 'bundle')    ? '' : 'none';
+                    ['fichier','formation','licence','bundle'].forEach(function(f){
+                        var el = document.getElementById('opt-'+f);
+                        if(el) el.style.borderColor = (fmt === f) ? '#4f46e5' : '#e5e7eb';
+                    });
                 }
                 // Synchronise l'UI avec le type pré-sélectionné (depuis l'écran de choix)
                 document.addEventListener('DOMContentLoaded', toggleFormat);
@@ -923,9 +934,9 @@
             return !isNaN(prix) && prix > 0;
         }
         if (section === 'fichiers') {
-            // Une formation ou une licence n'exige pas de fichier téléchargeable.
+            // Seul le format "fichier" exige un fichier téléchargeable.
             var fmt = (document.querySelector('input[name="format"]:checked') || {}).value || 'fichier';
-            if (fmt === 'formation' || fmt === 'licence') return true;
+            if (fmt !== 'fichier') return true;
             var fi = document.getElementById('fichier-input');
             return fi && fi.files.length > 0;
         }

@@ -54,7 +54,7 @@ class ProduitController extends Controller
         $categories = Categorie::where('boutique_id', $boutiqueId)->get();
 
         // Format pré-sélectionné depuis l'écran de choix
-        $formatInitial = in_array($request->query('format'), ['fichier', 'formation', 'licence'])
+        $formatInitial = in_array($request->query('format'), ['fichier', 'formation', 'licence', 'bundle'])
             ? $request->query('format')
             : 'fichier';
 
@@ -99,6 +99,12 @@ class ProduitController extends Controller
         if ($produit->estLicence()) {
             return redirect()->route('admin.produits.licences.gestion', $produit)
                 ->with('success', 'Produit créé. Ajoutez maintenant vos clés de licence.');
+        }
+
+        // Si c'est un bundle → aller composer le pack.
+        if ($produit->estBundle()) {
+            return redirect()->route('admin.produits.bundle.gestion', $produit)
+                ->with('success', 'Pack créé. Choisissez maintenant les produits inclus.');
         }
 
         return redirect()->route('admin.produits.index')

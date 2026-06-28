@@ -158,6 +158,26 @@ class Produit extends Model
         return $this->clesLicence()->where('statut', 'disponible')->count();
     }
 
+    /* ── Bundle (pack de produits) ─────────────────────────────────── */
+
+    public function estBundle(): bool
+    {
+        return $this->format === 'bundle';
+    }
+
+    /** Produits inclus dans ce pack. */
+    public function produitsInclus()
+    {
+        return $this->belongsToMany(Produit::class, 'bundle_produits', 'bundle_id', 'produit_id')
+                    ->withTimestamps();
+    }
+
+    /** Valeur cumulée des produits inclus (pour afficher l'économie). */
+    public function valeurInclus(): float
+    {
+        return (float) $this->produitsInclus->sum(fn($p) => $p->prix_promo ?? $p->prix);
+    }
+
     /* ── Helpers Lead Magnet ───────────────────────────────────────── */
 
     public function estGratuit(): bool

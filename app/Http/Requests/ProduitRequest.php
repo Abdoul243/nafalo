@@ -16,8 +16,8 @@ class ProduitRequest extends FormRequest
         $isCreate  = $this->isMethod('POST') && !$this->route('produit');
         $isGratuit = $this->input('type') === 'gratuit';
 
-        // Une formation ou une licence n'exige pas de fichier téléchargeable.
-        $isFormation = in_array($this->input('format'), ['formation', 'licence']);
+        // Formation / licence / bundle n'exigent pas de fichier téléchargeable.
+        $isFormation = in_array($this->input('format'), ['formation', 'licence', 'bundle']);
 
         return [
             'categorie_id'       => 'nullable|exists:categories,id',
@@ -29,7 +29,7 @@ class ProduitRequest extends FormRequest
             'fichier'            => (($isCreate && !$isFormation) ? 'required' : 'nullable') . '|file|mimes:pdf,zip,mp3,mp4,docx,xlsx|max:102400',
             'est_publie'         => 'boolean',
             // Format de livraison + type d'accès
-            'format'                => 'nullable|in:fichier,formation,licence',
+            'format'                => 'nullable|in:fichier,formation,licence,bundle',
             'acces_type'            => 'nullable|in:unique,abonnement',
             'abonnement_intervalle' => 'nullable|in:mensuel,annuel',
             // Lead Magnet

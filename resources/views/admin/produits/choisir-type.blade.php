@@ -64,12 +64,12 @@
         </a>
 
         {{-- Bundle --}}
-        <div class="ct-card disabled">
-            <span class="ct-badge soon">Bientôt</span>
+        <a href="{{ route('admin.produits.create', ['format' => 'bundle']) }}" class="ct-card">
+            <span class="ct-badge new">Dispo</span>
             <div class="ct-icon" style="background:linear-gradient(135deg,#14b8a6,#0d9488);"><i class="fas fa-layer-group"></i></div>
             <div class="ct-name">Bundle</div>
             <div class="ct-desc">Regroupez plusieurs produits en un pack à prix réduit. L'achat débloque tout.</div>
-        </div>
+        </a>
 
         {{-- Coaching --}}
         <div class="ct-card disabled">
