@@ -178,6 +178,18 @@ class Produit extends Model
         return (float) $this->produitsInclus->sum(fn($p) => $p->prix_promo ?? $p->prix);
     }
 
+    /* ── Communauté ────────────────────────────────────────────────── */
+
+    public function estCommunaute(): bool
+    {
+        return $this->format === 'communaute';
+    }
+
+    public function messagesCommunaute()
+    {
+        return $this->hasMany(MessageCommunaute::class, 'produit_id');
+    }
+
     /* ── Helpers Lead Magnet ───────────────────────────────────────── */
 
     public function estGratuit(): bool

@@ -63,6 +63,11 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
     Route::get('produits/{produit}/bundle', [Admin\BundleController::class, 'gestion'])->name('produits.bundle.gestion');
     Route::post('produits/{produit}/bundle', [Admin\BundleController::class, 'enregistrer'])->name('produits.bundle.enregistrer');
 
+    // ── Communauté : annonces + modération ──
+    Route::get('produits/{produit}/communaute', [Admin\CommunauteController::class, 'gestion'])->name('produits.communaute.gestion');
+    Route::post('produits/{produit}/communaute', [Admin\CommunauteController::class, 'poster'])->name('produits.communaute.poster');
+    Route::delete('communaute/message/{message}', [Admin\CommunauteController::class, 'supprimer'])->name('produits.communaute.supprimer');
+
     // ── Licences : gestion des clés ──
     Route::get('produits/{produit}/licences', [Admin\LicenceController::class, 'gestion'])->name('produits.licences.gestion');
     Route::post('produits/{produit}/licences/ajouter', [Admin\LicenceController::class, 'ajouter'])->name('produits.licences.ajouter');

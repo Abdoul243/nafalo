@@ -158,6 +158,10 @@ Route::middleware(['web', 'domaine'])->prefix('boutique')->group(function () {
             Route::post('/lecon/{lecon}/terminer', [Client\FormationClientController::class, 'terminerLecon'])->name('formation.lecon.terminer');
             Route::get('/lecon/{lecon}/video', [Client\FormationClientController::class, 'video'])->name('formation.lecon.video');
             Route::get('/lecon/{lecon}/ressource', [Client\FormationClientController::class, 'ressource'])->name('formation.lecon.ressource');
+
+            // ── Espace communauté ──
+            Route::get('/communaute/{produit}', [Client\CommunauteController::class, 'show'])->name('communaute.show');
+            Route::post('/communaute/{produit}/poster', [Client\CommunauteController::class, 'poster'])->name('communaute.poster');
         });
     });
 });

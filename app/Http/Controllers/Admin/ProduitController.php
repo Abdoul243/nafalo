@@ -54,7 +54,7 @@ class ProduitController extends Controller
         $categories = Categorie::where('boutique_id', $boutiqueId)->get();
 
         // Format pré-sélectionné depuis l'écran de choix
-        $formatInitial = in_array($request->query('format'), ['fichier', 'formation', 'licence', 'bundle'])
+        $formatInitial = in_array($request->query('format'), ['fichier', 'formation', 'licence', 'bundle', 'communaute'])
             ? $request->query('format')
             : 'fichier';
 
@@ -105,6 +105,12 @@ class ProduitController extends Controller
         if ($produit->estBundle()) {
             return redirect()->route('admin.produits.bundle.gestion', $produit)
                 ->with('success', 'Pack créé. Choisissez maintenant les produits inclus.');
+        }
+
+        // Si c'est une communauté → aller publier la première annonce.
+        if ($produit->estCommunaute()) {
+            return redirect()->route('admin.produits.communaute.gestion', $produit)
+                ->with('success', 'Communauté créée. Publiez un message de bienvenue.');
         }
 
         return redirect()->route('admin.produits.index')

@@ -724,6 +724,10 @@
                     <input type="radio" name="format" value="bundle" onchange="toggleFormat()" {{ $fmtInit === 'bundle' ? 'checked' : '' }}>
                     <span><strong>Bundle (pack)</strong><br><span class="text-muted small">Plusieurs produits réunis</span></span>
                 </label>
+                <label style="flex:1;min-width:200px;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-communaute">
+                    <input type="radio" name="format" value="communaute" onchange="toggleFormat()" {{ $fmtInit === 'communaute' ? 'checked' : '' }}>
+                    <span><strong>Communauté</strong><br><span class="text-muted small">Espace membre + discussions</span></span>
+                </label>
             </div>
 
             {{-- Note formation --}}
@@ -739,6 +743,11 @@
             {{-- Note bundle --}}
             <div id="bloc-bundle" style="display:none;background:#f0fdfa;border:1px solid #99f6e4;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#0f766e;font-size:0.88rem;">
                 <i class="fas fa-layer-group"></i> Après avoir enregistré le produit, vous pourrez <strong>choisir les produits inclus dans le pack</strong>. L'achat du pack débloque tous les produits inclus.
+            </div>
+
+            {{-- Note communauté --}}
+            <div id="bloc-communaute" style="display:none;background:#fff1f2;border:1px solid #fecdd3;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#be123c;font-size:0.88rem;">
+                <i class="fas fa-users"></i> Après enregistrement, vous pourrez <strong>publier des annonces</strong>. Les membres (acheteurs/abonnés) échangent dans le fil de discussion. Astuce : passez le produit en <strong>Abonnement</strong> (section ci-dessus) pour un accès récurrent.
             </div>
 
             <div class="mb-4" id="bloc-fichier">
@@ -764,10 +773,11 @@
                     var sansFichier = (fmt !== 'fichier');
                     var bf = document.getElementById('bloc-fichier');
                     if(bf) bf.style.display = sansFichier ? 'none' : '';
-                    document.getElementById('bloc-formation').style.display = (fmt === 'formation') ? '' : 'none';
-                    document.getElementById('bloc-licence').style.display   = (fmt === 'licence')   ? '' : 'none';
-                    document.getElementById('bloc-bundle').style.display     = (fmt === 'bundle')    ? '' : 'none';
-                    ['fichier','formation','licence','bundle'].forEach(function(f){
+                    document.getElementById('bloc-formation').style.display  = (fmt === 'formation')  ? '' : 'none';
+                    document.getElementById('bloc-licence').style.display    = (fmt === 'licence')    ? '' : 'none';
+                    document.getElementById('bloc-bundle').style.display      = (fmt === 'bundle')     ? '' : 'none';
+                    document.getElementById('bloc-communaute').style.display  = (fmt === 'communaute') ? '' : 'none';
+                    ['fichier','formation','licence','bundle','communaute'].forEach(function(f){
                         var el = document.getElementById('opt-'+f);
                         if(el) el.style.borderColor = (fmt === f) ? '#4f46e5' : '#e5e7eb';
                     });

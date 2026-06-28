@@ -80,12 +80,12 @@
         </div>
 
         {{-- Communauté --}}
-        <div class="ct-card disabled">
-            <span class="ct-badge soon">Bientôt</span>
+        <a href="{{ route('admin.produits.create', ['format' => 'communaute']) }}" class="ct-card">
+            <span class="ct-badge new">Dispo</span>
             <div class="ct-icon" style="background:linear-gradient(135deg,#f43f5e,#e11d48);"><i class="fas fa-users"></i></div>
             <div class="ct-name">Communauté</div>
-            <div class="ct-desc">Espace membre à accès récurrent (abonnement) avec contenus exclusifs.</div>
-        </div>
+            <div class="ct-desc">Espace membre avec fil de discussion. Accès unique ou par abonnement.</div>
+        </a>
 
     </div>
 </div>
