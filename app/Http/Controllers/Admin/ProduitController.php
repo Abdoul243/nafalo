@@ -174,6 +174,142 @@ class ProduitController extends Controller
             ->with('success', 'Produit « ' . $produit->nom . ' » créé avec succès.');
     }
 
+    /* ─────────── Wizards dédiés (Formation, Licence, Bundle, Communauté) ─────────── */
+
+    private function slugUnique(string $nom): string
+    {
+        $slug = Str::slug($nom);
+        if (Produit::where('slug', $slug)->exists()) $slug .= '-' . Str::lower(Str::random(4));
+        return $slug;
+    }
+
+    private function basePayload(array $data): array
+    {
+        $p = [
+            'boutique_id'  => session('boutique_id'),
+            'nom'          => $data['nom'],
+            'slug'         => $this->slugUnique($data['nom']),
+            'categorie_id' => $data['categorie_id'] ?? null,
+            'description'  => $data['description'] ?? null,
+            'prix'         => $data['prix'],
+            'type'         => 'payant',
+            'est_publie'   => request()->boolean('est_publie'),
+        ];
+        if (request()->hasFile('image')) {
+            $img = request()->file('image');
+            $p['image']        = $img->store('produits/images', 'public');
+            $p['image_mime']   = $img->getMimeType();
+            $p['image_taille'] = $img->getSize();
+        }
+        return $p;
+    }
+
+    private function categoriesBoutique()
+    {
+        return Categorie::where('boutique_id', session('boutique_id'))->orderBy('nom')->get();
+    }
+
+    private function reglesCommunes(): array
+    {
+        return [
+            'nom'          => 'required|string|max:255',
+            'categorie_id' => 'nullable|exists:categories,id',
+            'description'  => 'nullable|string',
+            'prix'         => 'required|numeric|min:0',
+            'image'        => 'nullable|image|max:2048',
+            'est_publie'   => 'nullable|boolean',
+        ];
+    }
+
+    // ── Formation ──
+    public function createFormation()
+    {
+        return view('admin.produits.create-formation', ['categories' => $this->categoriesBoutique()]);
+    }
+    public function storeFormation(Request $request)
+    {
+        $data = $request->validate($this->reglesCommunes());
+        $produit = Produit::create($this->basePayload($data) + ['format' => 'formation']);
+        return redirect()->route('admin.produits.formation.programme', $produit)
+            ->with('success', 'Formation créée. Construisez maintenant le programme.');
+    }
+
+    // ── Licence ──
+    public function createLicence()
+    {
+        return view('admin.produits.create-licence', ['categories' => $this->categoriesBoutique()]);
+    }
+    public function storeLicence(Request $request)
+    {
+        $data = $request->validate($this->reglesCommunes() + [
+            'cle_type' => 'nullable|in:alphanumerique,uuid',
+            'cle_longueur' => 'nullable|integer|in:8,16,24,32',
+            'cle_prefixe' => 'nullable|string|max:12',
+            'cle_quantite' => 'nullable|integer|min:0|max:1000',
+        ]);
+        $produit = Produit::create($this->basePayload($data) + ['format' => 'licence']);
+
+        // Génération initiale des clés (optionnelle)
+        $qte = (int) ($data['cle_quantite'] ?? 0);
+        if ($qte > 0) {
+            $type = $data['cle_type'] ?? 'alphanumerique';
+            $len  = $data['cle_longueur'] ?? 16;
+            $pre  = strtoupper(preg_replace('/[^A-Z0-9]/i', '', $data['cle_prefixe'] ?? ''));
+            $faites = 0; $tent = 0;
+            while ($faites < $qte && $tent < $qte * 5) {
+                $tent++;
+                $base = $type === 'uuid' ? strtoupper((string) Str::uuid()) : implode('-', str_split(strtoupper(Str::random($len)), 4));
+                $cle  = ($pre ? $pre . '-' : '') . $base;
+                if ($produit->clesLicence()->where('cle', $cle)->exists()) continue;
+                $produit->clesLicence()->create(['cle' => $cle, 'statut' => 'disponible']);
+                $faites++;
+            }
+        }
+        return redirect()->route('admin.produits.licences.gestion', $produit)
+            ->with('success', 'Produit licence créé. Gérez vos clés ici.');
+    }
+
+    // ── Bundle ──
+    public function createBundle()
+    {
+        $disponibles = Produit::where('boutique_id', session('boutique_id'))
+            ->where('format', '!=', 'bundle')->orderBy('nom')->get();
+        return view('admin.produits.create-bundle', ['categories' => $this->categoriesBoutique(), 'disponibles' => $disponibles]);
+    }
+    public function storeBundle(Request $request)
+    {
+        $data = $request->validate($this->reglesCommunes() + [
+            'produits' => 'nullable|array', 'produits.*' => 'integer|exists:produits,id',
+        ]);
+        $produit = Produit::create($this->basePayload($data) + ['format' => 'bundle']);
+        $ids = Produit::whereIn('id', $data['produits'] ?? [])
+            ->where('boutique_id', session('boutique_id'))->where('format', '!=', 'bundle')->pluck('id');
+        $produit->produitsInclus()->sync($ids);
+        return redirect()->route('admin.produits.bundle.gestion', $produit)
+            ->with('success', 'Pack créé avec ' . $ids->count() . ' produit(s).');
+    }
+
+    // ── Communauté ──
+    public function createCommunaute()
+    {
+        return view('admin.produits.create-communaute', ['categories' => $this->categoriesBoutique()]);
+    }
+    public function storeCommunaute(Request $request)
+    {
+        $data = $request->validate($this->reglesCommunes() + [
+            'acces_type' => 'nullable|in:unique,abonnement',
+            'abonnement_intervalle' => 'nullable|in:mensuel,annuel',
+        ]);
+        $extra = [
+            'format'     => 'communaute',
+            'acces_type' => $data['acces_type'] ?? 'unique',
+            'abonnement_intervalle' => ($data['acces_type'] ?? 'unique') === 'abonnement' ? ($data['abonnement_intervalle'] ?? 'mensuel') : null,
+        ];
+        $produit = Produit::create($this->basePayload($data) + $extra);
+        return redirect()->route('admin.produits.communaute.gestion', $produit)
+            ->with('success', 'Communauté créée. Publiez un message de bienvenue.');
+    }
+
     public function store(ProduitRequest $request)
     {
         $data = $request->validated();

@@ -92,8 +92,12 @@ $types = [
 
 <script>
 var CT_ROUTES = {
-    coaching: "{{ route('admin.produits.create-coaching') }}",
-    fichier:  "{{ route('admin.produits.create-fichier') }}"
+    coaching:   "{{ route('admin.produits.create-coaching') }}",
+    fichier:    "{{ route('admin.produits.create-fichier') }}",
+    formation:  "{{ route('admin.produits.create-formation') }}",
+    licence:    "{{ route('admin.produits.create-licence') }}",
+    bundle:     "{{ route('admin.produits.create-bundle') }}",
+    communaute: "{{ route('admin.produits.create-communaute') }}"
 };
 function ctSelect(key){
     document.querySelectorAll('.ct-card').forEach(c => c.classList.toggle('sel', c.dataset.key === key));

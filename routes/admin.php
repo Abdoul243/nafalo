@@ -56,6 +56,16 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
     Route::post('produits/create/fichier', [Admin\ProduitController::class, 'storeFichier'])
         ->name('produits.store-fichier');
 
+    // Wizards dédiés : Formation, Licence, Bundle, Communauté
+    Route::get('produits/create/formation', [Admin\ProduitController::class, 'createFormation'])->name('produits.create-formation');
+    Route::post('produits/create/formation', [Admin\ProduitController::class, 'storeFormation'])->name('produits.store-formation');
+    Route::get('produits/create/licence', [Admin\ProduitController::class, 'createLicence'])->name('produits.create-licence');
+    Route::post('produits/create/licence', [Admin\ProduitController::class, 'storeLicence'])->name('produits.store-licence');
+    Route::get('produits/create/bundle', [Admin\ProduitController::class, 'createBundle'])->name('produits.create-bundle');
+    Route::post('produits/create/bundle', [Admin\ProduitController::class, 'storeBundle'])->name('produits.store-bundle');
+    Route::get('produits/create/communaute', [Admin\ProduitController::class, 'createCommunaute'])->name('produits.create-communaute');
+    Route::post('produits/create/communaute', [Admin\ProduitController::class, 'storeCommunaute'])->name('produits.store-communaute');
+
     // Téléchargement du fichier produit par le marchand (protégé)
     Route::get('produits/{produit}/fichier', [Admin\ProduitController::class, 'telechargerFichier'])
         ->name('produits.fichier');
