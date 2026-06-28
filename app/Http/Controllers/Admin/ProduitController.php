@@ -133,40 +133,14 @@ class ProduitController extends Controller
 
     public function storeFichier(Request $request)
     {
-        $data = $request->validate([
-            'nom'          => 'required|string|max:255',
-            'categorie_id' => 'required|exists:categories,id',
-            'description'  => 'nullable|string',
-            'prix'         => 'required|numeric|min:0',
-            'fichier'      => 'required|file|mimes:pdf,zip,mp3,mp4,docx,xlsx,png,jpg|max:102400',
-            'image'        => 'nullable|image|max:2048',
-            'est_publie'   => 'nullable|boolean',
+        $data = $request->validate($this->reglesCommunes() + [
+            'fichier' => 'required|file|mimes:pdf,zip,mp3,mp4,docx,xlsx,png,jpg|max:102400',
         ]);
 
-        $slug = Str::slug($data['nom']);
-        if (Produit::where('slug', $slug)->exists()) {
-            $slug .= '-' . Str::lower(Str::random(4));
-        }
-
-        $payload = [
-            'boutique_id'  => session('boutique_id'),
-            'nom'          => $data['nom'],
-            'slug'         => $slug,
-            'categorie_id' => $data['categorie_id'] ?? null,
-            'description'  => $data['description'] ?? null,
-            'prix'         => $data['prix'],
-            'type'         => 'payant',
-            'format'       => 'fichier',
-            'fichier'      => $request->file('fichier')->store('produits/fichiers', 'local'),
-            'est_publie'   => $request->boolean('est_publie'),
+        $payload = $this->basePayload($data) + [
+            'format'  => 'fichier',
+            'fichier' => $request->file('fichier')->store('produits/fichiers', 'local'),
         ];
-
-        if ($request->hasFile('image')) {
-            $img = $request->file('image');
-            $payload['image']        = $img->store('produits/images', 'public');
-            $payload['image_mime']   = $img->getMimeType();
-            $payload['image_taille'] = $img->getSize();
-        }
 
         $produit = Produit::create($payload);
 
@@ -185,14 +159,20 @@ class ProduitController extends Controller
 
     private function basePayload(array $data): array
     {
+        $type  = ($data['type'] ?? 'payant') === 'gratuit' ? 'gratuit' : 'payant';
+        $prix  = $type === 'gratuit' ? 0 : (float) $data['prix'];
+        $promo = (!empty($data['prix_promo']) && $data['prix_promo'] > 0 && $data['prix_promo'] < $prix)
+            ? (float) $data['prix_promo'] : null;
+
         $p = [
             'boutique_id'  => session('boutique_id'),
             'nom'          => $data['nom'],
             'slug'         => $this->slugUnique($data['nom']),
             'categorie_id' => $data['categorie_id'] ?? null,
             'description'  => $data['description'] ?? null,
-            'prix'         => $data['prix'],
-            'type'         => 'payant',
+            'prix'         => $prix,
+            'prix_promo'   => $promo,
+            'type'         => $type,
             'est_publie'   => request()->boolean('est_publie'),
         ];
         if (request()->hasFile('image')) {
@@ -215,7 +195,9 @@ class ProduitController extends Controller
             'nom'          => 'required|string|max:255',
             'categorie_id' => 'required|exists:categories,id',
             'description'  => 'nullable|string',
+            'type'         => 'nullable|in:payant,gratuit',
             'prix'         => 'required|numeric|min:0',
+            'prix_promo'   => 'nullable|numeric|min:0',
             'image'        => 'nullable|image|max:2048',
             'est_publie'   => 'nullable|boolean',
         ];

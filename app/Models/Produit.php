@@ -27,6 +27,7 @@ class Produit extends Model
         'slug',
         'description',
         'prix',
+        'prix_promo',
         'image',
         'image_mime',
         'image_taille',
@@ -48,6 +49,7 @@ class Produit extends Model
 
     protected $casts = [
         'prix'              => 'decimal:2',
+        'prix_promo'        => 'decimal:2',
         'est_publie'        => 'boolean',
         'nb_ventes'         => 'integer',
         'lead_champs_requis'=> 'array',
