@@ -91,13 +91,14 @@ $types = [
 </div>
 
 <script>
+var CT_ROUTES = { coaching: "{{ route('admin.produits.create-coaching') }}" };
 function ctSelect(key){
     document.querySelectorAll('.ct-card').forEach(c => c.classList.toggle('sel', c.dataset.key === key));
     document.querySelectorAll('.ct-detail').forEach(d => d.style.display = 'none');
     var det = document.getElementById('detail-' + key);
     if(det) det.style.display = '';
     var btn = document.getElementById('ct-continue-btn');
-    if(btn) btn.href = "{{ route('admin.produits.create') }}?format=" + key;
+    if(btn) btn.href = CT_ROUTES[key] || ("{{ route('admin.produits.create') }}?format=" + key);
 }
 </script>
 @endsection

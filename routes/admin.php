@@ -44,6 +44,12 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
     Route::get('produits/choisir', [Admin\ProduitController::class, 'choisirType'])
         ->name('produits.choisir');
 
+    // Wizard dédié Coaching (étapes spécifiques)
+    Route::get('produits/create/coaching', [Admin\ProduitController::class, 'createCoaching'])
+        ->name('produits.create-coaching');
+    Route::post('produits/create/coaching', [Admin\ProduitController::class, 'storeCoaching'])
+        ->name('produits.store-coaching');
+
     // Téléchargement du fichier produit par le marchand (protégé)
     Route::get('produits/{produit}/fichier', [Admin\ProduitController::class, 'telechargerFichier'])
         ->name('produits.fichier');

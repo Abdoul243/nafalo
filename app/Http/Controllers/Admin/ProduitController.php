@@ -61,6 +61,69 @@ class ProduitController extends Controller
         return view('admin.produits.create', compact('categories', 'formatInitial'));
     }
     
+    /** Wizard dédié à la création d'une séance de coaching (étapes Chariow). */
+    public function createCoaching()
+    {
+        $categories = Categorie::where('boutique_id', session('boutique_id'))->get();
+        return view('admin.produits.create-coaching', compact('categories'));
+    }
+
+    public function storeCoaching(Request $request)
+    {
+        $data = $request->validate([
+            'nom'            => 'required|string|max:255',
+            'categorie_id'   => 'nullable|exists:categories,id',
+            'description'    => 'nullable|string',
+            'prix'           => 'required|numeric|min:0',
+            'image'          => 'nullable|image|max:2048',
+            'coaching_duree' => 'required|integer|min:5|max:600',
+            'coaching_pause' => 'nullable|integer|min:0|max:240',
+            'jours'          => 'nullable|array',
+            'est_publie'     => 'nullable|boolean',
+        ]);
+
+        // Disponibilité hebdomadaire
+        $dispo = [];
+        foreach (['lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi', 'dimanche'] as $j) {
+            $v = $request->input("jours.$j");
+            if (!empty($v['actif']) && !empty($v['debut']) && !empty($v['fin']) && $v['debut'] < $v['fin']) {
+                $dispo[$j] = [['debut' => $v['debut'], 'fin' => $v['fin']]];
+            }
+        }
+
+        $slug = Str::slug($data['nom']);
+        if (Produit::where('slug', $slug)->exists()) {
+            $slug .= '-' . Str::lower(Str::random(4));
+        }
+
+        $payload = [
+            'boutique_id'             => session('boutique_id'),
+            'nom'                     => $data['nom'],
+            'slug'                    => $slug,
+            'categorie_id'            => $data['categorie_id'] ?? null,
+            'description'             => $data['description'] ?? null,
+            'prix'                    => $data['prix'],
+            'type'                    => 'payant',
+            'format'                  => 'coaching',
+            'coaching_duree'          => $data['coaching_duree'],
+            'coaching_pause'          => $data['coaching_pause'] ?? 0,
+            'coaching_disponibilites' => $dispo ?: null,
+            'est_publie'              => $request->boolean('est_publie'),
+        ];
+
+        if ($request->hasFile('image')) {
+            $img = $request->file('image');
+            $payload['image']        = $img->store('produits/images', 'public');
+            $payload['image_mime']   = $img->getMimeType();
+            $payload['image_taille'] = $img->getSize();
+        }
+
+        $produit = Produit::create($payload);
+
+        return redirect()->route('admin.produits.coaching.reservations', $produit)
+            ->with('success', 'Séance de coaching créée ! Vos disponibilités sont enregistrées.');
+    }
+
     public function store(ProduitRequest $request)
     {
         $data = $request->validated();
