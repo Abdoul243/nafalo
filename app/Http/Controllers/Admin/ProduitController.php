@@ -70,6 +70,7 @@ class ProduitController extends Controller
 
     public function storeCoaching(Request $request)
     {
+        $this->preparerCategorie($request);
         $data = $request->validate($this->reglesCommunes() + [
             'coaching_duree' => 'required|integer|min:5|max:600',
             'coaching_pause' => 'nullable|integer|min:0|max:240',
@@ -105,6 +106,7 @@ class ProduitController extends Controller
 
     public function storeFichier(Request $request)
     {
+        $this->preparerCategorie($request);
         $data = $request->validate($this->reglesCommunes() + [
             'fichier' => 'required|file|mimes:pdf,zip,mp3,mp4,docx,xlsx,png,jpg|max:102400',
         ]);
@@ -161,6 +163,28 @@ class ProduitController extends Controller
         return Categorie::where('boutique_id', session('boutique_id'))->orderBy('nom')->get();
     }
 
+    /**
+     * Si le marchand a choisi « Créer une nouvelle catégorie », on la crée
+     * (ou réutilise) pour sa boutique et on injecte son id dans la requête,
+     * pour qu'elle passe la validation `exists:categories,id` comme une normale.
+     */
+    private function preparerCategorie(Request $request): void
+    {
+        if ($request->input('categorie_id') !== '__new__') {
+            return;
+        }
+        $nom = trim((string) $request->input('nouvelle_categorie', ''));
+        if ($nom === '') {
+            $request->merge(['categorie_id' => null]); // déclenchera l'erreur "catégorie requise"
+            return;
+        }
+        $cat = Categorie::firstOrCreate(
+            ['boutique_id' => session('boutique_id'), 'slug' => Str::slug($nom)],
+            ['nom' => $nom]
+        );
+        $request->merge(['categorie_id' => $cat->id]);
+    }
+
     private function reglesCommunes(): array
     {
         return [
@@ -182,6 +206,7 @@ class ProduitController extends Controller
     }
     public function storeFormation(Request $request)
     {
+        $this->preparerCategorie($request);
         $data = $request->validate($this->reglesCommunes());
         $produit = Produit::create($this->basePayload($data) + ['format' => 'formation']);
         return redirect()->route('admin.produits.formation.programme', $produit)
@@ -195,6 +220,7 @@ class ProduitController extends Controller
     }
     public function storeLicence(Request $request)
     {
+        $this->preparerCategorie($request);
         $data = $request->validate($this->reglesCommunes() + [
             'cle_type' => 'nullable|in:alphanumerique,uuid',
             'cle_longueur' => 'nullable|integer|in:8,16,24,32',
@@ -232,6 +258,7 @@ class ProduitController extends Controller
     }
     public function storeBundle(Request $request)
     {
+        $this->preparerCategorie($request);
         $data = $request->validate($this->reglesCommunes() + [
             'produits' => 'nullable|array', 'produits.*' => 'integer|exists:produits,id',
         ]);
@@ -250,6 +277,7 @@ class ProduitController extends Controller
     }
     public function storeCommunaute(Request $request)
     {
+        $this->preparerCategorie($request);
         $data = $request->validate($this->reglesCommunes() + [
             'acces_type' => 'nullable|in:unique,abonnement',
             'abonnement_intervalle' => 'nullable|in:mensuel,annuel',

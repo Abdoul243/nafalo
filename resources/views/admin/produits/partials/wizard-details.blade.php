@@ -9,13 +9,15 @@
 
     <div class="wz-field">
         <label>Catégorie <span class="req">*</span></label>
-        <select name="categorie_id" id="f-cat" required>
+        <select name="categorie_id" id="f-cat" required onchange="majCat()">
             <option value="">Dans quelle catégorie classer ce produit ?</option>
             @foreach($categories as $cat)
             <option value="{{ $cat->id }}">{{ $cat->nom }}</option>
             @endforeach
+            <option value="__new__">＋ Créer une nouvelle catégorie…</option>
         </select>
-        <div class="wz-err" id="e-cat">Choisissez une catégorie.</div>
+        <input type="text" name="nouvelle_categorie" id="f-newcat" value="{{ old('nouvelle_categorie') }}" placeholder="Nom de votre catégorie" style="display:none;margin-top:0.6rem;">
+        <div class="wz-err" id="e-cat">Choisissez ou créez une catégorie.</div>
     </div>
 
     <div class="wz-field">
