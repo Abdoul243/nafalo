@@ -80,9 +80,37 @@
     {{-- Générer --}}
     <div class="lc-card">
         <h3>Générer des clés automatiquement</h3>
-        <p class="h">Crée des clés uniques au format <span class="lc-key">PREFIXE-XXXX-XXXX-XXXX-XXXX</span>.</p>
+        <p class="h">Configurez le format puis générez vos clés uniques.</p>
+
+        {{-- Aperçu live --}}
+        <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:12px;padding:1rem 1.25rem;text-align:center;margin-bottom:1rem;">
+            <div style="font-size:0.72rem;color:#9ca3af;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:6px;">Aperçu de la clé générée</div>
+            <div id="lc-preview" class="lc-key" style="font-size:1.15rem;letter-spacing:0.05em;color:#6d28d9;word-break:break-all;">XXXX-XXXX-XXXX-XXXX</div>
+        </div>
+
         <form action="{{ route('admin.produits.licences.generer', $produit) }}" method="POST">
             @csrf
+
+            {{-- Type --}}
+            <label style="font-size:0.82rem;font-weight:700;color:#374151;display:block;margin-bottom:6px;">Type de clé</label>
+            <div style="display:flex;gap:0.7rem;flex-wrap:wrap;margin-bottom:1rem;">
+                <label style="flex:1;min-width:160px;border:1.5px solid #7c3aed;border-radius:10px;padding:0.6rem 0.8rem;cursor:pointer;" id="opt-alpha">
+                    <input type="radio" name="type" value="alphanumerique" checked onchange="lcUpdate()"> <strong>Alphanumérique</strong>
+                    <div class="text-muted small">Lettres et chiffres</div>
+                </label>
+                <label style="flex:1;min-width:160px;border:1.5px solid #e5e7eb;border-radius:10px;padding:0.6rem 0.8rem;cursor:pointer;" id="opt-uuid">
+                    <input type="radio" name="type" value="uuid" onchange="lcUpdate()"> <strong>UUID</strong>
+                    <div class="text-muted small">Format standard universel</div>
+                </label>
+            </div>
+
+            {{-- Longueur (alphanumérique uniquement) --}}
+            <div id="lc-longueur-wrap" style="margin-bottom:1rem;">
+                <label style="font-size:0.82rem;font-weight:700;color:#374151;display:block;margin-bottom:6px;">Longueur : <span id="lc-len-val">16</span> caractères</label>
+                <input type="range" name="longueur" id="lc-longueur" min="8" max="32" step="8" value="16" oninput="lcUpdate()" style="width:100%;accent-color:#7c3aed;">
+                <div style="display:flex;justify-content:space-between;font-size:0.72rem;color:#9ca3af;"><span>8</span><span>16</span><span>24</span><span>32</span></div>
+            </div>
+
             <div class="lc-row">
                 <div>
                     <label>Quantité</label>
@@ -90,7 +118,7 @@
                 </div>
                 <div>
                     <label>Préfixe (optionnel)</label>
-                    <input type="text" name="prefixe" maxlength="12" placeholder="Ex : PRO">
+                    <input type="text" name="prefixe" id="lc-prefixe" maxlength="12" placeholder="Ex : PRO" oninput="lcUpdate()">
                 </div>
                 <div style="flex:0;">
                     <button class="lc-btn" style="margin-top:0;"><i class="fas fa-bolt"></i> Générer</button>
@@ -98,6 +126,28 @@
             </div>
         </form>
     </div>
+
+    <script>
+    function lcRand(n){ var c='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789', s=''; for(var i=0;i<n;i++) s+=c[Math.floor(Math.random()*c.length)]; return s; }
+    function lcChunks(s){ return s.match(/.{1,4}/g).join('-'); }
+    function lcUpdate(){
+        var type = (document.querySelector('input[name=type]:checked')||{}).value || 'alphanumerique';
+        var prefixe = (document.getElementById('lc-prefixe').value||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+        var len = parseInt(document.getElementById('lc-longueur').value)||16;
+        document.getElementById('lc-len-val').textContent = len;
+        document.getElementById('lc-longueur-wrap').style.display = (type==='uuid') ? 'none' : '';
+        document.getElementById('opt-alpha').style.borderColor = (type==='alphanumerique') ? '#7c3aed' : '#e5e7eb';
+        document.getElementById('opt-uuid').style.borderColor  = (type==='uuid') ? '#7c3aed' : '#e5e7eb';
+        var base;
+        if(type==='uuid'){
+            base = 'XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX'.replace(/X/g, function(){ return lcRand(1); });
+        } else {
+            base = lcChunks(lcRand(len));
+        }
+        document.getElementById('lc-preview').textContent = (prefixe ? prefixe+'-' : '') + base;
+    }
+    document.addEventListener('DOMContentLoaded', lcUpdate);
+    </script>
 
     {{-- Clés attribuées --}}
     @if($attribuees->count() > 0)

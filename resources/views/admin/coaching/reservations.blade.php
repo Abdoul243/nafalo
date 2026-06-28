@@ -45,16 +45,38 @@
 
     @if(session('success'))<div class="co-alert"><i class="fas fa-check-circle"></i> {{ session('success') }}</div>@endif
 
-    {{-- Réglages --}}
+    {{-- Réglages + disponibilité --}}
+    @php $dispo = $produit->coaching_disponibilites ?? []; @endphp
     <div class="co-card">
-        <h3>⚙️ Réglages de la séance</h3>
-        <form action="{{ route('admin.produits.coaching.reglages', $produit) }}" method="POST" style="display:flex;gap:0.7rem;align-items:flex-end;flex-wrap:wrap;">
+        <h3>⚙️ Réglages & disponibilité</h3>
+        <form action="{{ route('admin.produits.coaching.reglages', $produit) }}" method="POST">
             @csrf
-            <div>
-                <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Durée (minutes)</label>
-                <input type="number" name="coaching_duree" min="5" max="600" value="{{ $produit->coaching_duree }}" placeholder="Ex : 60" style="width:140px;">
+            <div style="display:flex;gap:0.7rem;flex-wrap:wrap;margin-bottom:1rem;">
+                <div>
+                    <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Durée (min)</label>
+                    <input type="number" name="coaching_duree" min="5" max="600" value="{{ $produit->coaching_duree ?: 60 }}" style="width:120px;">
+                </div>
+                <div>
+                    <label style="font-size:0.78rem;font-weight:600;color:#374151;display:block;margin-bottom:4px;">Pause entre séances (min)</label>
+                    <input type="number" name="coaching_pause" min="0" max="240" value="{{ $produit->coaching_pause ?: 0 }}" style="width:160px;">
+                </div>
             </div>
-            <button class="co-btn"><i class="fas fa-save"></i> Enregistrer</button>
+
+            <label style="font-size:0.82rem;font-weight:700;color:#374151;display:block;margin-bottom:8px;">Disponibilité hebdomadaire</label>
+            @foreach(['lundi'=>'Lundi','mardi'=>'Mardi','mercredi'=>'Mercredi','jeudi'=>'Jeudi','vendredi'=>'Vendredi','samedi'=>'Samedi','dimanche'=>'Dimanche'] as $key => $label)
+            @php $actif = isset($dispo[$key]); $deb = $dispo[$key][0]['debut'] ?? '09:00'; $fin = $dispo[$key][0]['fin'] ?? '17:00'; @endphp
+            <div style="display:flex;align-items:center;gap:10px;padding:0.5rem 0;border-bottom:1px solid #f3f4f6;">
+                <label style="display:flex;align-items:center;gap:8px;width:130px;cursor:pointer;">
+                    <input type="checkbox" name="jours[{{ $key }}][actif]" value="1" {{ $actif ? 'checked' : '' }} style="width:18px;height:18px;accent-color:#db2777;">
+                    <span style="font-weight:600;color:#111827;font-size:0.88rem;">{{ $label }}</span>
+                </label>
+                <input type="time" name="jours[{{ $key }}][debut]" value="{{ $deb }}" style="padding:0.4rem 0.6rem;border:1px solid #d1d5db;border-radius:8px;">
+                <span style="color:#9ca3af;">→</span>
+                <input type="time" name="jours[{{ $key }}][fin]" value="{{ $fin }}" style="padding:0.4rem 0.6rem;border:1px solid #d1d5db;border-radius:8px;">
+            </div>
+            @endforeach
+
+            <button class="co-btn" style="margin-top:1rem;"><i class="fas fa-save"></i> Enregistrer les disponibilités</button>
         </form>
     </div>
 

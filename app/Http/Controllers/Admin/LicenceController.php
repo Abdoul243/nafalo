@@ -55,34 +55,48 @@ class LicenceController extends Controller
         return back()->with('success', "$ajoutees clé(s) ajoutée(s).");
     }
 
-    /** Génère automatiquement N clés (format XXXX-XXXX-XXXX-XXXX). */
+    /** Génère automatiquement N clés (alphanumérique ou UUID). */
     public function generer(Request $request, Produit $produit)
     {
         $this->autoriser($produit);
 
         $data = $request->validate([
             'quantite' => 'required|integer|min:1|max:1000',
+            'type'     => 'nullable|in:alphanumerique,uuid',
             'prefixe'  => 'nullable|string|max:12',
+            'longueur' => 'nullable|integer|in:8,16,24,32',
         ]);
 
-        $prefixe = strtoupper(preg_replace('/[^A-Z0-9]/i', '', $data['prefixe'] ?? ''));
-        $genere = 0;
+        $type     = $data['type'] ?? 'alphanumerique';
+        $longueur = $data['longueur'] ?? 16;
+        $prefixe  = strtoupper(preg_replace('/[^A-Z0-9]/i', '', $data['prefixe'] ?? ''));
+        $genere   = 0;
+        $tentatives = 0;
 
-        for ($i = 0; $i < $data['quantite']; $i++) {
-            // 4 blocs de 4 caractères
-            $blocs = [];
-            for ($b = 0; $b < 4; $b++) {
-                $blocs[] = strtoupper(Str::random(4));
-            }
-            $cle = ($prefixe ? $prefixe . '-' : '') . implode('-', $blocs);
+        while ($genere < $data['quantite'] && $tentatives < $data['quantite'] * 5) {
+            $tentatives++;
+            $cle = $this->genererUneCle($type, $longueur, $prefixe);
 
-            if ($produit->clesLicence()->where('cle', $cle)->exists()) { $i--; continue; }
+            if ($produit->clesLicence()->where('cle', $cle)->exists()) continue;
 
             $produit->clesLicence()->create(['cle' => $cle, 'statut' => 'disponible']);
             $genere++;
         }
 
         return back()->with('success', "$genere clé(s) générée(s).");
+    }
+
+    private function genererUneCle(string $type, int $longueur, string $prefixe): string
+    {
+        if ($type === 'uuid') {
+            $base = strtoupper((string) Str::uuid());
+        } else {
+            // N caractères alphanumériques, groupés par blocs de 4
+            $brut  = strtoupper(Str::random($longueur));
+            $base  = implode('-', str_split($brut, 4));
+        }
+
+        return ($prefixe ? $prefixe . '-' : '') . $base;
     }
 
     /** Supprime une clé encore disponible. */

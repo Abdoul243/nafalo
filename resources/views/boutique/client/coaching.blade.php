@@ -50,8 +50,33 @@ body { background:#f6f7f9; }
         <h3>📅 Réserver un créneau</h3>
         <form action="{{ route('client.coaching.store', $produit) }}" method="POST">
             @csrf
-            <label>Date et heure souhaitées</label>
-            <input type="datetime-local" name="date_souhaitee" required>
+
+            @if(!empty($creneaux))
+                {{-- Sélection dans les créneaux disponibles --}}
+                <input type="hidden" name="date_souhaitee" id="cc-slot" required>
+                <div id="cc-slots">
+                    @foreach($creneaux as $jour => $heures)
+                    <div style="margin-bottom:0.9rem;">
+                        <div style="font-size:0.8rem;font-weight:700;color:#111827;margin-bottom:6px;text-transform:capitalize;">
+                            {{ \Carbon\Carbon::parse($jour)->translatedFormat('l d F') }}
+                        </div>
+                        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                            @foreach($heures as $h)
+                            <button type="button" class="cc-slot-btn" data-val="{{ $jour }} {{ $h }}"
+                                style="border:1.5px solid #e5e7eb;background:#fff;border-radius:9px;padding:0.45rem 0.9rem;font-size:0.83rem;font-weight:600;color:#374151;cursor:pointer;">
+                                {{ $h }}
+                            </button>
+                            @endforeach
+                        </div>
+                    </div>
+                    @endforeach
+                </div>
+            @else
+                {{-- Repli : aucune dispo définie → date libre --}}
+                <label>Date et heure souhaitées</label>
+                <input type="datetime-local" name="date_souhaitee" required>
+            @endif
+
             <div style="margin-top:0.8rem;">
                 <label>Message au coach (optionnel)</label>
                 <textarea name="message" rows="3" maxlength="1000" placeholder="Votre objectif, vos questions…"></textarea>
@@ -85,3 +110,16 @@ body { background:#f6f7f9; }
     @endif
 </div>
 @endsection
+
+@push('scripts')
+<script>
+document.querySelectorAll('.cc-slot-btn').forEach(function(btn){
+    btn.addEventListener('click', function(){
+        document.querySelectorAll('.cc-slot-btn').forEach(function(b){ b.style.borderColor='#e5e7eb'; b.style.background='#fff'; b.style.color='#374151'; });
+        this.style.borderColor='#db2777'; this.style.background='#db2777'; this.style.color='#fff';
+        var inp = document.getElementById('cc-slot');
+        if(inp) inp.value = this.dataset.val;
+    });
+});
+</script>
+@endpush

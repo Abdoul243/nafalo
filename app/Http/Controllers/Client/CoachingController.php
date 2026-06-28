@@ -31,7 +31,10 @@ class CoachingController extends Controller
             ->latest()
             ->get();
 
-        return view('boutique.client.coaching', compact('boutique', 'client', 'produit', 'reservations'));
+        // Créneaux réservables (selon la disponibilité du coach)
+        $creneaux = $produit->creneauxDisponibles(14);
+
+        return view('boutique.client.coaching', compact('boutique', 'client', 'produit', 'reservations', 'creneaux'));
     }
 
     /** Le client demande un créneau. */
@@ -46,6 +49,17 @@ class CoachingController extends Controller
             'date_souhaitee' => 'required|date|after:now',
             'message'        => 'nullable|string|max:1000',
         ]);
+
+        // Si une disponibilité est définie, le créneau choisi doit en faire partie.
+        $creneaux = $produit->creneauxDisponibles(14);
+        if (!empty($creneaux)) {
+            $choisi = \Carbon\Carbon::parse($data['date_souhaitee']);
+            $jour   = $choisi->format('Y-m-d');
+            $heure  = $choisi->format('H:i');
+            if (!in_array($heure, $creneaux[$jour] ?? [], true)) {
+                return back()->with('error', 'Ce créneau n\'est plus disponible. Choisissez-en un autre.');
+            }
+        }
 
         $achat = Achat::where('client_id', $client->id)->where('produit_id', $produit->id)
             ->whereHas('transaction', fn($q) => $q->where('statut', 'reussi'))->latest()->first();

@@ -35,6 +35,8 @@ class Produit extends Model
         'acces_type',
         'abonnement_intervalle',
         'coaching_duree',
+        'coaching_disponibilites',
+        'coaching_pause',
         'est_publie',
         'nb_ventes',
         // Lead magnet
@@ -51,6 +53,9 @@ class Produit extends Model
         'lead_champs_requis'=> 'array',
         'lead_limite_dl'    => 'integer',
         'lead_compteur'     => 'integer',
+        'coaching_disponibilites' => 'array',
+        'coaching_duree'    => 'integer',
+        'coaching_pause'    => 'integer',
     ];
 
     public function boutique()
@@ -201,6 +206,54 @@ class Produit extends Model
     public function reservationsCoaching()
     {
         return $this->hasMany(ReservationCoaching::class, 'produit_id');
+    }
+
+    /**
+     * Génère les créneaux réservables sur les N prochains jours à partir de la
+     * disponibilité hebdomadaire, en excluant ceux déjà pris.
+     * @return array<string, string[]>  ['2026-06-29' => ['09:00','10:00'], ...]
+     */
+    public function creneauxDisponibles(int $jours = 14): array
+    {
+        $dispo = $this->coaching_disponibilites ?? [];
+        if (empty($dispo)) return [];
+
+        $duree = $this->coaching_duree ?: 60;
+        $pas   = $duree + ($this->coaching_pause ?: 0);
+
+        $mapJours = ['lundi' => 1, 'mardi' => 2, 'mercredi' => 3, 'jeudi' => 4,
+                     'vendredi' => 5, 'samedi' => 6, 'dimanche' => 7];
+
+        // Créneaux déjà réservés (en attente ou confirmés)
+        $prises = $this->reservationsCoaching()
+            ->whereIn('statut', ['en_attente', 'confirmee'])
+            ->get()
+            ->map(fn($r) => optional($r->date_confirmee ?? $r->date_souhaitee)->format('Y-m-d H:i'))
+            ->filter()->flip()->all();
+
+        $resultats = [];
+        $aujourdhui = \Carbon\Carbon::today();
+
+        for ($d = 0; $d < $jours; $d++) {
+            $date = $aujourdhui->copy()->addDays($d);
+            $nomJour = array_search($date->isoWeekday(), $mapJours);
+            if (!$nomJour || empty($dispo[$nomJour])) continue;
+
+            foreach ($dispo[$nomJour] as $plage) {
+                if (empty($plage['debut']) || empty($plage['fin'])) continue;
+                $fin = $date->copy()->setTimeFromTimeString($plage['fin']);
+                $t   = $date->copy()->setTimeFromTimeString($plage['debut']);
+
+                while ($t->copy()->addMinutes($duree)->lte($fin)) {
+                    if ($t->isFuture() && !isset($prises[$t->format('Y-m-d H:i')])) {
+                        $resultats[$date->format('Y-m-d')][] = $t->format('H:i');
+                    }
+                    $t->addMinutes($pas);
+                }
+            }
+        }
+
+        return $resultats;
     }
 
     /* ── Helpers Lead Magnet ───────────────────────────────────────── */
