@@ -34,6 +34,7 @@ class Produit extends Model
         'format',
         'acces_type',
         'abonnement_intervalle',
+        'coaching_duree',
         'est_publie',
         'nb_ventes',
         // Lead magnet
@@ -188,6 +189,18 @@ class Produit extends Model
     public function messagesCommunaute()
     {
         return $this->hasMany(MessageCommunaute::class, 'produit_id');
+    }
+
+    /* ── Coaching ──────────────────────────────────────────────────── */
+
+    public function estCoaching(): bool
+    {
+        return $this->format === 'coaching';
+    }
+
+    public function reservationsCoaching()
+    {
+        return $this->hasMany(ReservationCoaching::class, 'produit_id');
     }
 
     /* ── Helpers Lead Magnet ───────────────────────────────────────── */

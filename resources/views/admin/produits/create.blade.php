@@ -728,6 +728,10 @@
                     <input type="radio" name="format" value="communaute" onchange="toggleFormat()" {{ $fmtInit === 'communaute' ? 'checked' : '' }}>
                     <span><strong>Communauté</strong><br><span class="text-muted small">Espace membre + discussions</span></span>
                 </label>
+                <label style="flex:1;min-width:200px;border-radius:10px;padding:0.7rem 0.9rem;cursor:pointer;display:flex;align-items:center;gap:9px;" id="opt-coaching">
+                    <input type="radio" name="format" value="coaching" onchange="toggleFormat()" {{ $fmtInit === 'coaching' ? 'checked' : '' }}>
+                    <span><strong>Coaching</strong><br><span class="text-muted small">Séances sur réservation</span></span>
+                </label>
             </div>
 
             {{-- Note formation --}}
@@ -748,6 +752,11 @@
             {{-- Note communauté --}}
             <div id="bloc-communaute" style="display:none;background:#fff1f2;border:1px solid #fecdd3;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#be123c;font-size:0.88rem;">
                 <i class="fas fa-users"></i> Après enregistrement, vous pourrez <strong>publier des annonces</strong>. Les membres (acheteurs/abonnés) échangent dans le fil de discussion. Astuce : passez le produit en <strong>Abonnement</strong> (section ci-dessus) pour un accès récurrent.
+            </div>
+
+            {{-- Note coaching --}}
+            <div id="bloc-coaching" style="display:none;background:#fdf2f8;border:1px solid #fbcfe8;border-radius:12px;padding:1rem 1.25rem;margin-bottom:1.25rem;color:#be185d;font-size:0.88rem;">
+                <i class="fas fa-video"></i> Après paiement, le client <strong>demande un créneau</strong> ; vous le <strong>confirmez</strong> avec un lien visio. Vous réglerez la durée de la séance à l'étape suivante.
             </div>
 
             <div class="mb-4" id="bloc-fichier">
@@ -777,7 +786,8 @@
                     document.getElementById('bloc-licence').style.display    = (fmt === 'licence')    ? '' : 'none';
                     document.getElementById('bloc-bundle').style.display      = (fmt === 'bundle')     ? '' : 'none';
                     document.getElementById('bloc-communaute').style.display  = (fmt === 'communaute') ? '' : 'none';
-                    ['fichier','formation','licence','bundle','communaute'].forEach(function(f){
+                    document.getElementById('bloc-coaching').style.display    = (fmt === 'coaching')   ? '' : 'none';
+                    ['fichier','formation','licence','bundle','communaute','coaching'].forEach(function(f){
                         var el = document.getElementById('opt-'+f);
                         if(el) el.style.borderColor = (fmt === f) ? '#4f46e5' : '#e5e7eb';
                     });

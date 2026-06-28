@@ -162,6 +162,10 @@ Route::middleware(['web', 'domaine'])->prefix('boutique')->group(function () {
             // ── Espace communauté ──
             Route::get('/communaute/{produit}', [Client\CommunauteController::class, 'show'])->name('communaute.show');
             Route::post('/communaute/{produit}/poster', [Client\CommunauteController::class, 'poster'])->name('communaute.poster');
+
+            // ── Coaching : réservation ──
+            Route::get('/coaching/{produit}', [Client\CoachingController::class, 'reserver'])->name('coaching.reserver');
+            Route::post('/coaching/{produit}', [Client\CoachingController::class, 'store'])->name('coaching.store');
         });
     });
 });

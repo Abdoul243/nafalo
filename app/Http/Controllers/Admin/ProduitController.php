@@ -54,7 +54,7 @@ class ProduitController extends Controller
         $categories = Categorie::where('boutique_id', $boutiqueId)->get();
 
         // Format pré-sélectionné depuis l'écran de choix
-        $formatInitial = in_array($request->query('format'), ['fichier', 'formation', 'licence', 'bundle', 'communaute'])
+        $formatInitial = in_array($request->query('format'), ['fichier', 'formation', 'licence', 'bundle', 'communaute', 'coaching'])
             ? $request->query('format')
             : 'fichier';
 
@@ -111,6 +111,12 @@ class ProduitController extends Controller
         if ($produit->estCommunaute()) {
             return redirect()->route('admin.produits.communaute.gestion', $produit)
                 ->with('success', 'Communauté créée. Publiez un message de bienvenue.');
+        }
+
+        // Si c'est du coaching → aller gérer les réservations / réglages.
+        if ($produit->estCoaching()) {
+            return redirect()->route('admin.produits.coaching.reservations', $produit)
+                ->with('success', 'Séance de coaching créée. Réglez la durée et gérez les réservations ici.');
         }
 
         return redirect()->route('admin.produits.index')

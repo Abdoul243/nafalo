@@ -72,12 +72,12 @@
         </a>
 
         {{-- Coaching --}}
-        <div class="ct-card disabled">
-            <span class="ct-badge soon">Bientôt</span>
+        <a href="{{ route('admin.produits.create', ['format' => 'coaching']) }}" class="ct-card">
+            <span class="ct-badge new">Dispo</span>
             <div class="ct-icon" style="background:linear-gradient(135deg,#ec4899,#db2777);"><i class="fas fa-video"></i></div>
             <div class="ct-name">Coaching</div>
             <div class="ct-desc">Vendez des séances : le client réserve un créneau après paiement.</div>
-        </div>
+        </a>
 
         {{-- Communauté --}}
         <a href="{{ route('admin.produits.create', ['format' => 'communaute']) }}" class="ct-card">

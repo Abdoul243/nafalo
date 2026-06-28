@@ -342,6 +342,10 @@
                             <a href="{{ route('client.communaute.show', $achat->produit) }}" class="btn-dl" style="background:#e11d48;">
                                 <i class="fas fa-users"></i> Accéder à la communauté
                             </a>
+                        @elseif($achat->produit->estCoaching())
+                            <a href="{{ route('client.coaching.reserver', $achat->produit) }}" class="btn-dl" style="background:#db2777;">
+                                <i class="fas fa-video"></i> Réserver ma séance
+                            </a>
                         @elseif($achat->produit->estBundle())
                             <span class="btn-dl" style="background:#0d9488;cursor:default;">
                                 <i class="fas fa-layer-group"></i> Pack ({{ $achat->produit->produitsInclus->count() }} produits)

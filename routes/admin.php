@@ -68,6 +68,12 @@ Route::prefix('admin')->name('admin.')->middleware(['web', 'auth'])->group(funct
     Route::post('produits/{produit}/communaute', [Admin\CommunauteController::class, 'poster'])->name('produits.communaute.poster');
     Route::delete('communaute/message/{message}', [Admin\CommunauteController::class, 'supprimer'])->name('produits.communaute.supprimer');
 
+    // ── Coaching : réservations ──
+    Route::get('produits/{produit}/coaching', [Admin\CoachingController::class, 'reservations'])->name('produits.coaching.reservations');
+    Route::post('produits/{produit}/coaching/reglages', [Admin\CoachingController::class, 'reglages'])->name('produits.coaching.reglages');
+    Route::post('coaching/{reservation}/confirmer', [Admin\CoachingController::class, 'confirmer'])->name('produits.coaching.confirmer');
+    Route::delete('coaching/{reservation}/annuler', [Admin\CoachingController::class, 'annuler'])->name('produits.coaching.annuler');
+
     // ── Licences : gestion des clés ──
     Route::get('produits/{produit}/licences', [Admin\LicenceController::class, 'gestion'])->name('produits.licences.gestion');
     Route::post('produits/{produit}/licences/ajouter', [Admin\LicenceController::class, 'ajouter'])->name('produits.licences.ajouter');
