@@ -483,6 +483,13 @@
     @media (max-width: 1199px) { .col-xl-4, .col-xl-8 { flex: 0 0 100%; max-width: 100%; } }
     @media (max-width: 991px)  { .col-lg-4, .col-lg-8, .col-lg-3, .col-lg-6 { flex: 0 0 100%; max-width: 100%; } }
 
+    /* ── Filet de sécurité responsive : tout tableau devient scrollable sur petit écran ── */
+    @media (max-width: 768px) {
+        table { display: block; width: max-content; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .table-responsive, .cw-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .cw-toolbar { flex-wrap: wrap; }
+    }
+
     /* ══════════════════════════════════════════════
        CHARIOW DESIGN SYSTEM — classes globales
     ══════════════════════════════════════════════ */

@@ -535,6 +535,11 @@
         .footer-inner { padding: 0 1rem; }
         .footer-bottom { flex-direction: column; text-align: center; }
     }
+
+    /* ── Filet de sécurité responsive : tableaux scrollables sur petit écran ── */
+    @media (max-width: 768px) {
+        table { display: block; width: max-content; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    }
     </style>
 
     @stack('styles')

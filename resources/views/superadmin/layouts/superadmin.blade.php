@@ -175,6 +175,14 @@
             .sa-content { padding: 0.75rem; }
             .sa-table { overflow-x: auto; }
         }
+
+        /* ── Filet de sécurité responsive ── */
+        html, body { overflow-x: hidden; }
+        img, video, canvas, svg { max-width: 100%; height: auto; }
+        @media (max-width: 768px) {
+            table { display: block; width: max-content; max-width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+            .sa-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        }
     </style>
     @stack('styles')
 </head>
